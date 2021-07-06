@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://www.eflytop.com</id>
+    <title>一览网事</title>
+    <updated>2021-07-06T09:08:00.816Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://www.eflytop.com"/>
+    <link rel="self" href="https://www.eflytop.com/atom.xml"/>
+    <subtitle>知行合一，网中取乐</subtitle>
+    <logo>https://www.eflytop.com/images/avatar.png</logo>
+    <icon>https://www.eflytop.com/favicon.ico</icon>
+    <rights>All rights reserved 2021, 一览网事</rights>
+    <entry>
+        <title type="html"><![CDATA[Cisco ISR4000路由器从3.x升级至Denali 16.2指南]]></title>
+        <id>https://www.eflytop.com/post/cisco-isr4000-lu-you-qi-cong-3x-sheng-ji-zhi-denali-162-zhi-nan/</id>
+        <link href="https://www.eflytop.com/post/cisco-isr4000-lu-you-qi-cong-3x-sheng-ji-zhi-denali-162-zhi-nan/">
+        </link>
+        <updated>2021-04-20T02:31:17.000Z</updated>
+        <summary type="html"><![CDATA[<p>在管理和升级ISR4000系列路由器时，我们发现IOS XE版本有3.x的，也有Denali 16.x的。我们可以将3.x版本升级到16.x版本，已实现生成环境的稳定性。在本文中，我们将向您展示如何将ISR4000从IOS XE 3.6升级到Denali 16.2.1。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>在管理和升级ISR4000系列路由器时，我们发现IOS XE版本有3.x的，也有Denali 16.x的。我们可以将3.x版本升级到16.x版本，已实现生成环境的稳定性。在本文中，我们将向您展示如何将ISR4000从IOS XE 3.6升级到Denali 16.2.1。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[如何在CentOS 7上安装Cacti 1.2]]></title>
+        <id>https://www.eflytop.com/post/ru-he-zai-centos-7-shang-an-zhuang-cacti-12/</id>
+        <link href="https://www.eflytop.com/post/ru-he-zai-centos-7-shang-an-zhuang-cacti-12/">
+        </link>
+        <updated>2021-04-19T02:26:53.000Z</updated>
+        <summary type="html"><![CDATA[<p>Cacti是一套基于PHP，MySQL，SNMP及RRDTool开发的网络流量监测图形分析工具。它通过SNMP来获取数据，使用 RRDtool绘画图形，本文介绍如何在CentOS 7上安装Cacti 1.2</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Cacti是一套基于PHP，MySQL，SNMP及RRDTool开发的网络流量监测图形分析工具。它通过SNMP来获取数据，使用 RRDtool绘画图形，本文介绍如何在CentOS 7上安装Cacti 1.2</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[如何在Cisco ISR 4000上抓包]]></title>
+        <id>https://www.eflytop.com/post/ru-he-zai-cisco-isr-4000-shang-zhua-bao/</id>
+        <link href="https://www.eflytop.com/post/ru-he-zai-cisco-isr-4000-shang-zhua-bao/">
+        </link>
+        <updated>2021-04-12T02:21:35.000Z</updated>
+        <summary type="html"><![CDATA[<p>在本文中，我们将看到如何在Cisco ISR 4000系列路由器上抓包并导出抓包文件。抓包文件是pcap文件格式，可以在Wireshark中轻松打开和分析。<br>
+本实验中使用的ISR 4331正在运行IOS XE 16.6.4。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>在本文中，我们将看到如何在Cisco ISR 4000系列路由器上抓包并导出抓包文件。抓包文件是pcap文件格式，可以在Wireshark中轻松打开和分析。<br>
+本实验中使用的ISR 4331正在运行IOS XE 16.6.4。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Centos 7安装与配置Netflow Analyzer 12.4]]></title>
+        <id>https://www.eflytop.com/post/centos-7-an-zhuang-yu-pei-zhi-netflow-analyzer-124/</id>
+        <link href="https://www.eflytop.com/post/centos-7-an-zhuang-yu-pei-zhi-netflow-analyzer-124/">
+        </link>
+        <updated>2021-04-06T02:17:16.000Z</updated>
+        <summary type="html"><![CDATA[<p>NetFlow Analyzer是一款专业的带宽监控与流量 协议分析软件，帮助用户了解网络流量构成、协议分布以及用户的行为。它利用Flow技术，支持NetFlow、sFlow、cflowd、J-Flow、IPFIX、NetStream等协议，</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>NetFlow Analyzer是一款专业的带宽监控与流量 协议分析软件，帮助用户了解网络流量构成、协议分布以及用户的行为。它利用Flow技术，支持NetFlow、sFlow、cflowd、J-Flow、IPFIX、NetStream等协议，</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[FortiGate与ASA防火墙建立IPsec VPN]]></title>
+        <id>https://www.eflytop.com/post/fortigate-yu-asa-fang-huo-qiang-jian-li-ipsec-vpn/</id>
+        <link href="https://www.eflytop.com/post/fortigate-yu-asa-fang-huo-qiang-jian-li-ipsec-vpn/">
+        </link>
+        <updated>2021-03-26T02:33:50.000Z</updated>
+        <summary type="html"><![CDATA[<p>用户本地的出口防火墙选用FortiGate设备，中心点为ASA防火墙，本文介绍如何在这2个设备之间建立IPsec VPN。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>用户本地的出口防火墙选用FortiGate设备，中心点为ASA防火墙，本文介绍如何在这2个设备之间建立IPsec VPN。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[通过Aux口访问console口]]></title>
+        <id>https://www.eflytop.com/post/tong-guo-aux-kou-fang-wen-console-kou/</id>
+        <link href="https://www.eflytop.com/post/tong-guo-aux-kou-fang-wen-console-kou/">
+        </link>
+        <updated>2021-03-15T01:37:58.000Z</updated>
+        <summary type="html"><![CDATA[<p>在实际网络环境中，有时需要通过Console口来管理路由器/交换机，但是如果没有Console配置线怎么办？你可以使用其它路由器的AUX口来连接。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>在实际网络环境中，有时需要通过Console口来管理路由器/交换机，但是如果没有Console配置线怎么办？你可以使用其它路由器的AUX口来连接。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Cisco SD-WAN cEdge安装]]></title>
+        <id>https://www.eflytop.com/post/cisco-sd-wan-cedge-an-zhuang/</id>
+        <link href="https://www.eflytop.com/post/cisco-sd-wan-cedge-an-zhuang/">
+        </link>
+        <updated>2021-02-09T02:50:40.000Z</updated>
+        <summary type="html"><![CDATA[<p>Cisco SD-WAN包含三大类Edge设备：vEdge-Cloud、vEdge硬件盒子、 cEdge路由器</p>
+<ul>
+<li>vEdge-Cloud是以虚拟机的形式存在</li>
+<li>vEdge硬件盒子包括了Viptela原生的路由器</li>
+<li>cEdge是指思科ISR/ASR等路由器</li>
+</ul>
+]]></summary>
+        <content type="html"><![CDATA[<p>Cisco SD-WAN包含三大类Edge设备：vEdge-Cloud、vEdge硬件盒子、 cEdge路由器</p>
+<ul>
+<li>vEdge-Cloud是以虚拟机的形式存在</li>
+<li>vEdge硬件盒子包括了Viptela原生的路由器</li>
+<li>cEdge是指思科ISR/ASR等路由器</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[年轻人的第一个无线网络 - Cisco vWLC基础配置教程]]></title>
+        <id>https://www.eflytop.com/post/nian-qing-ren-de-di-yi-ge-wu-xian-wang-luo-cisco-vwlc-ji-chu-pei-zhi-jiao-cheng/</id>
+        <link href="https://www.eflytop.com/post/nian-qing-ren-de-di-yi-ge-wu-xian-wang-luo-cisco-vwlc-ji-chu-pei-zhi-jiao-cheng/">
+        </link>
+        <updated>2021-02-08T01:50:44.000Z</updated>
+        <summary type="html"><![CDATA[<p>本文以vWLC 8.5.151.0为例。为什么选择这个版本呢？根据兼容性矩阵，这个版本是支持Cisco 3500系列AP的最高版本。3500系列是第一个支持5G（802.11n 300Mbps）的系列，在本文写作时仍具有实用价值。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>本文以vWLC 8.5.151.0为例。为什么选择这个版本呢？根据兼容性矩阵，这个版本是支持Cisco 3500系列AP的最高版本。3500系列是第一个支持5G（802.11n 300Mbps）的系列，在本文写作时仍具有实用价值。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Cisco SD-WAN之vManage，vBond，vSmart和vEdge上线]]></title>
+        <id>https://www.eflytop.com/post/cisco-sd-wan-zhi-vmanagevbondvsmart-he-vedge-shang-xian/</id>
+        <link href="https://www.eflytop.com/post/cisco-sd-wan-zhi-vmanagevbondvsmart-he-vedge-shang-xian/">
+        </link>
+        <updated>2020-11-09T03:01:18.000Z</updated>
+        <summary type="html"><![CDATA[<p>SD-WAN的架构<br>
+1、编排平面: Vbord作为协调器，协调管理控制。数据平面负责授权所有控制器连接（白名单模式）。    2、管理平面: Vmanager统一图形化管理，实施。<br>
+3、控制平面: Vsmart整个方案的大脑，提供中心策略，负责实施策略、网络分段、流量工程等。与所有Vedge建立关系，每一个租户一个Vsmart。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>SD-WAN的架构<br>
+1、编排平面: Vbord作为协调器，协调管理控制。数据平面负责授权所有控制器连接（白名单模式）。    2、管理平面: Vmanager统一图形化管理，实施。<br>
+3、控制平面: Vsmart整个方案的大脑，提供中心策略，负责实施策略、网络分段、流量工程等。与所有Vedge建立关系，每一个租户一个Vsmart。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[GRE vs IPIP Tunneling]]></title>
+        <id>https://www.eflytop.com/post/gre-vs-ipip-tunneling/</id>
+        <link href="https://www.eflytop.com/post/gre-vs-ipip-tunneling/">
+        </link>
+        <updated>2020-09-07T02:00:44.000Z</updated>
+        <summary type="html"><![CDATA[<p>Generic Routing Encapsulation (GRE) 和IP-in-IP (IPIP) 是两个相似的隧道机制，但经常混淆。在本文中，我们将介绍它们的运作机制、区别以及何时使用它们。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Generic Routing Encapsulation (GRE) 和IP-in-IP (IPIP) 是两个相似的隧道机制，但经常混淆。在本文中，我们将介绍它们的运作机制、区别以及何时使用它们。</p>
+]]></content>
+    </entry>
+</feed>
