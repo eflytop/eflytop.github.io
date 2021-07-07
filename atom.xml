@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.eflytop.com</id>
     <title>一览网事</title>
-    <updated>2021-07-07T01:22:31.186Z</updated>
+    <updated>2021-07-07T01:32:04.725Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.eflytop.com"/>
     <link rel="self" href="https://www.eflytop.com/atom.xml"/>
@@ -122,18 +122,14 @@
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Cisco SD-WAN之vManage，vBond，vSmart和vEdge上线]]></title>
-        <id>https://www.eflytop.com/post/cisco-sd-wan-zhi-vmanagevbondvsmart-he-vedge-shang-xian/</id>
-        <link href="https://www.eflytop.com/post/cisco-sd-wan-zhi-vmanagevbondvsmart-he-vedge-shang-xian/">
+        <title type="html"><![CDATA[MPLS VPN的基本配置]]></title>
+        <id>https://www.eflytop.com/post/mpls-vpn-de-ji-ben-pei-zhi/</id>
+        <link href="https://www.eflytop.com/post/mpls-vpn-de-ji-ben-pei-zhi/">
         </link>
-        <updated>2020-11-09T03:01:18.000Z</updated>
-        <summary type="html"><![CDATA[<p>SD-WAN的架构<br>
-1、编排平面: Vbord作为协调器，协调管理控制。数据平面负责授权所有控制器连接（白名单模式）。    2、管理平面: Vmanager统一图形化管理，实施。<br>
-3、控制平面: Vsmart整个方案的大脑，提供中心策略，负责实施策略、网络分段、流量工程等。与所有Vedge建立关系，每一个租户一个Vsmart。</p>
+        <updated>2021-01-03T01:24:36.000Z</updated>
+        <summary type="html"><![CDATA[<p>MPLS-VPN是指采用MPLS（多协议标记转换）技术在骨干的宽带IP网络上构建企业IP专网，实现跨地域、安全、高速、可靠的数据、语音、图像多业务通信，并结合差别服务、流量工程等相关技术，将公众网可靠的性能、良好的扩展性、丰富的功能与专用网的安全 、灵活、高效结合在一起。本文主要展示一些基本配置。</p>
 ]]></summary>
-        <content type="html"><![CDATA[<p>SD-WAN的架构<br>
-1、编排平面: Vbord作为协调器，协调管理控制。数据平面负责授权所有控制器连接（白名单模式）。    2、管理平面: Vmanager统一图形化管理，实施。<br>
-3、控制平面: Vsmart整个方案的大脑，提供中心策略，负责实施策略、网络分段、流量工程等。与所有Vedge建立关系，每一个租户一个Vsmart。</p>
+        <content type="html"><![CDATA[<p>MPLS-VPN是指采用MPLS（多协议标记转换）技术在骨干的宽带IP网络上构建企业IP专网，实现跨地域、安全、高速、可靠的数据、语音、图像多业务通信，并结合差别服务、流量工程等相关技术，将公众网可靠的性能、良好的扩展性、丰富的功能与专用网的安全 、灵活、高效结合在一起。本文主要展示一些基本配置。</p>
 ]]></content>
     </entry>
 </feed>
