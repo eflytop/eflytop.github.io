@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.eflytop.com</id>
     <title>一览网事</title>
-    <updated>2021-07-06T09:08:00.816Z</updated>
+    <updated>2021-07-07T00:48:59.566Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.eflytop.com"/>
     <link rel="self" href="https://www.eflytop.com/atom.xml"/>
@@ -10,6 +10,17 @@
     <logo>https://www.eflytop.com/images/avatar.png</logo>
     <icon>https://www.eflytop.com/favicon.ico</icon>
     <rights>All rights reserved 2021, 一览网事</rights>
+    <entry>
+        <title type="html"><![CDATA[如何使用Python自动采集路由器信息]]></title>
+        <id>https://www.eflytop.com/post/ru-he-shi-yong-python-zi-dong-cai-ji-lu-you-qi-xin-xi/</id>
+        <link href="https://www.eflytop.com/post/ru-he-shi-yong-python-zi-dong-cai-ji-lu-you-qi-xin-xi/">
+        </link>
+        <updated>2021-07-07T00:27:50.000Z</updated>
+        <summary type="html"><![CDATA[<p>还有一小时就要下班了，老板突然指示马上收集一下所有设备的IP，软件版本，序列号信息，一台一台登录肯定得加班了，要不用Python自动采集吧。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>还有一小时就要下班了，老板突然指示马上收集一下所有设备的IP，软件版本，序列号信息，一台一台登录肯定得加班了，要不用Python自动采集吧。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Cisco ISR4000路由器从3.x升级至Denali 16.2指南]]></title>
         <id>https://www.eflytop.com/post/cisco-isr4000-lu-you-qi-cong-3x-sheng-ji-zhi-denali-162-zhi-nan/</id>
@@ -123,17 +134,6 @@
         <content type="html"><![CDATA[<p>SD-WAN的架构<br>
 1、编排平面: Vbord作为协调器，协调管理控制。数据平面负责授权所有控制器连接（白名单模式）。    2、管理平面: Vmanager统一图形化管理，实施。<br>
 3、控制平面: Vsmart整个方案的大脑，提供中心策略，负责实施策略、网络分段、流量工程等。与所有Vedge建立关系，每一个租户一个Vsmart。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[GRE vs IPIP Tunneling]]></title>
-        <id>https://www.eflytop.com/post/gre-vs-ipip-tunneling/</id>
-        <link href="https://www.eflytop.com/post/gre-vs-ipip-tunneling/">
-        </link>
-        <updated>2020-09-07T02:00:44.000Z</updated>
-        <summary type="html"><![CDATA[<p>Generic Routing Encapsulation (GRE) 和IP-in-IP (IPIP) 是两个相似的隧道机制，但经常混淆。在本文中，我们将介绍它们的运作机制、区别以及何时使用它们。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>Generic Routing Encapsulation (GRE) 和IP-in-IP (IPIP) 是两个相似的隧道机制，但经常混淆。在本文中，我们将介绍它们的运作机制、区别以及何时使用它们。</p>
 ]]></content>
     </entry>
 </feed>
