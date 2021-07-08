@@ -483,7 +483,6 @@ ul li {
   display: flex;
   flex-direction: row;
   align-items: center;
-  display: inline-block;
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
   margin-right: 1rem;
@@ -656,6 +655,7 @@ ul li {
 .pagination-container {
   padding: 24px 32px 32px;
   align-self: center;
+  text-align: center;
 }
 .pagination-container .prev-page {
   margin: 0 16px;
