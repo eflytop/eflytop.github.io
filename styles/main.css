@@ -483,6 +483,7 @@ ul li {
   display: flex;
   flex-direction: row;
   align-items: center;
+  display: inline-block;
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
   margin-right: 1rem;
