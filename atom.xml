@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://www.eflytop.com</id>
     <title>一览网事</title>
-    <updated>2021-07-08T02:04:23.204Z</updated>
+    <updated>2021-07-10T00:33:48.141Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://www.eflytop.com"/>
     <link rel="self" href="https://www.eflytop.com/atom.xml"/>
@@ -10,6 +10,17 @@
     <logo>https://www.eflytop.com/images/avatar.png</logo>
     <icon>https://www.eflytop.com/favicon.ico</icon>
     <rights>All rights reserved 2021, 一览网事</rights>
+    <entry>
+        <title type="html"><![CDATA[使用Python批量配置思科路由器]]></title>
+        <id>https://www.eflytop.com/post/shi-yong-python-pi-liang-pei-zhi-si-ke-lu-you-qi/</id>
+        <link href="https://www.eflytop.com/post/shi-yong-python-pi-liang-pei-zhi-si-ke-lu-you-qi/">
+        </link>
+        <updated>2021-07-10T00:25:34.000Z</updated>
+        <summary type="html"><![CDATA[<p>分享一个使用Python批量配置思科路由器代码，把cfg.py、device.txt、cmd.txt放同一目录下，device.txt是要登录的主机列表，一行一个IP地址；cmd.txt是命令列表，一行一条命令，不需要输入configure terminal和write命令。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>分享一个使用Python批量配置思科路由器代码，把cfg.py、device.txt、cmd.txt放同一目录下，device.txt是要登录的主机列表，一行一个IP地址；cmd.txt是命令列表，一行一条命令，不需要输入configure terminal和write命令。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[如何使用Python自动采集路由器信息]]></title>
         <id>https://www.eflytop.com/post/ru-he-shi-yong-python-zi-dong-cai-ji-lu-you-qi-xin-xi/</id>
@@ -119,17 +130,6 @@
         <summary type="html"><![CDATA[<p>本文以vWLC 8.5.151.0为例。为什么选择这个版本呢？根据兼容性矩阵，这个版本是支持Cisco 3500系列AP的最高版本。3500系列是第一个支持5G（802.11n 300Mbps）的系列，在本文写作时仍具有实用价值。</p>
 ]]></summary>
         <content type="html"><![CDATA[<p>本文以vWLC 8.5.151.0为例。为什么选择这个版本呢？根据兼容性矩阵，这个版本是支持Cisco 3500系列AP的最高版本。3500系列是第一个支持5G（802.11n 300Mbps）的系列，在本文写作时仍具有实用价值。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[MPLS VPN的基本配置]]></title>
-        <id>https://www.eflytop.com/post/mpls-vpn-de-ji-ben-pei-zhi/</id>
-        <link href="https://www.eflytop.com/post/mpls-vpn-de-ji-ben-pei-zhi/">
-        </link>
-        <updated>2021-01-03T01:24:36.000Z</updated>
-        <summary type="html"><![CDATA[<p>MPLS-VPN是指采用MPLS（多协议标记转换）技术在骨干的宽带IP网络上构建企业IP专网，实现跨地域、安全、高速、可靠的数据、语音、图像多业务通信，并结合差别服务、流量工程等相关技术，将公众网可靠的性能、良好的扩展性、丰富的功能与专用网的安全 、灵活、高效结合在一起。本文主要展示一些基本配置。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>MPLS-VPN是指采用MPLS（多协议标记转换）技术在骨干的宽带IP网络上构建企业IP专网，实现跨地域、安全、高速、可靠的数据、语音、图像多业务通信，并结合差别服务、流量工程等相关技术，将公众网可靠的性能、良好的扩展性、丰富的功能与专用网的安全 、灵活、高效结合在一起。本文主要展示一些基本配置。</p>
 ]]></content>
     </entry>
 </feed>
