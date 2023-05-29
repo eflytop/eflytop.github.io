@@ -1,0 +1,226 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>VMware SD-WAN EDGE冗余方案 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    VMware SD-WAN EDGE冗余方案
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-11-30 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/lHOI-VAwP/" class="post-tags">
+                            # VMware
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/NN7J8Olf9p/" class="post-tags">
+                            # SDWAN
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>SD-WAN采用管理平面、控制层面和数据层面分离的工作模式，其中VCO负责管理层面、VCG中的VCC部分负责控制层面、VCE负责数据层面。因此，VCO和VCG（VCC部分）的部署位置其实影响没有那么大，只是我们管理操作稍微慢点，更新路由稍微慢点（毫秒级别），数据通过VCE传输的，直接影响用户感知。</p>
+<!-- more -->
+<p>如果所有的VCO和VCG都挂了，根据官方信息，VCE上的路由表保持不变，在一定的时间内数据传输不受影响。</p>
+<ol>
+<li>VCE有3种冗余模式或架构</li>
+</ol>
+<ul>
+<li>HA高可用High Availability，适合大中小站点及数据中心</li>
+<li>集群Clustering，适合大型站点及数据中心</li>
+<li>VRRP (used in branch only)，适合小站点</li>
+</ul>
+<ol start="2">
+<li>
+<p>3种冗余模式特征对比表<br>
+<img src="https://eflytop.github.io/post-images/1638259020859.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>架构示意图</p>
+</li>
+</ol>
+<ul>
+<li>HA模式<br>
+HA模式又分为普通模式与增强模式，无论哪种模式都只能为Active和Standby状态。当Active VCE出问题时，Standby会自动接替Active继续工作。<br>
+两台VCE之间使用GE1口用作心跳线，建议部署新的非HA模式的VCE时，不要使用G1口，以便日后方便部署HA模式。<br>
+HA普通模式：<br>
+<img src="https://eflytop.github.io/post-images/1638259383857.png" alt="" loading="lazy"><br>
+HA增强模式：<br>
+<img src="https://eflytop.github.io/post-images/1638259388653.png" alt="" loading="lazy"></li>
+<li>集群模式：<br>
+每个VCE的LAN口和WAN口都需要一个独立的IP，如果VCE直连Internet，每个VCE都需要一个公网地址，MPLS线路建议先接入自行管理的路由器，然后通过路由器与每台VCE建BGP邻居。<br>
+根据官方文档，VCG会根据每台VCE的负载情况（CPU，内存，隧道容量）来调度，优先使用最低利用率的VCE来承担新的流量。<br>
+集群建议部署的VCE的数量为N+1, N为满足隧道数和吞吐量的最小VCE数量。<br>
+<img src="https://eflytop.github.io/post-images/1638259392988.png" alt="" loading="lazy"></li>
+<li>VRRP模式：<br>
+典型的运作模式为，主线路为专线接其它品牌路由器，备用线路为Internet接VCE，当专线断线时，流量自动切换到Internet接入的SD-WAN上。<br>
+<img src="https://eflytop.github.io/post-images/1638259397265.png" alt="" loading="lazy"></li>
+</ul>
+<ol start="4">
+<li>VCO上VCE的冗余状态显示<br>
+<img src="https://eflytop.github.io/post-images/1638259422990.png" alt="" loading="lazy"><br>
+lh-vce和lh-vce2为一个集群，HA列显示为【集群】，集群中的每台VCE单独展示；<br>
+zz-vce为HA普通模式，HA列显示为一个圆点，2台VCE只展示一台；<br>
+vce-b为HA普通模式，HA列显示为一个圆点，2台VCE只展示一台；<br>
+vce-e为VRRP模式，HA列显示为双向箭头加数字。</li>
+</ol>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/vmware-sd-wan-by-velocloud/" class="post-title gt-a-link">
+                    VMware SD-WAN组件简介
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

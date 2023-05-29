@@ -1,0 +1,409 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Cisco Nexus VPC配置向导 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Cisco Nexus VPC配置向导
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-09-08 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/05RirekEW1/" class="post-tags">
+                            # VPC
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>vPC是一种实现跨设备链路聚合的机制，基于LACP进行了扩展，能够实现多台设备间的链路聚合，从而把链路可靠性从单设备级提高到了多设备级。目前，vPC可以在Cisco Nexus 9000、7000、5000和3000系列平台上实施。</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://eflytop.github.io/post-images/1631069069879.png" alt="" loading="lazy"></figure>
+<h4 id="名词">名词</h4>
+<ul>
+<li>VPC - Virtual Port Channel</li>
+<li>VPC Peer - 指的是通过vPC Peer-link链接的两台相邻交换机，其它设备通过Multi-Channel Ethernet (MEC)跟这两台交换机链接。</li>
+<li>VPC Peer-link - 用于同步和转发两台VPC PEER的数据，包括组播，广播，单播等。需要至少10G以上的端口链接。</li>
+<li>VPC Peer Keepalive Link - 提供一个L3通道来再次验证两个VPC PEER是否运作正常。可以检测出VPC Peer自己是否发生故障或者对方已经关闭。它不转发和同步数据，使用UDP 3200端口，默认检测时间为1秒超时5秒。</li>
+<li>VPC domain - 通过domain ID来区分不同domain。</li>
+<li>VPC Member port - 加入VPC Peer-link的端口。</li>
+<li>Cisco Fabric Service (CFS) - 该协议用于有状态的同步和配置，不需要进行额外的配置。</li>
+</ul>
+<h4 id="vpc配置步骤">vPC配置步骤</h4>
+<p>vPC配置通常有9个步骤，应该注意的是，vPC 配置的顺序很重要，基本的 vPC 设置是通过使用前 4 个步骤建立的：<br>
+<img src="https://eflytop.github.io/post-images/1631066548597.png" alt="" loading="lazy"><br>
+步骤 1：开启vPC特性并在两台 Nexus 交换机上配置 vPC domain ID。<br>
+步骤 2：选择一个Peer Keepalive链接部署方式。<br>
+步骤 3：建立vPC Peer Keepalive链接。<br>
+步骤 4：配置vPC Peer-Link，完成全局 vPC 配置。<br>
+步骤 5：将vPC配置到下游交换机或设备。<br>
+步骤 6：（可选）开启peer gateway以优化HSRP。<br>
+步骤 7：（可选）开启peer switch特性来优化vPC的STP。<br>
+步骤 8：（可选）其它优化VPC设定。<br>
+步骤 9：（可选）验证vPC参数。</p>
+<h4 id="cisco-nexus-vpc-配置示例">CISCO NEXUS VPC 配置示例</h4>
+<p>这里我们以两台N5K交换机为例来配置vPC。两台交换机分别命名为N5k-Primary和N5k-Secondary。</p>
+<h5 id="步骤-1开启vpc特性并在两台-nexus-交换机上配置-vpc-domain-id">步骤 1：开启vPC特性并在两台 Nexus 交换机上配置 vPC domain ID。</h5>
+<pre><code>N5k-Primary(config)# feature vpc
+N5k-Primary(config)# vpc domain 1
+N5k-Primary(config-vpc-domain)# show vpc role
+vPC Role status
+----------------------------------------------------
+vPC role                        : none established             
+Dual Active Detection Status    : 0
+vPC system-mac                  : 00:23:04:ee:be:01             
+vPC system-priority             : 32667
+vPC local system-mac            : 8c:60:4f:2c:b3:01            
+vPC local role-priority         : 0  
+</code></pre>
+<pre><code>N5k-Secondary(config)# feature vpc
+N5k-Secondary(config)# vpc domain 1
+N5k-Secondary(config-vpc-domain)# show vpc role
+vPC Role status
+----------------------------------------------------
+vPC role                                    : none established             
+Dual Active Detection Status    : 0
+vPC system-mac                  : 00:23:04:ee:be:01            
+vPC system-priority             : 32667
+vPC local system-mac            : 8c:60:4f:aa:c2:3c            
+vPC local role-priority         : 0  
+</code></pre>
+<p>两台交换机必须使用相同的domain ID，这里把domain ID配置为1。<code>show vpc role</code>命令的显示的系统MAC地址来自vPC的domain ID，它等于01。</p>
+<h5 id="步骤-2选择一个peer-keepalive链接部署方式">步骤 2：选择一个Peer Keepalive链接部署方式。</h5>
+<p>Peer Keepalive有如下部署方式：<br>
+<img src="https://eflytop.github.io/post-images/1631067867353.png" alt="" loading="lazy"><br>
+这里我们采用第二种方式启用SVI进行。先启用一个专用VLAN，然后配置SVI并划分到一个专用VRF里面来区分和隔离其它流量。默认情况下，vPC Peer Keepalive数据包使用管理接口并在VRF management中传输。但是强烈建议为vPC Peer Keepalive链路单独配置一个VRF，以确保Peer Keepalive流量始终在Peer Keepalive链路上传输，而从不在Peer-Link上传输。<br>
+这里我们使用接口Ethernet1/32用作Peer Keepalive的专用接口：</p>
+<pre><code>N5k-Primary(config)# vlan 23
+N5k-Primary(config-vlan)# name keepalive
+N5k-Primary(config)# vrf context keepalive
+
+N5k-Primary(config)#interface Vlan23
+N5k-Primary(config)#  vrf member keepalive
+N5k-Primary(config)#  ip address 192.168.1.1/24
+
+N5k-Primary(config)#interface Ethernet1/32
+ N5k-Primary(config)# switchport access vlan 23
+</code></pre>
+<pre><code>N5k-Secondary (config)# vlan 23
+N5k-Secondary(config-vlan)# name keepalive
+N5k-Secondary(config)# vrf context keepalive
+
+N5k-Secondary (config)# interface Vlan23
+N5k-Secondary (config)#   vrf member keepalive
+N5k-Secondary (config)#  ip address 192.168.1.2/24
+
+N5k-Secondary (config)# interface Ethernet1/32
+N5k-Secondary (config)#  switchport access vlan 23
+</code></pre>
+<p>验证peer keepalive链接：</p>
+<pre><code>N5k-Secondary# ping 192.168.1.1 vrf keepalive
+PING 192.168.1.1 (192.168.1.1): 56 data bytes
+36 bytes from 192.168.1.2: Destination Host Unreachable
+Request 0 timed out
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=254 time=3.91 ms
+</code></pre>
+<p>前几个包丢包是正常现象，因为交换机需要首先发出 ARP 请求以获取192.168.1.1的MAC地址，然后发送 ICMP数据包。</p>
+<h5 id="步骤-3建立vpc-peer-keepalive链接">步骤 3：建立vPC Peer Keepalive链接。</h5>
+<pre><code>N5k-Primary(config)# vpc domain 1
+N5k-Primary (config-vpc-domain)# peer-keepalive destination 192.168.1.2 source 192.168.1.1 vrf keepalive
+</code></pre>
+<pre><code>N5k-Secondary(config)# vpc domain 1
+N5k-Secondary(config-vpc-domain)# peer-keepalive destination 192.168.1.1 source 192.168.1.2 vrf keepalive
+</code></pre>
+<p>在两台交换机上使用<code>show vpc peer-keepalive</code>命令验证：</p>
+<pre><code>N5k-Secondary# show vpc peer-keepalive
+vPC keep-alive status           : peer is alive                
+--Peer is alive for             : (106) seconds, (385) msec
+--Send status                   : Success
+--Last send at                  : 2017.06.22 22:46:32 106 ms
+--Sent on interface             : Vlan23
+--Receive status                : Success
+--Last receive at               : 2017.06.22 22:46:32 5 ms
+--Received on interface         : Vlan23
+--Last update from peer         : (0) seconds, (333) msec
+
+vPC Keep-alive parameters
+--Destination                   : 192.168.1.1
+--Keepalive interval            : 1000 msec
+--Keepalive timeout             : 5 seconds
+--Keepalive hold timeout        : 3 seconds
+--Keepalive vrf                 : keepalive
+--Keepalive udp port            : 3200
+--Keepalive tos                 : 192
+</code></pre>
+<h5 id="步骤-4配置vpc-peer-link完成全局-vpc-配置">步骤 4：配置vPC Peer-Link，完成全局 vPC 配置。</h5>
+<p>开启lacp特性，并建立PortChannel用于vPC Peer-Link。</p>
+<pre><code>N5k-Primary (config)# feature lacp
+N5k-Primary(config)# interface ethernet 1/2-3
+N5k-Primary(config-if-range)# description *** VPC PEER LINKS ***
+N5k-Primary(config-if-range)# channel-group 23 mode active
+N5k-Primary(config)# interface port-channel 23
+N5k-Primary(config-if)# description *** VPC PEER LINKS ***
+N5k-Primary(config-if)# switchport mode trunk
+N5k-Primary(config-if)# switchport trunk allowed vlan 10, x, xx, xxx
+N5k-Primary(config-if)# vpc peer-link
+N5k-Primary(config-if)# spanning-tree port type network 
+</code></pre>
+<p>把PortChannel配置成Trunk，并允许相关Vlan流量。建议排除Peer Keepalive VLAN，如上面配置的Vlan 23，同时不建议在该Trunk上允许non-vPC VLAN，因为这种配置可能会导致当vPC出现问题时non-vPC VLAN的流量中断，如果VPC同行链接失败。</p>
+<pre><code>N5k-Secondary(config)# feature lacp
+N5k-Seondary(config)# interface ethernet 1/2-3
+N5k-Secondary(config-if-range)# description *** VPC PEER LINKS ***
+N5k-Secondary(config-if-range)# channel-group 23 mode active
+N5k-Secondary(config)# interface port-channel 23
+N5k-Secondary(config-if)# description *** VPC PEER LINKS ***
+N5k-Secondary(config-if)# switchport mode trunk
+N5k-Secondary(config-if)# switchport trunk allowed vlan 10, x, xx, xxx
+N5k-Secondary(config-if)# vpc peer-link
+N5k-Secondary(config-if)# spanning-tree port type network
+</code></pre>
+<p>在两台交换机上使用<code>show vpc</code>验证：</p>
+<pre><code>N5k-Secondary# show vpc
+Legend:
+                (*) - local vPC is down, forwarding via vPC peer-link
+vPC domain id                     : 1  
+Peer status                       : peer adjacency formed ok     
+vPC keep-alive status             : peer is alive                
+Configuration consistency status  : success
+Per-vlan consistency status       : success                      
+Type-2 consistency status         : success
+vPC role                          : secondary, operational primary
+Number of vPCs configured         : 0  
+Peer Gateway                      : Disabled
+Dual-active excluded VLANs        : -
+Graceful Consistency Check        : Enabled
+Auto-recovery status              : Enabled (timeout = 240 seconds)
+vPC Peer-link status
+---------------------------------------------------------------------
+id   Port   Status Active vlans   
+--   ----   ------ --------------------------------------------------
+1    Po23   up     10
+</code></pre>
+<h5 id="步骤-5将vpc配置到下游交换机或设备">步骤 5：将vPC配置到下游交换机或设备。</h5>
+<p>上述步骤中已正确建立vPC域，因此现在可以为下游交换机配置vPC。这台下游交换机将分别连接到两台vPC Peer交换机，以增加冗余和带宽可用性。<br>
+<img src="https://eflytop.github.io/post-images/1631073181692.png" alt="" loading="lazy"></p>
+<pre><code>N5k-Primary(config)#interface Ethernet1/1
+N5k-Primary(config)#  description *** Connected to Switch ***
+N5k-Primary(config)#  switchport access vlan 10
+N5k-Primary(config)#  channel-group 10
+
+N5k-Primary(config)#interface port-channel10
+N5k-Primary(config)# switchport access vlan 10
+N5k-Primary(config)#  vpc 10
+</code></pre>
+<pre><code>N5k-Secondary(config)#interface Ethernet1/1
+N5k-Secondary(config)#  description *** Connected to Switch ***
+N5k-Secondary(config)#  switchport access vlan 10
+N5k-Secondary(config)#  channel-group 10
+
+N5k-Secondary(config)#interface port-channel10
+N5k-Secondary(config)# switchport access vlan 10
+N5k-Secondary(config)#  vpc 10
+</code></pre>
+<pre><code>Switch(config)#interface range Ethernet1/1 - 2
+Switch(config)#description *** Connected to vPC Peer ***
+Switch(config)#switchport access vlan 10
+Switch(config)#  channel-group 10
+
+Switch(config)#interface port-channel10
+Switch(config)# switchport access vlan 10
+</code></pre>
+<h5 id="步骤-6可选开启peer-gateway以优化hsrp">步骤 6：（可选）开启peer gateway以优化HSRP。</h5>
+<p>在vPC中使用HSRP没有任何特殊配置，同正常的HSRP操作一样，Active HSRP接口响应ARP请求，区别的是vPC HSRP（active 和 standby）均会转发流量。<br>
+如果发送到3层网关的帧使用MAC burn -in-address（实mac）而不是HSRP MAC（虚mac）地址，那么因PortChannel hash可能会将它转发到错误的vPC peer，而该错误的vPC peer将会通过vPC peer link将帧发给另一个vPC peer。这样因为 vPC duplicate prevention rule，帧将不会再给vPC成员端口。解决以上问题的配置命令：peer-gateway。该命令允许vPC peers 交换各自的BIA MAC地址的信息，这样它们就可以在本地直接转发流量，而不必通过vPC peer link转发流量。</p>
+<pre><code>N5k-Primary(config)# vpc domain 1
+N5k-Primary(config-vpc-domain)# peer-gateway
+</code></pre>
+<pre><code>N5k-Secondary(config)# vpc domain 1
+N5k-Secondary(config-vpc-domain)# peer-gateway
+</code></pre>
+<h5 id="步骤-7可选开启peer-switch特性来优化vpc的stp">步骤 7：（可选）开启peer switch特性来优化vPC的STP。</h5>
+<p>通常情况下，我们需要将Primary Switch配置成root primary，将Secondary Switch配置成此root secondary。开启peer switch特性后可以使两台vPC交换机运行为单个生成树根。加快了vPC交换机出现故障时STP的收敛速度。</p>
+<pre><code>N5k-Primary(config)# vpc domain 1
+N5k-Primary(config-vpc-domain)# peer-switch
+</code></pre>
+<pre><code>N5k-Secondary(config)# vpc domain 1
+N5k-Secondary(config-vpc-domain)# peer-switch
+</code></pre>
+<h5 id="步骤-8可选其它优化vpc设定">步骤 8：（可选）其它优化VPC设定。</h5>
+<pre><code>N5k-Primary(config)# vpc domain 1
+N5k-Primary(config-vpc-domain)# delay restore 360
+N5k-Primary(config-vpc-domain)# auto-recovery
+Warning: Enables restoring of vPCs in a peer-detached state after reload, will wait for 240 seconds to determine if peer is un-reachable
+N5k-Primary(config-vpc-domain)# graceful consistency-check
+N5k-Primary(config-vpc-domain)# ip arp synchronize
+</code></pre>
+<pre><code>N5k-Secondary(config)# vpc domain 1
+N5k-Secondary(config-vpc-domain)# delay restore 360
+N5k-Secondary(config-vpc-domain)# auto-recovery
+Warning: Enables restoring of vPCs in a peer-detached state after reload, will wait for 240 seconds to determine if peer is un-reachable
+N5k-Secondary(config-vpc-domain)# graceful consistency-check
+N5k-Secondary(config-vpc-domain)# ip arp synchronize
+</code></pre>
+<h5 id="步骤-9可选验证vpc参数">步骤 9：（可选）验证vPC参数。</h5>
+<pre><code>N5k-Primary# show vpc brief
+N5k-Primary# show vpc consistency-parameters global
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/vss-cfg-guildline/" class="post-title gt-a-link">
+                    Cisco VSS简易配置向导
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

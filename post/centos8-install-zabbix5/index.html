@@ -1,0 +1,350 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>如何在CentOS 8上安装Zabbix 5.0或5.4 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    如何在CentOS 8上安装Zabbix 5.0或5.4
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-09-11 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/gGrHw33uD5/" class="post-tags">
+                            # Centos
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/kIY7YR2YB6/" class="post-tags">
+                            # Zabbix
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>Zabbix是100%免费开源的企业级监控软件，旨在监控IT基础设施组件和服务的可用性和性能。Zabbix可安装在任何Linux发行版上，本教程将展示在CentOS 8上如何安装Zabbix 5.0 LTS和Zabbix 5.4版本。</p>
+<!-- more -->
+<p>Zabbix 5.0 LTS 版本官方支持至 2025年5月，Zabbix 5.4 标准版官方支持至 2021年12月。</p>
+<hr>
+<p>首先我们安装和配置 Zabbix 服务器，然后是数据库，最后是WEB前端frontend。<br>
+<img src="https://eflytop.github.io/post-images/1631325351617.jpg" alt="" loading="lazy"></p>
+<h4 id="step-1-设置selinux">STEP 1. 设置Selinux</h4>
+<p>将Selinux设置为permissive模式</p>
+<pre><code>setenforce 0 &amp;&amp; sed -i 's/^SELINUX=.*/SELINUX=permissive/g' /etc/selinux/config
+</code></pre>
+<h4 id="step-2-安装zabbix-server-zabbix-web和zabbix-agent">STEP 2. 安装zabbix-server, zabbix-web和zabbix-agent</h4>
+<p>Zabbix 5.0：</p>
+<pre><code>rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/8/x86_64/zabbix-release-5.0-1.el8.noarch.rpm
+dnf clean all
+dnf -y install zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-agent
+</code></pre>
+<p>Zabbix 5.4：</p>
+<pre><code>rpm -Uvh https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/zabbix-release-5.4-1.el8.noarch.rpm
+dnf clean all
+dnf -y install zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+</code></pre>
+<p>可以看出5.4多了zabbix-sql-scripts这个组件。</p>
+<h4 id="step-3-安装和配置mariadb数据库">STEP 3. 安装和配置MariaDB数据库</h4>
+<h5 id="安装mariadb和启用mariadb服务">安装MariaDB和启用MariaDB服务</h5>
+<pre><code>dnf -y install mariadb-server &amp;&amp; systemctl start mariadb &amp;&amp; systemctl enable mariadb
+</code></pre>
+<ul>
+<li>配置MariaDB</li>
+</ul>
+<p>输入如下命令初始化配置：</p>
+<pre><code>mysql_secure_installation
+</code></pre>
+<p>配置步骤和参数供参考：</p>
+<pre><code>Enter current password for root (enter for none): 敲回车
+Set root password? [Y/n]: Y
+New password: &lt;Enter root DB password&gt;
+Re-enter new password: &lt;Repeat root DB password&gt;
+Remove anonymous users? [Y/n]: Y
+Disallow root login remotely? [Y/n]: Y
+Remove test database and access to it? [Y/n]: Y
+Reload privilege tables now? [Y/n]: Y
+</code></pre>
+<p>这里为root用户创建了一个MariaDB密码。</p>
+<h5 id="创建数据库">创建数据库</h5>
+<pre><code>mysql -uroot -p
+Enter password:
+MariaDB [(none)]&gt; create database zabbix character set utf8 collate utf8_bin;
+MariaDB [(none)]&gt; create user zabbix@localhost identified by 'your zabbix DB password';
+MariaDB [(none)]&gt; grant all privileges on zabbix.* to zabbix@localhost;
+MariaDB [(none)]&gt; quit;
+</code></pre>
+<p>这里创建了一个名为zabbix的数据库，然后创建了一个名为zabbix的用户，把'your zabbix DB password'中''里面的内容替换为你自己的密码。</p>
+<h5 id="导入初始架构和数据">导入初始架构和数据</h5>
+<p>Zabbix 5.0：</p>
+<pre><code>zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p zabbix
+Enter password:
+</code></pre>
+<p>Zabbix 5.4：</p>
+<pre><code>zcat /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz | mysql -uzabbix -p zabbix
+Enter password:
+</code></pre>
+<p>如果出现报错<code>ERROR 1118 (42000) at line 1284: Row size too large (&gt; 8126)</code>，可以通过如下命令临时关闭strict mode：</p>
+<pre><code>mysql -uroot -p
+Enter password:
+MariaDB [(none)]&gt;set global innodb_strict_mode='OFF';
+MariaDB [(none)]&gt; quit;
+</code></pre>
+<p>然后再执行上面的数据导入步骤，数据导入完毕后再开启strict mode：</p>
+<pre><code>mysql -uroot -p
+Enter password:
+MariaDB [(none)]&gt;set global innodb_strict_mode='ON';
+MariaDB [(none)]&gt; quit;
+</code></pre>
+<h5 id="修改zabbix_serverconf配置文件">修改zabbix_server.conf配置文件</h5>
+<p>编辑配置文件<code> /etc/zabbix/zabbix_server.conf</code>：</p>
+<pre><code>vi  /etc/zabbix/zabbix_server.conf
+</code></pre>
+<p>把Zabbix数据库密码修改为上面设定的密码：</p>
+<pre><code>DBPassword= your zabbix DB password
+</code></pre>
+<p>假如你设定的数据库名和用户名不是为zabbix，对应的也是在这个文件中把数据库名和用户名修改为你设定的名字。</p>
+<h4 id="step-4-配置防火墙">STEP 4. 配置防火墙</h4>
+<pre><code>firewall-cmd --add-service={http,https} --permanent
+firewall-cmd --add-port={10051/tcp,10050/tcp} --permanent
+firewall-cmd --reload
+</code></pre>
+<h4 id="step-5-配置zabbix前端frontend">STEP 5. 配置Zabbix前端frontend</h4>
+<h5 id="配置php中的时区参数">配置PHP中的时区参数</h5>
+<p>编辑<code>/etc/php-fpm.d/zabbix.conf</code>文件：</p>
+<pre><code>vi /etc/php-fpm.d/zabbix.conf
+</code></pre>
+<p>删除<code>php_value date.timezone Europe/Riga</code>前面的; 号（取消注释），然后修改为正确的时区：</p>
+<pre><code>php_value[date.timezone] = Asia/Shanghai
+</code></pre>
+<p>点击<a href="https://www.php.net/manual/zh/timezones.php">时区列表</a>查看各个时区。</p>
+<h5 id="重启zabbix-server-zabbix-agent-http和php服务进程">重启zabbix-server, zabbix-agent, http和php服务进程</h5>
+<pre><code>systemctl restart zabbix-server zabbix-agent httpd php-fpm &amp;&amp; systemctl enable zabbix-server zabbix-agent httpd php-fpm
+</code></pre>
+<h5 id="配置web前端">配置Web前端</h5>
+<p>用浏览器打开网址http://server_ip_or_name/zabbix，根据提示一步一步往下进行配置，在DB配置页面输入正确的数据库密码：<br>
+<img src="https://eflytop.github.io/post-images/1631330745446.png" alt="" loading="lazy"></p>
+<p>最后输入默认的用户名密码Admin/zabbix登录。</p>
+<p>至此，你已经在CentOS 8上成功安装了Zabbix 5，现在您可以监控任何东西了。下面是一些优化设定，请根据实际情况设定。</p>
+<h4 id="step-6-可选优化zabbix服务器参数">STEP 6. （可选）优化Zabbix服务器参数</h4>
+<p>如果你监控的设备不多，就没必要进行此步骤，但如果计划监控大量设备，请执行此步骤。<br>
+编辑配置文件<code> /etc/zabbix/zabbix_server.conf</code>：</p>
+<pre><code>vi  /etc/zabbix/zabbix_server.conf
+</code></pre>
+<p>在任何位置加入如下参数：</p>
+<pre><code>StartPollers=100
+StartPollersUnreachable=50
+StartPingers=50
+StartTrappers=10
+StartDiscoverers=15
+StartPreprocessors=15
+StartHTTPPollers=5
+StartAlerters=5
+StartTimers=2
+StartEscalators=2
+CacheSize=128M
+HistoryCacheSize=64M
+HistoryIndexCacheSize=32M
+TrendCacheSize=32M
+ValueCacheSize=256M
+</code></pre>
+<p>请根据实际情况进一步优化，假设您不使用 ICMP 检查，则将<code>StartPingers</code>参数设置为1，或者如果您不使用活动代理，则将<code>StartTrappers</code>设置为1。您可以在<a href="https://www.zabbix.com/documentation/4.0/manual/appendix/config/zabbix_proxy">官方文档</a>中找到有关Zabbix配置文件中支持的参数的更多信息 。</p>
+<h4 id="step-7-可选优化mysqlmariadb数据库">STEP 7. （可选）优化MySQL/MariaDB数据库</h4>
+<h5 id="创建自定义mysql配置文件">创建自定义MySQL配置文件</h5>
+<p>通过命令<code>vi /etc/my.cnf.d/zabbix_db.cnf</code>创建zabbix_db.cnf数据库配置文件：</p>
+<pre><code>vi /etc/my.cnf.d/zabbix_db.cnf
+</code></pre>
+<p>然后粘贴如下配置：</p>
+<pre><code>[mysqld]
+max_connections = 404
+innodb_buffer_pool_size = 800M
+
+innodb-log-file-size = 128M
+innodb-log-buffer-size = 128M
+innodb-file-per-table = 1
+innodb_buffer_pool_instances = 8
+innodb_old_blocks_time = 1000
+innodb_stats_on_metadata = off
+innodb-flush-method = O_DIRECT
+innodb-log-files-in-group = 2
+innodb-flush-log-at-trx-commit = 2
+
+tmp-table-size = 96M
+max-heap-table-size = 96M
+open_files_limit = 65535
+max_connect_errors = 1000000
+connect_timeout = 60
+wait_timeout = 28800
+</code></pre>
+<p>赋予权限：</p>
+<pre><code>chown mysql:mysql /etc/my.cnf.d/zabbix_db.cnf
+chmod 644 /etc/my.cnf.d/zabbix_db.cnf
+</code></pre>
+<p>这样设定后可以避免一些报错，比如参数<code>max_connections = 404</code>可以解决这个报错：<code>“[Z3001] connection to database 'zabbix' failed: [1040] Too many connections”</code>。值得注意的是<code>max_connections</code>参数必须大于所有Zabbix代理进程总数+150，我们可以使用如下命令计算出来：</p>
+<pre><code>egrep &quot;^Start.+=[0-9]&quot; /etc/zabbix/zabbix_server.conf | awk -F &quot;=&quot; '{s+=$2} END {print s+150}'
+</code></pre>
+<p>还有一个比较重要的参数是<code>innodb_buffer_pool_size</code>，这个参数决定了MySQL可以获得多少内存来缓存 InnoDB表和索引数据。如果服务器只运行了数据库，我们建议将这个值设定为系统内存的70%；这里我们同时运行了数据库、Zabbix-Server及WEB服务，我们建议将这个值设定为系统内存的40%，假如系统内存为2G，那么这个值为800MB。</p>
+<h5 id="重启进程">重启进程</h5>
+<pre><code>systemctl restart zabbix-server 
+systemctl restart mariadb
+</code></pre>
+<h4 id="step-8-可选在history和events表上创建mysql分区">STEP 8. （可选）在History和Events表上创建MySQL分区</h4>
+<p>Zabbix的housekeeping进程负责删除旧的trend和history数据，这个动作会对数据库性能产生负面影响，有时会产生这个烦人的警报：<code>Zabbix housekeeper processes more than 75% busy</code>。<br>
+使用数据库分区可以轻松解决该问题。分区每小时或每天创建表，并在不再需要时删除它们。SQL DROP 比 DELETE 语句更有效。<br>
+MySQL分区教程请详见本网站<code>为Zabbix在History和Events表上创建MySQL分区</code>博文教程。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/VPC-CONFIGURATION-GUIDE/" class="post-title gt-a-link">
+                    Cisco Nexus VPC配置向导
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Elastic Stack收集NetFlow或sFlow数据 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Elastic Stack收集NetFlow或sFlow数据
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-07-31 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/gGrHw33uD5/" class="post-tags">
+                            # Centos
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/97-JuQ4zo8/" class="post-tags">
+                            # ELK
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/uQqelgFFIi/" class="post-tags">
+                            # Netflow
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>NetFlow是一种数据交换方式。Netflow提供网络流量的会话级视图，记录下每个TCP/IP事务的信息。当汇集起来时，它更加易于管理和易读。Netflow由Cisco创造。<br>
+同NetFlow一样，sFlow是一种向采集器发送报告的推送技术。所不同的是，NetFlow是一种基于软件的技术，而sFlow则采用内置在硬件中的专用芯片。这种做法消除了路由器或交换机的CPU和内存的负担。</p>
+<!-- more -->
+<table>
+<thead>
+<tr>
+<th>Flow名称</th>
+<th>代表厂商</th>
+<th>主要版本</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NetFlow</td>
+<td>Cisco</td>
+<td>V1、V5、V7、V8、V9</td>
+<td>应用最广</td>
+</tr>
+<tr>
+<td>sFlow</td>
+<td>Foundry、HP、Alcatel、NEC、Extreme等</td>
+<td>V4、V5</td>
+<td>实时性较强，具备突出的第二~七层信息描述能力</td>
+</tr>
+<tr>
+<td>NetStream</td>
+<td>华为</td>
+<td>V5、V8、V9</td>
+<td>与NetFlow较为类似</td>
+</tr>
+<tr>
+<td>IPFIX</td>
+<td>IETF标准规范</td>
+<td>RFC 3917</td>
+<td>以NetFlow V9为蓝本</td>
+</tr>
+<tr>
+<td>CFlowd</td>
+<td>Juniper</td>
+<td>V5、V8</td>
+<td>厂商跟进力度不高</td>
+</tr>
+</tbody>
+</table>
+<p>本文使用ELK协议栈中Filebeat内置的netflow.yml模块，以思科路由器为例，把flow输出到Elasticsearch，并在Kibana中查阅。</p>
+<h5 id="安装filebeat">安装Filebeat</h5>
+<pre><code>[root@cncs ~]# yum install filebeat -y
+</code></pre>
+<h5 id="配置开机自启动和开启服务">配置开机自启动和开启服务</h5>
+<pre><code>[root@cncs ~]# systemctl enable filebeat
+[root@cncs ~]# systemctl start filebeat
+</code></pre>
+<h5 id="修改filebeat总体配置">修改Filebeat总体配置</h5>
+<p>指定Elasticsearch和Kibana参数</p>
+<pre><code>[root@cncs ~]# vim /etc/filebeat/filebeat.yml
+setup.kibana:
+  host: &quot;10.18.224.112:5601&quot;
+output.elasticsearch:
+  hosts: [&quot;10.18.224.112:9200&quot;]
+  # 自定义索引
+  indices:
+    - index: &quot;filebeat-netflow_%{+yyyy.MM.dd}&quot;
+      when.equals:
+        event.module: &quot;netflow&quot;
+</code></pre>
+<h5 id="启用netflow模块">启用netflow模块</h5>
+<pre><code>[root@cncs ~]# filebeat modules enable netflow
+Enabled netflow
+[root@cncs ~]# filebeat modules list
+Enabled:
+netflow
+
+Disabled:
+activemq
+......
+</code></pre>
+<h5 id="修改netlfow模块的配置">修改netlfow模块的配置</h5>
+<p>netflow模块配置文件netflow.yml位于/etc/Filebeat/modules.d/目录下</p>
+<pre><code>[root@cncs ~]# vim /etc/filebeat/modules.d/netflow.yml
+- module: netflow
+  log:
+    enabled: true
+    var:
+      netflow_host: 0.0.0.0
+      netflow_port: 9996
+</code></pre>
+<p>指定思科netflow输出端口udp/9996</p>
+<h5 id="可以用test命令测试配置有没有问题">可以用test命令测试配置有没有问题</h5>
+<pre><code>[root@cncs ~]# filebeat test config
+Config OK
+</code></pre>
+<h5 id="防火墙开放">防火墙开放</h5>
+<pre><code>[root@cncs ~]# firewall-cmd --permanent --add-port=9996/udp
+[root@cncs ~]# firewall-cmd --reload
+[root@cncs ~]# firewall-cmd --list-all
+</code></pre>
+<h5 id="使用setup命令加载kibana-dashboards">使用setup命令加载Kibana dashboards</h5>
+<pre><code>[root@cncs ~]# filebeat setup
+Overwriting ILM policy is disabled. Set `setup.ilm.overwrite: true` for enabling.
+
+Index setup finished.
+Loading dashboards (Kibana must be running and reachable)
+Loaded dashboards
+Setting up ML using setup --machine-learning is going to be removed in 8.0.0. Please use the ML app instead.
+See more: https://www.elastic.co/guide/en/machine-learning/current/index.html
+Loaded machine learning job configurations
+Loaded Ingest pipelines
+[root@cncs ~]#  service filebeat restart
+Restarting filebeat (via systemctl):                       [  OK  ]
+</code></pre>
+<h5 id="kibana网页端初步设置">Kibana网页端初步设置</h5>
+<p><img src="https://eflytop.github.io/post-images/1627730418168.png" alt="" loading="lazy"><br>
+<img src="https://eflytop.github.io/post-images/1627730424640.png" alt="" loading="lazy"><br>
+<img src="https://eflytop.github.io/post-images/1627731425111.png" alt="" loading="lazy"></p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/elk-cisco-log/" class="post-title gt-a-link">
+                    Elastic Stack收集思科设备log日志
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

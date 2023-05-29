@@ -1,0 +1,427 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Cisco VSS简易配置向导 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Cisco VSS简易配置向导
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-09-07 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/_ZWh19O1VY/" class="post-tags">
+                            # VSS
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>VSS是思科的一种交换机集群技术，可将两台物理交换机虚拟成一台逻辑交换机。两台物理交换机通过VSL链路连接，用于承载控制平面和转发平面流量。本文以两台Catalyst 4500为例，展示如何配置VSS。</p>
+<!-- more -->
+<p><img src="https://eflytop.github.io/post-images/1631004932961.png" alt="" loading="lazy"><br>
+名词：<br>
+VSS - Virtual Switching System<br>
+VSL - Virtual Switch Link</p>
+<p>配置步骤：</p>
+<h5 id="1-配置virtual-switch-domain和switch-numbers">1. 配置Virtual Switch Domain和Switch Numbers</h5>
+<p>首先，您须在 VSS 的两台交换机上配置相同的Virtual Switch Domain。Virtual Switch Domain是1到255之间的数字。然后您须将一台交换机配置为Switch Number 1，另一台交换机配置为Switch Number 2。</p>
+<pre><code>SW1#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+SW1(config)#switch virtual domain 10
+Domain ID 10 config will take effect only
+after the exec command 'switch convert mode virtual' is issued
+SW1(config-vs-domain)#switch 1
+SW1(config-vs-domain)#exit
+SW1(config)#
+</code></pre>
+<pre><code>SW2#conf t
+Enter configuration commands, one per line. End with CNTL/Z.
+SW2(config)#switch virtual domain 10
+Domain ID 10 config will take effect only
+after the exec command 'switch convert mode virtual' is issued
+SW2(config-vs-domain)#switch 2
+SW2(config-vs-domain)#exit
+SW2(config)#
+</code></pre>
+<h5 id="2-配置vsl-portchannel">2. 配置VSL PortChannel</h5>
+<p>您需要在每台交换机上使用PortChannel配置 VSL。PortChannel号需要不一样，否则VSS不能正常建立将进入 RPR 模式。为避免这种情况，请为两个交换机上的两个PortChannel分配不同编号。</p>
+<pre><code>SW1(config)#int port-channel 5
+SW1(config-if)#switchport
+SW1(config-if)#switch virtual link 1
+SW1(config-if)#no shut
+SW1(config-if)#exit
+*Jan 24 05:19:57.092: %SPANTREE-6-PORTDEL_ALL_VLANS: Port-channel5 deleted from all Vlans
+</code></pre>
+<pre><code>SW2(config)#int port-channel 10
+SW2(config-if)#switchport
+SW2(config-if)#switch virtual link 2
+SW2(config-if)#no shut
+SW2(config-if)#exit
+SW2(config)#
+*Jan 24 05:14:17.273: %SPANTREE-6-PORTDEL_ALL_VLANS: Port-channel10 deleted from all Vlans
+</code></pre>
+<h5 id="3-配置vsl端口">3. 配置VSL端口</h5>
+<p>将 VSL 物理端口添加到PortChannel。在以下示例中，Switch 1上的Gi7/3和Gi7/4接口连接到Switch 2上的Gi4/45和Gi4/46接口。</p>
+<pre><code>SW1(config)#int range gig7/3 - 4
+SW1(config-if-range)#switchport mode trunk
+SW1(config-if-range)#channel-group 5 mode on
+WARNING: Interface GigabitEthernet7/3 placed in restricted config mode. All extraneous configs removed!
+WARNING: Interface GigabitEthernet7/4 placed in restricted config mode. All extraneous configs removed!
+SW1(config-if-range)#exit
+</code></pre>
+<pre><code>SW2(config)#int range gig4/45 - 46
+SW2(config-if-range)#switchport mode trunk
+SW2(config-if-range)#channel-group 10 mode on
+WARNING: Interface GigabitEthernet4/45 placed in restricted config mode. All extraneous configs removed!
+WARNING: Interface GigabitEthernet4/46 placed in restricted config mode. All extraneous configs removed!
+SW2(config-if-range)#exit
+</code></pre>
+<p>注意：一旦使用“channel-group”命令将接口放入VSL端口通道，则接口进入“notconnect”状态。Interface status显示为UP，但line protocol将down。接口将处于up/down状态，直到交换机在步骤 4 中重新启动。</p>
+<h5 id="4-切换交换机至virtual-switch模式">4. 切换交换机至Virtual Switch模式</h5>
+<p>在switch 1上输入<code>switch convert mode virtual</code>命令将交换机转换为 Virtual Switch模式。系统创建一个转换后的配置文件，并将配置文件保存到bootflash，并自动重启。</p>
+<pre><code>SW1#switch convert mode virtual 
+
+This command will convert all interface names
+to naming convention &quot;interface-type switch-number/slot/port&quot;,
+save the running config to startup-config and
+reload the switch.
+Do you want to proceed? [yes/no]: yes
+Converting interface names
+Building configuration...
+Compressed configuration from 6551 bytes to 2893 bytes[OK]
+Saving converted configuration to bootflash: ...
+Destination filename [startup-config.converted_vs-20130124-062921]?
+Please stand by while rebooting the system...
+Restarting system. 
+
+Rommon (G) Signature verification PASSED  
+Rommon (P) Signature verification PASSED  
+FPGA   (P) Signature verification PASSED
+</code></pre>
+<p>同样的操作命令将switch 2转换为Virtual Switch模式：</p>
+<pre><code>SW2#switch convert mode virtual​ 
+
+This command will convert all interface names
+to naming convention &quot;interface-type switch-number/slot/port&quot;,
+save the running config to startup-config and
+reload the switch.
+Do you want to proceed? [yes/no]: yes
+Converting interface names
+Building configuration...
+Compressed configuration from 6027 bytes to 2774 bytes[OK]
+Saving converted configuration to bootflash: ...
+Destination filename [startup-config.converted_vs-20130124-052526]?
+Please stand by while rebooting the system...
+Restarting system. 
+
+Rommon (G) Signature verification PASSED  
+Rommon (P) Signature verification PASSED  
+FPGA   (P) Signature verification PASSED 
+</code></pre>
+<p>重启完毕后交换机将处于Virtual Switch模式，可以通过如下命令验证。</p>
+<ul>
+<li><code>show switch virtual</code> 查询virtual switch domain number和switch number及角色（Active or Standby）。</li>
+</ul>
+<pre><code>SW1#sh switch virtual 
+
+Executing the command on VSS member switch role = VSS Active, id = 1 
+
+Switch mode                  : Virtual Switch
+Virtual switch domain number : 10
+Local switch number          : 1
+Local switch operational role: Virtual Switch Active
+Peer switch number           : 2
+Peer switch operational role : Virtual Switch Standby 
+
+Executing the command on VSS member switch role = VSS Standby, id = 2  
+
+Switch mode                  : Virtual Switch
+Virtual switch domain number : 10
+Local switch number          : 2
+Local switch operational role: Virtual Switch Standby
+Peer switch number           : 1
+Peer switch operational role : Virtual Switch Active
+</code></pre>
+<ul>
+<li>Standby Switch用console登录后无法查看和修改配置，仅能看到如下提示：</li>
+</ul>
+<pre><code>SW2-standby&gt; 
+Standby console disabled
+</code></pre>
+<ul>
+<li><code>show switch virtual role'</code>查看交换机详细角色信息：</li>
+</ul>
+<pre><code>SW1#sh switch virtual role 
+
+Executing the command on VSS member switch role = VSS Active, id = 1 
+
+RRP information for Instance 1 
+
+--------------------------------------------------------------------
+Valid Flags   Peer     Preferred Reserved
+               Count     Peer       Peer  
+
+--------------------------------------------------------------------
+TRUE   V       1           1         1  
+
+Switch Switch Status Preempt       Priority Role     Local   Remote
+       Number         Oper(Conf)   Oper(Conf)         SID     SID
+--------------------------------------------------------------------
+LOCAL   1     UP     FALSE(N )     100(100) ACTIVE   0       0
+REMOTE  2     UP     FALSE(N )     100(100) STANDBY 6834   6152  
+
+Peer 0 represents the local switch  
+
+Flags : V - Valid
+In dual-active recovery mode: No  
+
+Executing the command on VSS member switch role = VSS Standby, id = 2 
+
+RRP information for Instance 2  
+
+--------------------------------------------------------------------
+Valid Flags   Peer     Preferred Reserved
+               Count     Peer       Peer  
+
+--------------------------------------------------------------------
+TRUE    V       1           1         1  
+
+Switch Switch Status Preempt       Priority Role     Local   Remote
+       Number         Oper(Conf)   Oper(Conf)         SID     SID
+--------------------------------------------------------------------
+LOCAL   2     UP     FALSE(N )     100(100) STANDBY  0       0
+REMOTE  1     UP     FALSE(N )     100(100) ACTIVE   6152   6834 
+
+Peer 0 represents the local switch
+
+Flags : V - Valid
+In dual-active recovery mode: No
+</code></pre>
+<ul>
+<li><code>show switch virtual link</code>查看VSL链路状态：</li>
+</ul>
+<pre><code>SW1#sh switch virtual link  
+
+Executing the command on VSS member switch role = VSS Active, id = 1 
+
+VSL Status : UP
+VSL Uptime : 3 minutes
+VSL Control Link : Gi1/7/4  
+
+Executing the command on VSS member switch role = VSS Standby, id = 2 
+
+VSL Status : UP
+VSL Uptime : 3 minutes
+VSL Control Link : Gi2/4/45
+</code></pre>
+<ul>
+<li><code>show switch virtual link port-channel</code>查看PortChannel信息：</li>
+</ul>
+<pre><code>SW1#sh switch virtual link port-channel 
+
+Executing the command on VSS member switch role = VSS Active, id = 1 
+
+Flags: D - down       P - bundled in port-channel
+       I - stand-alone s - suspended
+       H - Hot-standby (LACP only)
+       R - Layer3     S - Layer2
+       U - in use     N - not in use, no aggregation
+       f - failed to allocate aggregator         
+
+       M - not in use, no aggregation due to minimum links not met
+       m - not in use, port not aggregated due to minimum links not met
+       u - unsuitable for bundling
+       d - default port  
+       
+       w - waiting to be aggregated  
+
+Group Port-channel Protocol   Ports
+------+-------------+-----------+-------------------
+5     Po5(SU)          -       Gi1/7/3(P) Gi1/7/4(P)
+10    Po10(SU)         -       Gi2/4/45(P) Gi2/4/46(P)  
+
+Executing the command on VSS member switch role = VSS Standby, id = 2  
+
+Flags: D - down       P - bundled in port-channel
+       I - stand-alone s - suspended
+       H - Hot-standby (LACP only)
+       R - Layer3     S - Layer2
+       U - in use     N - not in use, no aggregation
+       f - failed to allocate aggregator         
+       
+       M - not in use, no aggregation due to minimum links not met
+       m - not in use, port not aggregated due to minimum links not met
+       u - unsuitable for bundling
+       d - default port  
+       
+       w - waiting to be aggregated 
+
+Group Port-channel Protocol   Ports
+------+-------------+-----------+-------------------
+5     Po5(SU)          -       Gi1/7/3(P) Gi1/7/4(P)
+10    Po10(SU)         -       Gi2/4/45(P) Gi2/4/46(P) 
+</code></pre>
+<p>VSS正常运作后，交换机端口号由原来的Gi x/x自动转换成了Gi 1/x/x或Gi 2/x/x。1和2为两台硬件交换机编号，从逻辑上你可以把这两台交换机当作一台交换机了。你可以分别在这两台交换机上选一个端口比如Gi1/0/8和Gi2/0/8与其它交换机建立PortChannel。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/vss-vs-vpc/" class="post-title gt-a-link">
+                    Cisco VSS vs VPC
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

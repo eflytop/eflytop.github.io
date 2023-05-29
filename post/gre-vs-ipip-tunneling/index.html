@@ -1,0 +1,246 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>GRE vs IPIP Tunneling | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    GRE vs IPIP Tunneling
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2020-09-07 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/QcgFxsNOu_F/" class="post-tags">
+                            # VPN
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>Generic Routing Encapsulation (GRE) 和IP-in-IP (IPIP) 是两个相似的隧道机制，但经常混淆。在本文中，我们将介绍它们的运作机制、区别以及何时使用它们。</p>
+<!-- more -->
+<h4 id="ipip">IPIP</h4>
+<p>IP-in-IP 听起来就像:一个IP包封装在另一个IP包中。外层报头的协议字段为IPv4为4，IPv6为41。<br>
+<img src="https://eflytop.github.io/post-images/1625536940559.webp" alt="" loading="lazy"><br>
+IPv4与IPv6封装的所有组合在技术上都是可行的，但是有些厂商可能不支持所有组合。. 在Cisco IOS上有三种IPIP封装方法:IPv4/IPv4、IPv6/IPv6和IPv6/IPv4。</p>
+<pre><code>Router(config)# interface tun0
+Router(config-if)# tunnel mode ?
+  aurp    AURP TunnelTalk AppleTalk encapsulation
+  cayman  Cayman TunnelTalk AppleTalk encapsulation
+  dvmrp   DVMRP multicast tunnel
+  eon     EON compatible CLNS tunnel
+  gre     generic route encapsulation protocol
+  ipip    IP over IP encapsulation
+  ipsec   IPSec tunnel encapsulation
+  iptalk  Apple IPTalk encapsulation
+  ipv6    Generic packet tunneling in IPv6
+  ipv6ip  IPv6 over IP encapsulation
+  mpls    MPLS encapsulations
+  nos     IP over IP encapsulation (KA9Q/NOS compatible)
+  rbscp   RBSCP in IP tunnel
+</code></pre>
+<h4 id="gre">GRE</h4>
+<p>GRE (defined in RFC 2784 and updated by RFC 2890) 比IPIP更进一步，在内部和外部IP报头之间添加了自己的附加报头。<br>
+<img src="https://eflytop.github.io/post-images/1625536995869.webp" alt="" loading="lazy"><br>
+GRE报头的长度是可变的，从4字节到16字节不等，这取决于启用了哪些可选特性。<br>
+<img src="https://eflytop.github.io/post-images/1625537007528.webp" alt="" loading="lazy"></p>
+<ul>
+<li>C, K, and S: Bit flags which are set to one if the checksum, key, and  sequence number fields are present, respectively</li>
+<li>Ver: GRE version number (zero)</li>
+<li>Protocol: Ethertype of the encapsulated protocol</li>
+<li>Checksum: Packet checksum (optional)</li>
+<li>Key: Tunnel key (optional)</li>
+<li>Sequence Number: GRE sequence number (optional)</li>
+</ul>
+<p>GRE理论上可以使用有效的以太类型封装任何第三层协议， 而IPIP只能封装IP。</p>
+<p>GRE在Cisco IOS上 可以 被IPv4或IPv6封装。(The multipoint option is used for DMVPN)</p>
+<pre><code>Router(config)# interface tun0
+Router(config-if)# tunnel mode gre ?
+  ip          over IP
+  ipv6        over IPv6
+  multipoint  over IP (multipoint)
+</code></pre>
+<p>默认情况下，只包含一个最小的4字节头。其他GRE选项可以独立地打开或关闭:</p>
+<pre><code>Router(config-if)# tunnel ?
+  bandwidth           Set tunnel bandwidth informational parameter
+  checksum            enable end to end checksumming of packets
+  destination         destination of tunnel
+  flow                flow options
+  key                 security or selector key
+  mode                tunnel encapsulation method
+  mpls                MPLS tunnel commands
+  path-mtu-discovery  Enable Path MTU Discovery on tunnel
+  protection          Enable tunnel protection
+  rbscp               Set tunnel RBSCP parameters
+  route-via           Select subset of routes for tunnel transport
+  sequence-datagrams  drop datagrams arriving out of order
+  source              source of tunnel packets
+  tos                 set type of service byte
+  ttl                 set time to live
+  udlr                associate tunnel with unidirectional interface
+  vrf                 set tunnel vrf membership
+</code></pre>
+<p>总而言之，GRE可以：</p>
+<p>• 封装任何第三层协议(而不只是IP)<br>
+• 添加一个额外的校验(这对TCP/IPv4没什么用)<br>
+• 指定一个隧道key<br>
+• 执行数据包排序（ Enforce packet sequencing ）</p>
+<p>当然，这些特性是以额外的开销为代价的;如果不需要GRE的额外功能，IPIP也可以。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/hello-gridea/" class="post-title gt-a-link">
+                    Hello Gridea
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

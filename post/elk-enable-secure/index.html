@@ -1,0 +1,272 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Elastic Stack之安全认证 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Elastic Stack之安全认证
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-08-03 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/gGrHw33uD5/" class="post-tags">
+                            # Centos
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/97-JuQ4zo8/" class="post-tags">
+                            # ELK
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>安装完Elastic Stack打开Kibana网页端没有账号认证就能直接访问。之前的做法是使用Apache的密码认证进行安全配置，然后通过访问Nginx转发kibana服务器地址。从 7.1.0 版本开始， Elastic Stack安全功能可以实现账号认证。用户能够对网络流量进行加密、创建和管理用户、定义能够保护索引和集群级别访问权限的角色， Kibana 提供访问保护。</p>
+<!-- more -->
+<h3 id="配置elasticsearch">配置Elasticsearch</h3>
+<h5 id="在-elasticsearch-主节点上配置-tls">在 Elasticsearch 主节点上配置 TLS</h5>
+<p>首先关闭相关进程以免造成异常</p>
+<pre><code>[root@cncs ~]# systemctl stop elasticsearch
+</code></pre>
+<h5 id="生成自签名证书">生成自签名证书</h5>
+<p>在 Elasticsearch 主节点生成证书，文件名为elastic-stack-ca.p12。</p>
+<pre><code>[root@cncs ~]# cd /usr/share/elasticsearch
+#生成CA，包含CA私钥和证书,默认名称elastic-stack-ca.p12
+[root@cncs elasticsearch]# bin/elasticsearch-certutil ca
+ #敲2次回车
+#颁发一个实例证书,默认名称elastic-certificates.p12
+[root@cncs elasticsearch]#   bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12
+#敲3次回车
+</code></pre>
+<h5 id="拷贝证书到elasticsearch配置目录">拷贝证书到Elasticsearch配置目录</h5>
+<pre><code>[root@cncs ~]# mkdir /etc/elasticsearch/certs
+[root@cncs ~]# cp /usr/share/elasticsearch/elastic-certificates.p12 /etc/elasticsearch/certs
+[root@cncs ~]# chown -R elasticsearch:elasticsearch /etc/elasticsearch/certs
+</code></pre>
+<p>如有多个Elasticsearch节点，每个节点复制一份。</p>
+<h5 id="开启elasticsearch-security特性">开启Elasticsearch Security特性</h5>
+<p>Security特性默认是被禁用的，打开文件 config/elasticsearch.yaml。将下列代码行粘贴到文件末尾，开启Elasticsearch Security特性，加密内部通信流量与http流量。</p>
+<pre><code>[root@cncs ~]# vim /etc/elasticsearch/elasticsearch.yml
+xpack.security.enabled: true
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate
+xpack.security.transport.ssl.keystore.path: certs/elastic-certificates.p12
+xpack.security.transport.ssl.truststore.path: certs/elastic-certificates.p12
+</code></pre>
+<p>如有多个Elasticsearch节点，每个节点都需配置。</p>
+<h5 id="为内置用户创建密码">为内置用户创建密码</h5>
+<p>启动 Elasticsearch</p>
+<pre><code>[root@cncs ~]# systemctl start elasticsearch
+</code></pre>
+<p>Elasticsearch默认的内置用户有kibana_system、kibana、elastic、beats_system等。</p>
+<ul>
+<li>kibana_system用户用于Kibana连接Elasticsearch认证</li>
+<li>kibana用户用于Elasticsearch集群认证</li>
+<li>beats_system用户用于beats连接Elasticsearch认证</li>
+<li>elastic用户用于Kibana网页端登录认证</li>
+</ul>
+<p>通过运行 elasticsearch-setup-passwords 命令为内置用户设置密码。auto参数是自动生成随机密码，也可以通过 interactive 参数手动定义密码。请记录这些密码，非常重要。</p>
+<pre><code>[root@cncs ~]# cd /usr/share/elasticsearch
+[root@cncs elasticsearch]# bin/elasticsearch-setup-passwords auto
+Initiating the setup of passwords for reserved users elastic,apm_system,kibana,kibana_system,logstash_system,beats_system,remote_monitoring_user.
+The passwords will be randomly generated and printed to the console.
+Please confirm that you would like to continue [y/N]y
+
+
+Changed password for user apm_system
+PASSWORD apm_system = UymyZjBfqSS743TwTgpe
+
+Changed password for user kibana_system
+PASSWORD kibana_system = lwjCX1ho1oOMGf30bbJW
+
+Changed password for user kibana
+PASSWORD kibana = lwjCX1ho1oOMGf30bbJW
+
+Changed password for user logstash_system
+PASSWORD logstash_system = 6RYXgJw9V6LBnT53Qgzt
+
+Changed password for user beats_system
+PASSWORD beats_system = FiwFQBTuJsumTnWslM2f
+
+Changed password for user remote_monitoring_user
+PASSWORD remote_monitoring_user = oU73njEE3ynCThCT2NwZ
+
+Changed password for user elastic
+PASSWORD elastic = QA4xUfjBwnfjI6u73Af2
+</code></pre>
+<h3 id="配置kibana">配置Kibana</h3>
+<h5 id="配置kibana连接elasticsearch的账号">配置Kibana连接Elasticsearch的账号</h5>
+<p>上文生成了kibana_system这个账号密码，现在给Kibana配置上这个账号使Kibana能够连接Elasticsearch。</p>
+<pre><code>[root@cncs ~]# vi /etc/kibana/kibana.yml
+elasticsearch.username: &quot;kibana_system&quot;
+elasticsearch.password: &quot;lwjCX1ho1oOMGf30bbJW&quot;
+</code></pre>
+<p>现在可以使用elastic这个账号访问网页端http://10.18.224.112:5601/了。</p>
+<h3 id="配置filebeat">配置Filebeat</h3>
+<h5 id="配置filebeat连接elasticsearch的账号">配置Filebeat连接Elasticsearch的账号</h5>
+<p>这里用的是elastic这个账号密码</p>
+<pre><code>[root@localhost ~]# vi /etc/filebeat/filebeat.yml
+output.elasticsearch:
+  # Array of hosts to connect to.
+  hosts: [&quot;10.18.224.112:9200&quot;]
+  username: &quot;elastic&quot;
+  password: &quot;QA4xUfjBwnfjI6u73Af2&quot;
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/elk-netflow/" class="post-title gt-a-link">
+                    Elastic Stack收集NetFlow或sFlow数据
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

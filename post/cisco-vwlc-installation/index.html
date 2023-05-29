@@ -1,0 +1,342 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>年轻人的第一个无线网络 - Cisco vWLC基础配置教程 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    年轻人的第一个无线网络 - Cisco vWLC基础配置教程
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-02-08 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/6wly-upkI6p/" class="post-tags">
+                            # WLC
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>本文以vWLC 8.5.151.0为例。为什么选择这个版本呢？根据兼容性矩阵，这个版本是支持Cisco 3500系列AP的最高版本。3500系列是第一个支持5G（802.11n 300Mbps）的系列，在本文写作时仍具有实用价值。</p>
+<!-- more -->
+<p>另外在二手市场上我们可以方便地购买到大量低价并且相对完好的3500系列AP。无论做实验也好，给自家别墅做个无线覆盖也好，在预算有限的前提下，3500系列AP都是不错的选择。当然考虑到3500系列已经结束支持，如果预算足够的话，可以考虑一下比较新的型号。</p>
+<p>本文用到的设备：</p>
+<ul>
+<li>Cisco AIR-CAP3502I-x-K9（x是地区限制代号，硬件是一样的）</li>
+<li>一台服务器，作为虚拟机的主机（需要amd64架构，留出8GiB硬盘和2GiB内存给虚拟机）</li>
+</ul>
+<p>需要准备的文件：</p>
+<ul>
+<li>vWLC安装文件：AIR_CTVM-K9_8_5_151_0.ova</li>
+<li>瘦AP恢复版本固件：ap3g1-rcvk9w8-tar.153-3.JF10.tar</li>
+</ul>
+<h4 id="关于vwlc">关于vWLC</h4>
+<p>vWLC是Cisco做的一个虚拟化版本的WLC，基于Linux，能够运行在大多数虚拟机上。不过vWLC和硬件版本的WLC是有区别的。vWLC有很多限制：</p>
+<ul>
+<li>不能使用local模式，也就是说不能让AP把用户流量转发到WLC上交换<br>
+AP注册上来以后，在AP的配置页面一定要将AP Mode设置为“Flexconnect”模式，否则AP看似注册上来了，但是Radio是down状态</li>
+<li>不能使用mDNS Snooping</li>
+<li>所有在端口上广播的功能都是坏的，例如DHCP<br>
+vWLC不支持DHCPServer功能，需要自己搭建DHCP Server</li>
+</ul>
+<p>以上是由vWLC本身条件所限制，虚拟控制器本身是装在PC或Server上的，处理性能比不上真实物理机，所以思科尽量将控制器的影响性能的一些软件特性移植到其它设备上，如DHCP Server功能，AP本地流量转发等等。</p>
+<h4 id="网络拓扑计划">网络拓扑计划</h4>
+<p>以下是建议的网络拓扑：</p>
+<ul>
+<li>所有AP接在同一个交换域下</li>
+<li>你配置WLC用的电脑需要用有线网络接入同一个交换域</li>
+<li>如果你需要配置多个不同的无线网络，那么你的交换机需要支持VLAN Trunking</li>
+<li>如果你想使用service port，那么请为它准备一个单独的二层</li>
+</ul>
+<h4 id="安装vwlc">安装vWLC</h4>
+<p>在VMware/ESXi/vSphere中部署 OVF 模板，导入AIR_CTVM-K9_8_5_151_0.ova<br>
+默认虚拟机配置：</p>
+<ul>
+<li>1 vCPU</li>
+<li>2GiB以上内存，关闭动态内存分配或者balloon device之类的功能</li>
+<li>8GiB以上的IDE硬盘</li>
+<li>两张网卡<br>
+第一个是service port，一开始建议不接，一定要接的话别接到management port同一个二层上<br>
+第二个是management port，需要连接到你的网络大二层或者默认VLAN上</li>
+<li>有条件的话创建一个串口</li>
+</ul>
+<p>接下来应该不用多说了，等待启动，然后可以看到提示</p>
+<pre><code class="language-yaml">Press any key to use this terminal as the default terminal.
+</code></pre>
+<p>的时候按任意键。然后vWLC会显示一行等待autoinstall的倒计时提示：</p>
+<pre><code class="language-yaml">Would you like to terminate autoinstall? [yes]
+</code></pre>
+<p>在30秒内按一下回车来禁用autoinstall。接下来会进入初始化设置向导。</p>
+<h4 id="vwlc初始配置">vWLC初始配置</h4>
+<h5 id="设置向导">设置向导</h5>
+<pre><code class="language-yaml">System Name [Cisco_MAC:ADDRESS] (31 characters max): 输入一个主机名
+Enter Administrative User Name (24 characters max): 管理员用户名
+Enter Administrative Password (3 to 24 characters): 管理员密码
+Re-enter Administrative Password: 再输入一遍管理员密码
+Service Interface IP Address Configuration [static][DHCP]: 如果没接直接回车即可；如果接了，配一个该网段的static地址
+Management Interface IP Address: 输入你的大二层下面一个静态IP
+Management Interface Netmask: 子网掩码
+Management Interface Default Router: 网关
+Management Interface VLAN Identifier (0 = untagged): 输入VLAN tag，默认为0
+Management Interface Port Num [1 to 1]: 1
+Management Interface DHCP Server IP Address: 输入你的大二层下DHCP服务器的IP
+Virtual Gateway IP Address: 随便填一个你内网没用到的IP，192.168.1.1之类的都行
+Mobility/RF Group Name: 随便填
+Network Name (SSID): 随便填
+Configure DHCP Bridging Mode [yes][NO]: 回车
+Allow Static IP Addresses [YES][no]: 回车
+Configure a RADIUS Server now? [YES][no]: no回车
+Enter Country Code list (enter ‘help’ for a list of countries) [US]: 输入 US
+Enable 802.11b Network [YES][no]: no
+Enable 802.11a Network [YES][no]: no
+Enable 802.11g Network [YES][no]: no
+Enable Auto-RF [YES][no]: 回车
+Configure a NTP server now? [YES][no]: no
+Configure the system time now? [YES][no]: no
+Would you like to configure IPv6 parameters[YES][no]: no
+Configuration correct? If yes, system will save it and reset. [yes][NO]: yes
+</code></pre>
+<p>接下来等待WLC重启应用配置。</p>
+<h5 id="启用web管理面板">启用Web管理面板</h5>
+<p>重启完以后登录，输入以下两行命令：</p>
+<pre><code class="language-yaml">config network webmode enable
+save config
+</code></pre>
+<p>接下来我们就可以和命令行说再见了。使用浏览器打开vWLC的管理面板，登录，点击右上角的Advanced。我们将会在这里完成初始的Wi-Fi设置。网页右上角有个保存配置的链接，尽量完成一部分配置就保存一下，否则WLC重启以后配置不会恢复。<br>
+如果WLC管理面板显示不正常，请关掉浏览器的广告屏蔽插件再试。</p>
+<h5 id="设置dns和ntp">设置DNS和NTP</h5>
+<p>前往Controller-&gt;General，填写DNS Server IP为一个有效的DNS服务器IP。<br>
+前往Controller-&gt;NTP-&gt;Server，添加一个NTP服务器。Server后面的选项可以改成DNS，这样就可以输入域名。<br>
+如果不知道怎么填的话，NTP服务器可以填写这两个：</p>
+<pre><code class="language-yaml">time.asia.apple.com
+cn.pool.ntp.org
+</code></pre>
+<h5 id="关闭dhcp-proxy">关闭DHCP Proxy</h5>
+<p>这个功能没什么用并且可能搞事，建议事先关掉。<br>
+前往Controller-&gt;Advanced-&gt;DHCP，取消勾选Enable DHCP Proxy。</p>
+<h4 id="ap更新固件">AP更新固件</h4>
+<p>如果AP上是个胖（Autonomous）固件，那么需要刷成瘦固件。胖固件在无配置的情况下上电会尝试DHCP拿到一个IP，如果你能访问AP的网页管理面板（默认用户名和密码都是Cisco），那么进入Software-&gt;Software upgrade-&gt;HTTP Upgrade，上传ap3g1-rcvk9w8-tar.153-3.JF10.tar即可。（浏览器需要关闭弹出窗口拦截。）</p>
+<p>如果AP上有配置，那么你可能需要使用Console来清除配置，方法自行查看文档。</p>
+<p>如果你也跟我一样买了一批Console坏的AP，那么可能需要使用MODE按钮来更新固件。在你的电脑上启动一个TFTP服务器（记得关闭防火墙），把ap3g1-rcvk9w8-tar.153-3.JF10.tar重命名为ap3g1-k9w7-tar.default放在TFTP根目录下。然后将电脑的有线网口IP配置成10.0.0.2/24，并用网线连接电脑和AP。连接好后，按住AP上的MODE键给AP上电，等待AP上的LED转成红色（比较久，慢慢等）后立即松手。AP会自动从电脑下载固件然后重启。</p>
+<h4 id="注册">注册</h4>
+<h5 id="向wlc添加ap授权">向WLC添加AP授权</h5>
+<p>管理面板上前往Management-&gt;Software Activation-&gt;License Type，设置成RTU。如果之前不是RTU，那么设置完需要保存配置重启一下。<br>
+然后左侧导航栏选择Licenses，在右边Adder License里面填入你购买的AP授权数量（最高200），点击Set Count，同意用户协议。</p>
+<h5 id="注册ap">注册AP</h5>
+<p>把AP的网口连接到WLC所在的同一个二层，给AP上电，然后前往Wireless-&gt;Access Points-&gt;All APs查看AP注册状态。第一次注册会下载无线固件并重启，会比较久；之后会快很多。<br>
+AP启动过程中LED的模式：</p>
+<ul>
+<li>绿色闪烁：正在加载固件</li>
+<li>黄绿色常亮：正在启动固件</li>
+<li>绿色常亮：正在DHCP</li>
+<li>蓝色闪烁：正在下载新固件（只在手工更新固件或者第一次注册的时候有这个过程）</li>
+<li>红-绿-蓝切换或红-绿切换：正在向WLC注册</li>
+<li>蓝色闪烁</li>
+<li>绿色常亮：正常工作</li>
+<li>蓝色常亮：有设备连接</li>
+</ul>
+<h4 id="基础无线配置">基础无线配置</h4>
+<p>所有AP都注册成功以后，就可以配置无线网络了。<br>
+<img src="https://eflytop.github.io/post-images/1625536630624.png" alt="" loading="lazy"></p>
+<h5 id="配置ap属性">配置AP属性</h5>
+<p>Wireless-&gt;Access Points-&gt;All APs，分别点击每一个AP的名字，做如下设置：</p>
+<ul>
+<li>General-&gt;AP Name和Location可以按需改一下，以便区分不同AP</li>
+<li>General-&gt;AP Mode：设为FlexConnect</li>
+</ul>
+<h5 id="配置wi-fi">配置Wi-Fi</h5>
+<p>WLANs-&gt;WLANs-&gt;WLANs，右边创建一个新网络，填入Profile Name（名字，随便写）和SSID（Wi-Fi的显示名，也随便写），确定。<br>
+在列表界面点击新创建的WLAN ID，更改以下项：</p>
+<ul>
+<li>General-&gt;Status：勾选</li>
+<li>Advanced-&gt;FlexConnect Local Switching：勾选</li>
+<li>Advanced-&gt;Enable Session Timeout：取消勾选</li>
+</ul>
+<p>其它你可能会想要更改的选项：</p>
+<ul>
+<li>广播SSID：General-&gt;Broadcast SSID</li>
+<li>密码：Security-&gt;Layer 2里面找到Authentication Key Management，只勾选PSK，下面的文本框里输入密码</li>
+<li>2.4G/5G切换：General-&gt;Radio Policy</li>
+</ul>
+<p>如果你配置了多个Wi-Fi网络，请记住WLAN ID和名称的对应关系，一会儿会用到。</p>
+<h5 id="配置wi-fi到vlan的映射">配置Wi-Fi到VLAN的映射</h5>
+<p>如果你需要开多个Wi-Fi网络并且要把客户端分配到不同VLAN的话，需要把每个Wi-Fi网络映射到不同的VLAN ID。<br>
+进入Wireless-&gt;FlexConnect Groups，点击default-flex-group（或者新建一个），在General下点击FlexConnect AP，确认你所有的AP都显示在里面。<br>
+回到Wireless-&gt;FlexConnect Groups，点击你刚刚配置的group名称，在设置界面修改以下项目：</p>
+<ul>
+<li>WLAN VLAN mapping-&gt;VLAN Support：勾选</li>
+<li>Native VLAN ID：根据实际情况填写</li>
+</ul>
+<p>完成后先点击一下Apply。配置应用成功后，在同一页面的下面WLAN VLAN Mapping处，把WLAN ID和VLAN ID的对应关系逐条添加上。</p>
+<h4 id="启动无线网络">启动无线网络</h4>
+<h5 id="启动24g网络">启动2.4G网络</h5>
+<p>Wireless-&gt;802.11b/g/n，勾选上802.11b/g Network Status和802.11g Support两项，点击Apply。</p>
+<h5 id="启动5g网络">启动5G网络</h5>
+<p>Wireless-&gt;802.11a/n/ac，勾选上802.11a Network Status，点击Apply。</p>
+<h4 id="接下来做什么">接下来做什么</h4>
+<p>确认配置生效后，别忘记在网页右上角点击Save Configuration<br>
+记得备份一下虚拟机，因为AP会保存WLC的证书，如果虚拟机丢了而你AP的Console又是坏的，重置会比较麻烦<br>
+参考官方文档，探索一下vWLC别的功能，例如CleanAir</p>
+<p>本文转自Drown in Codes</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/basic-mpls-vpn-cfg/" class="post-title gt-a-link">
+                    MPLS VPN的基本配置
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Cisco SD-WAN cEdge安装 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Cisco SD-WAN cEdge安装
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-02-09 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/NN7J8Olf9p/" class="post-tags">
+                            # SDWAN
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>Cisco SD-WAN包含三大类Edge设备：vEdge-Cloud、vEdge硬件盒子、 cEdge路由器</p>
+<ul>
+<li>vEdge-Cloud是以虚拟机的形式存在</li>
+<li>vEdge硬件盒子包括了Viptela原生的路由器</li>
+<li>cEdge是指思科ISR/ASR等路由器</li>
+</ul>
+<!-- more -->
+<h5 id="cedge-安装更换-image">cEdge 安装/更换 image</h5>
+<p>cEdge支持如下硬件平台</p>
+<table>
+<thead>
+<tr>
+<th>Hardware Platform</th>
+<th>Model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cisco ASR 1000 series aggregation services routers</td>
+<td>ASR 1001-HX，ASR 1001-X， ASR 1002-HX， ASR 1002-X</td>
+</tr>
+<tr>
+<td>Cisco ISR 1000 series integrated services routers</td>
+<td>C1111-8P，C1111-8P LTE EA， C1111-8P LTE LA，C1117-4P LTE EA，C1117-4P LTE LA</td>
+</tr>
+<tr>
+<td>Cisco 4000 series integrated services routers</td>
+<td>ISR 4221，ISR 4321，ISR 4331，ISR 4351</td>
+</tr>
+</tbody>
+</table>
+<p>务必确保设备的最小ROMMO版本如下</p>
+<table>
+<thead>
+<tr>
+<th>Hardware Platform</th>
+<th>Minimum ROM Monitor Software Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASR 1000 series</td>
+<td>16.3 (2r)</td>
+</tr>
+<tr>
+<td>ISR 1000 series</td>
+<td>16.8 (1r)</td>
+</tr>
+<tr>
+<td>ISR 4000 series</td>
+<td>16.7 (3r)</td>
+</tr>
+</tbody>
+</table>
+<p>到思科官网下载路由器的SD-WAN镜像（非IOS）<br>
+将镜像导入路由器，此时切勿进行马上升级<br>
+<img src="https://eflytop.github.io/post-images/1625540196998.webp" alt="" loading="lazy"><br>
+执行如下命令，一定要确保IOS配置下的配置文件不会保存在NVRAM里。<br>
+因为当配置在SD-WAN镜像下启动被调用后，会无法让路由器进入SD-WAN config模式，会报错。重启后进入SD-WAN，cEdge默认一开始就会使用pnp模式，所以需要禁用，并清空pnp配置</p>
+<pre><code>ISR4K# (config)# no boot system ...
+ISR4K# (config)# boot system flash bootflash:SDWAN-image 
+ISR4K# write erase
+ISR4K# config t
+ISR4K(config)# config-register 0x2102
+ISR4K(config)# end  ISR4K# reload
+Proceed with reload? [confirm] Yes
+
+ISR4K# pnpa service discovery stop
+
+ISR4K# request platform software sdwan software reset
+</code></pre>
+<p>进入SD-WAN config模式配置system信息</p>
+<pre><code>ISR4K# config-transaction  
+ISR4K(config)# system host-name cEdge  
+ISR4K(config-system)# system-ip 1.1.1.1
+ISR4K(config-system)# site-id 11
+ISR4K(config-system)# vbond 10.22.0.2
+ISR4K(config-system)# organization-name xxxx  
+ISR4K(config-system)# commit and-quit
+</code></pre>
+<p>cEdge的tunnel名称具有特殊性，需要为每个物理接口都配置tunnel，cEdge是以tunnel来配置和调度接口，一 个物理接口对应一个tunnel接口。tunnel也具有限定的命名规则，如物理口ge0/0/0，那么对应的tunnel为0，  如果物理口ge0/1/0，那么对应的tunnel为10</p>
+<pre><code>ISR4K(config)# tunnel interface 0
+ISR4K(config-if)# ip unnumbered GigabitEthernet0/0/0 
+ISR4K(config-if)# tunnel source GigabitEthernet0/0/0
+ISR4K(config-if)# tunnel mode sdwan
+</code></pre>
+<p>配置物理接口地址</p>
+<pre><code>ISR4K(config)# interface GigabitEthernet0/0/0  
+ISR4K(config)# ip address 192.168.1.2 255.255.255.0  
+ISR4K(config)# no shut
+</code></pre>
+<p>配置VPN属性</p>
+<pre><code>ISR4K(config)# sdwan
+ISR4K(config-sdwan)# interface GigabitEthernet0/0/0  
+ISR4K(config-interface-interface-name)# tunnel-interface
+ISR4K(config-tunnel-interface)# color mpls  
+ISR4K(config-tunnel-interface)# encapsulation ipsec
+ISR4K(config-tunnel-interface)#exit
+ISR4K(config)# ip route 0.0.0.0 0.0.0.0 192.168.1.1
+</code></pre>
+<h5 id="cedge-获取pid-sn和证书序列号">cEdge 获取PID、SN和证书序列号</h5>
+<p>请使用如下命令查看设备序列号和token值</p>
+<pre><code>ISRK# show crypto pki certificates CISCO_IDEVID_SUDI  Certificate
+Status: Available
+Certificate Serial Number (hex): XXXXXXXX  Certificate Usage: General Purpose
+Issuer:
+cn=ACT2 SUDI CA
+o=Cisco  Subject:
+Name: ISR4431/K9
+Serial Number: PID:ISR4431/K9 SN:XXXXXXXXXXX  cn=ISR4431/K9
+ou=ACT-2 Lite SUDI  o=Cisco
+serialNumber=PID:ISR4431/K9 SN:XXXXXXXXXXX
+Validity Date:
+start date: 19:35:04 UTC Mar 28 2016
+end date: 19:35:04 UTC Mar 28 2026  Associated Trustpoints: CISCO_IDEVID_SUDI
+</code></pre>
+<h5 id="安装license">安装License</h5>
+<p>cEdge License请联系TSA获取，需要提供cEdge设备的PID、SN、证书序列号。License文件是附带organization属性的，所以拿到的license文件必须与证书、controller配置的organization名称一致。<br>
+进入vManage GUI界面，进入Configuration下的Devices菜单，在WAN Edge List下，选择Upload WAN Edge List<br>
+<img src="https://eflytop.github.io/post-images/1625540210700.webp" alt="" loading="lazy"></p>
+<p>选择Viptela的vEdge license文件，并勾选验证vEdge license list前面的复选框后上传，上传完毕后，便可在list里面看到有效的vEdge list<br>
+<img src="https://eflytop.github.io/post-images/1625540221342.webp" alt="" loading="lazy"><br>
+将license导入后，就可以看到预制的vEdge list。包含三大类vEdge设备：vEdge-Cloud、vEdge硬件盒子、 cEdge路由器</p>
+<ul>
+<li>vEdge-Cloud是以虚拟机的形式存在</li>
+<li>vEdge硬件盒子包括了Viptela原生的路由器</li>
+<li>cEdge是指思科ISR/ASR等路由器<br>
+<img src="https://eflytop.github.io/post-images/1625540236832.webp" alt="" loading="lazy"></li>
+</ul>
+<h5 id="cedge上线">cEdge上线</h5>
+<p>如果是使用系统自带的Symantec证书，cEdge无需安装，vManage会将签名后的证书传到cEdge，如果是使用其他CA，需要以下命令重新安装根证书，首先将根证书上传到bootflash</p>
+<pre><code>ISR4K# request platform software sdwan root-cert-chain install  bootflash:certificate
+</code></pre>
+<p>只要确保cEdge与controller网络可达，无需做任何操作，cEdge即可自动上线。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/cisco-vwlc-installation/" class="post-title gt-a-link">
+                    年轻人的第一个无线网络 - Cisco vWLC基础配置教程
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

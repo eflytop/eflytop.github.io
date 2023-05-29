@@ -1,0 +1,254 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>旧电脑绕过硬件限制升级Win11正式版最全「升级攻略」 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    旧电脑绕过硬件限制升级Win11正式版最全「升级攻略」
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-10-09 ·
+                    </time>
+                    
+                </div>
+                <div class="post-content">
+                    <p>微软正式发布新一代Windows 11操作系统。升级Windows 11有一定的最低硬件要求，比如CPU、TPM 2.0版本等。本文将介绍旧电脑如何绕过硬件限制升级Win11正式版。</p>
+<!-- more -->
+<p>本文转自PCBETA论坛，原文链接：https://bbs.pcbeta.com/viewthread-1906293-1-2.html<br>
+本文涉及到的工具下载：https://wwi.lanzoui.com/b00oxkxsj 密码:2jx9<br>
+Windows 11官方下载网址：https://www.microsoft.com/zh-cn/software-download/windows11/   选择「下载 Windows 11 磁盘映像 (ISO)」选项下载ISO文件</p>
+<p>绕过硬件检测时注意断网~</p>
+<h5 id="一-升级安装方案1">一、升级安装（方案1）</h5>
+<p>首先双击运行脚本“skip_tpm_check_on_dynamic_update_v2.cmd”</p>
+<p><strong>离线升级方法：</strong> 使用微软原版ISO离线升级（无需解压），双击装载。然后双击ISO根目录下的setup.exe即可。</p>
+<p><strong>在线升级方法：</strong></p>
+<ul>
+<li>情况1：如果已经通过offlineinsiderenroll强制切换到了Beta/RP通道，升级了Win11预览版，可以直接在Windows Update中检查更新，微软虽说不给升级，但并没有限制。（注意：如果使用了offlineinsiderenroll强制切换通道后，仍不能收到推送，还需要导入一个注册表rs_prerelease-SwitchChannel.reg，使通道可以自由切换，这样就能收到推送了。）</li>
+<li>情况2：如果你现在的系统是Win10，想采用在线升级，则运行上述批处理，等待推送（因为微软分批推送，短时间未必能收到）。</li>
+</ul>
+<blockquote>
+<p>优点：可以保留现有软件、设置等；<br>
+缺点：不是全新安装，可能会有遗留的疑难杂症。</p>
+</blockquote>
+<h5 id="二-升级安装方案2">二、升级安装（方案2）</h5>
+<ul>
+<li>步骤1、将ISO解压到C盘以外的某目录，比如E:\Win11</li>
+<li>步骤2、将“start_setup.bat”复制到ISO解压的根目录（与setup.exe同一目录）</li>
+<li>步骤3、以管理员身份运行“start_setup.bat”，后续步骤一路下一步即可完成系统的升级安装或全新安装。</li>
+</ul>
+<p>备注：相当于先解除限制、再运行ISO目录下的setup.exe。</p>
+<blockquote>
+<p>优点：简便，不需要PE、U盘等<br>
+缺点：如果当前系统是32位，此方案失效。</p>
+</blockquote>
+<h5 id="三-全新安装方案1">三、全新安装（方案1）</h5>
+<ul>
+<li>步骤1、将ISO解压到C盘以外的某目录，比如E:\Win11</li>
+<li>步骤2、将“start_sources_setup.bat”复制到ISO解压的根目录（与setup.exe同一目录）</li>
+<li>步骤3、以管理员身份运行“start_sources_setup.bat&quot;</li>
+</ul>
+<p>备注：相当于先解除限制、再运行ISO\sources目录下的setup.exe，此种方法虽是全新安装，但不能格式化C盘。生成的old文件夹，以后手动清理掉即可。</p>
+<blockquote>
+<p>优点：简便，不需要PE、U盘等。与在PE下格式化安装几乎毫无区别，干净！<br>
+缺点：如果当前系统是32位，此方案失效；与PE下安装相比，唯一缺陷是不能格式化C盘。</p>
+</blockquote>
+<h5 id="四-全新安装方案2">四、全新安装（方案2）</h5>
+<p>进入Win PE下：</p>
+<ul>
+<li>步骤1、将ISO解压，比如E:\Win11</li>
+<li>步骤2、将“start_setup.bat”复制到ISO解压的根目录（与setup.exe同一目录）</li>
+<li>步骤3、双击运行“start_setup.bat”，后续步骤一路下一步即可完成系统的升级安装或全新安装。</li>
+</ul>
+<blockquote>
+<p>优点：全新安装，非常干净！<br>
+缺点：需要准备64位Win10内核的PE，所以方便性上差一些。</p>
+</blockquote>
+<h5 id="五-全新安装方案3">五、全新安装（方案3）</h5>
+<p>不借助第三方WinPE，不借助U盘等，在当前系统下，使用Dism++工具：</p>
+<ul>
+<li>步骤1、运行Dism++x86.exe，左上角恢复功能→在RE中运行。稍等片刻自动重启进入RE环境。</li>
+<li>步骤2、使用左侧“工具箱”中的“系统还原”。依次设置5项内容：选择install.wim路径、选择系统盘（通常是C盘，如果盘符错乱，以“浏览”看到的为准）、选择Win11的版本、添加引导、格式化。选择完毕后，点击“确定”。</li>
+</ul>
+<blockquote>
+<p>优点：全新安装，非常干净！不需要第三方的PE；也不需要U盘；无论当前系统是32位还是64位，均可行。与进入PE没有区别。<br>
+缺点：需要会使用Dism++这个工具，否则白费。</p>
+</blockquote>
+<p>说明：可能有小伙伴会说，还可以不借助任何工具，直接重启进入高级启动，运行setup.exe不行吗？可以，但是局限性很大，比如当前32位系统，就不能安装64位的Win11。（反之也不可以）</p>
+<h5 id="六-全新安装方案4">六、全新安装（方案4）</h5>
+<p>进入Win PE：</p>
+<p>使用Dism++、WinNTSetup、CGI等工具直接部署安装，无需考虑硬件限制的问题。</p>
+<blockquote>
+<p>优点：全新安装，非常干净！<br>
+缺点：需要会使用PE、Dism++等工具，否则白费。</p>
+</blockquote>
+<h5 id="七-全新安装方案5">七、全新安装（方案5）</h5>
+<p>改造ISO大法，需要下载工具v2.0_plus++版本：</p>
+<ul>
+<li>步骤1、将原版ISO复制到W11目录下；</li>
+<li>步骤2、运行Win_11_Boot_And_Upgrade_FiX_KiT_v2.0_plus++_by_zbezj.cmd，等待3-5分钟，生成一个新的ISO；</li>
+<li>步骤3、将新的ISO写入U盘，U盘启动安装，即可绕过一切硬件限制。（U盘启动的制作工具很多，推荐Ventoy或Rufus，下载自行搜索）</li>
+</ul>
+<blockquote>
+<p>优点：经过改造的ISO，U盘启动无需其他任何操作，与原版的安装方法一样。此外，也可以和上文方案一样，运行ISO根目录下的skip.cmd（或start_setup.bat）安装，既适用于Windows也适用于Win PE环境。还集成了Dism++工具，可以方便的调用。也就是说，改造后，上述所有方案的内容都包含在里面了，集上述所有功能于一身。<br>
+缺点：改造ISO，可能会觉得麻烦。（其实就两步、耗时3分钟，傻瓜式操作）</p>
+</blockquote>
+<p>备注：改造ISO大法，也可把Win11的install.wim替换到Win10的ISO中，但不推荐。因为和原版ISO安装出来的不是100%一样的。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/cisco-smart-licensing/" class="post-title gt-a-link">
+                    思科路由器Smart Licensing注册步骤
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

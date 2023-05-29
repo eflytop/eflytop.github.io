@@ -1,0 +1,338 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>使用Python批量配置思科路由器 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    使用Python批量配置思科路由器
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-07-08 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/PoAVydsJ4_/" class="post-tags">
+                            # Python
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>分享一个使用Python批量配置思科路由器代码，把cfg.py、device.txt、cmd.txt放同一目录下，device.txt是要登录的主机列表，一行一个IP地址；cmd.txt是命令列表，一行一条命令，不需要输入configure terminal和write命令。</p>
+<!-- more -->
+<p>代码如下：</p>
+<h5 id="单线程版">单线程版：</h5>
+<pre><code>#!/usr/bin/env python3 
+# -*- coding=utf-8 -*-
+# by EFLYTOP
+# www.eflytop.com
+
+from netmiko import ConnectHandler,NetmikoTimeoutException,NetmikoAuthenticationException 
+import time
+import getpass
+import sys
+
+username = input(&quot;请输入设备用户名：&quot;)
+password = getpass.getpass(prompt='请输入密码:')
+#enpass = getpass.getpass(prompt='请输入enable密码:')
+
+failed_login_ip = []
+
+devices = open('device.txt','r')
+ip_list = [x.strip() for x in devices.readlines()]
+devices.close()
+
+commands = open('cmd.txt','r')
+cmd_list = [y.strip() for y in commands.readlines()]
+commands.close()
+
+start_time = time.time()
+
+#print输出到txt文件
+class Logger(object):
+	def __init__(self, filename=&quot;Default.log&quot;):
+		self.terminal = sys.stdout
+		self.log = open(filename, &quot;a&quot;)
+	def write(self, message):
+		self.terminal.write(message)
+		self.log.write(message)
+	def flush(self):
+		pass
+sys.stdout = Logger('log.txt')
+
+
+for ipaddr in ip_list:
+
+	device_info = {
+	    'device_type': 'cisco_ios',
+	    'ip': ipaddr,
+	    'username': username,
+	    'password': password,
+	    #'port': 22,
+	    #'secret': enpass,
+	}	
+
+	try:
+		host_conn = ConnectHandler(**device_info)
+		print('INFO: ',time.strftime('%x %X'),ipaddr,'正在连接...')	
+		output = host_conn.send_config_set(cmd_list)
+		save_cfg = host_conn.save_config()
+		print(output)
+		print(save_cfg)
+
+	except NetmikoAuthenticationException : #认证失败报错记录
+		print('INFO: ',time.strftime('%x %X'),ipaddr,'[Error 1] Authentication failed.')
+		failed_login_ip.append(ipaddr)
+
+	except NetmikoTimeoutException : #登录超时报错记录
+		print('INFO: ',time.strftime('%x %X'),ipaddr,'[Error 2] Connection timed out.')
+		failed_login_ip.append(ipaddr)
+
+	except : #未知报错记录
+		print('INFO: ',time.strftime('%x %X'),ipaddr,'[Error 3] Unknown error.')
+		failed_login_ip.append(ipaddr)
+
+print('下列主机登录失败，请手动检查：')
+for i in failed_login_ip:
+	print(i)
+print('本次执行时长：%.2f'%(time.time()-start_time) + '秒')
+print(&quot;命令执行完毕，结果请查看log.txt文件&quot;)
+</code></pre>
+<h5 id="多线程版">多线程版：</h5>
+<pre><code>#!/usr/bin/env python3 
+# -*- coding=utf-8 -*-
+# by EFLYTOP
+# www.eflytop.com
+
+from netmiko import ConnectHandler,NetmikoTimeoutException,NetmikoAuthenticationException 
+import time
+import getpass
+import sys
+
+username = input(&quot;请输入设备用户名：&quot;)
+password = getpass.getpass(prompt='请输入密码:')
+#enpass = getpass.getpass(prompt='请输入enable密码:')
+
+failed_login_ip = []
+
+devices = open('device.txt','r')
+ip_list = [x.strip() for x in devices.readlines()]
+devices.close()
+
+commands = open('cmd.txt','r')
+cmd_list = [y.strip() for y in commands.readlines()]
+commands.close()
+
+start_time = time.time()
+
+#print输出到txt文件
+class Logger(object):
+	def __init__(self, filename=&quot;Default.log&quot;):
+		self.terminal = sys.stdout
+		self.log = open(filename, &quot;a&quot;)
+	def write(self, message):
+		self.terminal.write(message)
+		self.log.write(message)
+	def flush(self):
+		pass
+sys.stdout = Logger('log.txt')
+
+
+for ipaddr in ip_list:
+
+	device_info = {
+	    'device_type': 'cisco_ios',
+	    'ip': ipaddr,
+	    'username': username,
+	    'password': password,
+	    #'port': 22,
+	    #'secret': enpass,
+	}	
+
+	try:
+		host_conn = ConnectHandler(**device_info)
+		print('INFO: ',time.strftime('%x %X'),ipaddr,'正在连接...')	
+		output = host_conn.send_config_set(cmd_list)
+		save_cfg = host_conn.save_config()
+		print(output)
+		print(save_cfg)
+
+	except NetmikoAuthenticationException : #认证失败报错记录
+		print('INFO: ',time.strftime('%x %X'),ipaddr,'[Error 1] Authentication failed.')
+		failed_login_ip.append(ipaddr)
+
+	except NetmikoTimeoutException : #登录超时报错记录
+		print('INFO: ',time.strftime('%x %X'),ipaddr,'[Error 2] Connection timed out.')
+		failed_login_ip.append(ipaddr)
+
+	except : #未知报错记录
+		print('INFO: ',time.strftime('%x %X'),ipaddr,'[Error 3] Unknown error.')
+		failed_login_ip.append(ipaddr)
+
+print('下列主机登录失败，请手动检查：')
+for i in failed_login_ip:
+	print(i)
+print('本次执行时长：%.2f'%(time.time()-start_time) + '秒')
+print(&quot;命令执行完毕，结果请查看log.txt文件&quot;)
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/cisco-python-show/" class="post-title gt-a-link">
+                    如何使用Python自动采集路由器信息
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

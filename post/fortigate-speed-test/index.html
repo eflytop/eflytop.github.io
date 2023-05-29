@@ -1,0 +1,265 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>FortiGate使用内置iperf服务进行带宽测试 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    FortiGate使用内置iperf服务进行带宽测试
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2023-03-27 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/vN6_XnotS/" class="post-tags">
+                            # iperf
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/JZWDQzm-Y9w/" class="post-tags">
+                            # FortiGate
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>FortiGate具有内置的iPerf3客户端和有限的嵌入式 iPerf3 服务器，本文介绍如何使用FortiGate内置iperf服务进行带宽测试，适用固件版本为FortiGate V7.0和V7.2。</p>
+<!-- more -->
+<p><img src="https://eflytop.github.io/post-images/1679881476276.png" alt="" loading="lazy"><br>
+为了进行测试，本文将“FG-A”作为 Iperf 服务器，将“FG-B”作为 Iperf 客户端。“FG-A”端口port1的IP地址为10.10.10.1/30，“FG-B”端口port1的IP地址为10.10.10.2/30。</p>
+<h6 id="fg-a的配置为">“FG-A”的配置为：</h6>
+<pre><code>config system global
+    set speedtest-server enable
+end
+
+config system interface
+    edit &quot;port1&quot;
+        set ip 10.10.10.1 255.255.255.252
+        set allowaccess ping https ssh http speed-test
+end
+</code></pre>
+<p>注：需在测试端口下允许speed-test流量，该流量使用的是TCP端口5201。</p>
+<h6 id="fg-b的配置为">“FG-B”的配置为：</h6>
+<pre><code>config system interface
+    edit &quot;port1&quot;
+        set ip 10.10.10.2 255.255.255.252
+end
+
+diagnose traffictest client-intf port1
+diagnose traffictest server-intf port1
+diagnose traffictest port 5201
+diagnose traffictest proto 0
+diagnose traffictest show
+    server-intf:    port1
+    client-intf:    port1
+    port:   5201
+    proto:  TCP
+</code></pre>
+<p>注：diagnose traffictest命令是及时的，退出终端后配置就会恢复成默认值。</p>
+<h6 id="测试">测试：</h6>
+<p>使用命令&quot; diagnose traffictest run -c 10.10.10.1&quot;测试带宽：</p>
+<pre><code>diagnose traffictest run -c 10.10.10.1
+Connecting to host 10.10.10.1, port 5201
+[ 10] local 10.10.10.2 port 21241 connected to 10.10.10.1 port 5201
+[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+[ 10]   0.00-1.00   sec   387 MBytes  3.25 Gbits/sec   70    509 KBytes
+[ 10]   1.00-2.00   sec   446 MBytes  3.75 Gbits/sec    0    566 KBytes
+[ 10]   2.00-3.00   sec   453 MBytes  3.80 Gbits/sec    2    455 KBytes
+[ 10]   3.00-4.00   sec   440 MBytes  3.69 Gbits/sec   26    433 KBytes
+[ 10]   4.00-5.00   sec   452 MBytes  3.80 Gbits/sec    0    515 KBytes
+[ 10]   5.00-6.00   sec   450 MBytes  3.77 Gbits/sec    0    570 KBytes
+[ 10]   6.00-7.00   sec   451 MBytes  3.78 Gbits/sec    4    474 KBytes
+[ 10]   7.00-8.00   sec   452 MBytes  3.79 Gbits/sec    0    539 KBytes
+[ 10]   8.00-9.00   sec   451 MBytes  3.78 Gbits/sec    0    587 KBytes
+[ 10]   9.00-10.00  sec   453 MBytes  3.80 Gbits/sec    2    452 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[ 10]   0.00-10.00  sec  4.33 GBytes  3.72 Gbits/sec  104             sender
+[ 10]   0.00-10.00  sec   338 MBytes   284 Mbits/sec                  receiver
+
+iperf Done.
+iperf3: interrupt - the server has terminated
+</code></pre>
+<pre><code>diagnose traffictest run -c 10.10.10.1 -R
+Connecting to host 10.10.10.1, port 5201
+Reverse mode, remote host 10.10.10.1 is sending
+[ 10] local 10.10.10.2 port 18987 connected to 10.10.10.1 port 5201
+[ ID] Interval           Transfer     Bandwidth
+[ 10]   0.00-1.00   sec   377 MBytes  3.16 Gbits/sec
+[ 10]   1.00-2.00   sec   402 MBytes  3.37 Gbits/sec
+[ 10]   2.00-3.00   sec   410 MBytes  3.44 Gbits/sec
+[ 10]   3.00-4.00   sec   439 MBytes  3.68 Gbits/sec
+[ 10]   4.00-5.00   sec   441 MBytes  3.70 Gbits/sec
+[ 10]   5.00-6.00   sec   450 MBytes  3.77 Gbits/sec
+[ 10]   6.00-7.00   sec   451 MBytes  3.78 Gbits/sec
+[ 10]   7.00-8.00   sec   452 MBytes  3.79 Gbits/sec
+[ 10]   8.00-9.00   sec   453 MBytes  3.80 Gbits/sec
+[ 10]   9.00-10.00  sec   330 MBytes  2.77 Gbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[ 10]   0.00-10.00  sec   111 MBytes  93.4 Mbits/sec    8             sender
+[ 10]   0.00-10.00  sec  4.11 GBytes  3.53 Gbits/sec                  receiver
+
+iperf Done.
+iperf3: interrupt - the server has terminated
+</code></pre>
+<p>注：默认情况下，iperf 将数据发送到远程主机，也就是说，在本例中，它针对“FG-A”进行了测试 （UPLOAD），要生成相反方向的流量，请使用 -R 选项。<br>
+查看其它可用命令：</p>
+<pre><code>diag traffictest run -h
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/centos8-install-zabbix6/" class="post-title gt-a-link">
+                    在CentOS 8上安装Zabbix 6.0
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

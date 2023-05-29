@@ -1,0 +1,746 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Cisco SD-WAN之vManage，vBond，vSmart和vEdge上线 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Cisco SD-WAN之vManage，vBond，vSmart和vEdge上线
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2020-11-09 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/NN7J8Olf9p/" class="post-tags">
+                            # SDWAN
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>SD-WAN的架构<br>
+1、编排平面: Vbord作为协调器，协调管理控制。数据平面负责授权所有控制器连接（白名单模式）。    2、管理平面: Vmanager统一图形化管理，实施。<br>
+3、控制平面: Vsmart整个方案的大脑，提供中心策略，负责实施策略、网络分段、流量工程等。与所有Vedge建立关系，每一个租户一个Vsmart。</p>
+<!-- more -->
+<p>4、数据平面: Vedge可以是虚拟的，也可以是硬件路由器。<br>
+Vsmart与Vedge之间运行OMP，edge之间没有控制平面，只有数据转发层面（Vsmart通常可以理解为BGP的RR），它收集所有站点的NLRI（前缀信息），默认情况下，edge会自动将本地业务侧路由表中的前缀信息公布到OMP。</p>
+<h2 id="一-架构和基本信息">一、架构和基本信息</h2>
+<h3 id="1-架构图">1. 架构图</h3>
+<figure data-type="image" tabindex="1"><img src="https://eflytop.github.io/post-images/1625540616725.png" alt="" loading="lazy"></figure>
+<h3 id="2-ip和设备信息">2. IP和设备信息</h3>
+<figure data-type="image" tabindex="2"><img src="https://eflytop.github.io/post-images/1625540765354.png" alt="" loading="lazy"></figure>
+<h3 id="3-上线基本流程">3. 上线基本流程</h3>
+<figure data-type="image" tabindex="3"><img src="https://eflytop.github.io/post-images/1625540790340.png" alt="" loading="lazy"></figure>
+<h2 id="二-ios-ca基本配置">二、IOS CA基本配置</h2>
+<h3 id="1-配置ca服务器">1. 配置CA服务器</h3>
+<pre><code>IOS-CA(config)#crypto key generate rsa label PKI modulus 2048
+The name for the keys will be: PKI
+% The key modulus size is 2048 bits
+% Generating 2048 bit RSA keys, keys will be non-exportable...
+[OK] (elapsed time was 2 seconds)
+*Sep 25 09:08:17.986: %SSH-5-ENABLED: SSH 1.99 has been enabled
+IOS-CA(config)#ip http server
+IOS-CA(config)#crypto pki server PKI
+IOS-CA(cs-server)#database url flash:
+% Server database url was changed. You need to move the
+% existing database to the new location.
+IOS-CA(cs-server)#database level complete
+IOS-CA(cs-server)#issuer-name cn=rootca.lab.local
+IOS-CA(cs-server)#hash sha256
+IOS-CA(cs-server)#database archive pkcs12 password cisco123
+IOS-CA(cs-server)#grant auto
+*Sep 25 09:09:44.783: %PKI-6-CS_GRANT_AUTO: All enrollment requests will be automatically granted.
+IOS-CA(cs-server)#no shut
+%Some server settings cannot be changed after CA certificate generation.
+% Certificate Server enabled.
+*Sep 25 09:09:56.732: %PKI-6-CS_ENABLED: Certificate server now enabled.
+</code></pre>
+<h3 id="2-查看root-ca">2. 查看root CA</h3>
+<p>我们可以导出root CA到flash存储</p>
+<pre><code>IOS-CA(cs-server)#crypto pki export PKI pem url flash:
+% The specified trustpoint is not enrolled (PKI).
+% Only export the CA certificate in PEM format.
+% Exporting CA certificate...
+Destination filename [PKI.ca]?
+Writing file to flash0:PKI.ca
+</code></pre>
+<p>或者直接在terminal窗口查看root CA</p>
+<pre><code>IOS-CA(config)#crypto pki export PKI pem terminal
+% The specified trustpoint is not enrolled (PKI).
+% Only export the CA certificate in PEM format.
+% CA certificate:
+-----BEGIN CERTIFICATE-----
+MIIDFDCCAfygAwIBAgIBATANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDExByb290
+Y2EubGFiLmxvY2FsMB4XDTIwMDkyNTA5MDk1NFoXDTIzMDkyNTA5MDk1NFowGzEZ
+MBcGA1UEAxMQcm9vdGNhLmxhYi5sb2NhbDCCASIwDQYJKoZIhvcNAQEBBQADggEP
+ADCCAQoCggEBAI5CbMtIV1G/5V8pETpqeMFfRSPPIH5Wa7+qoHB2xE7i8HzSGSG9
+V2+qGmXVbSU7eMDkPDZyr1GOqQ2czKsUvL1eP5Rfcn8UhbqmmRkMTnQl+FMQh/FJ
+LlyWmzjiJLOGLhL+Vn/+m0O57mDWoHe4jMeVi/YXBShw7R/mgNrwBj7v3eKPHlCC
+S4cmsx1y0A1srcvybN7gFGKFtwbkMZjCt5VObM4PFTcT1MHFDLzVbZDmwVzY63+l
+TpWR6t5/QgTAA30MNRSHYf2GkzUafN6rzaqv4e09IaBYlKcBNA7Kqosh6QgirQUN
+m3jB+PwlYlUCi4k3r7s+dUuO1AspTi62m7ECAwEAAaNjMGEwDwYDVR0TAQH/BAUw
+AwEB/zAOBgNVHQ8BAf8EBAMCAYYwHwYDVR0jBBgwFoAUMpsdCVikHqDDPo6WKe28
+IG1joqkwHQYDVR0OBBYEFDKbHQlYpB6gwz6OlintvCBtY6KpMA0GCSqGSIb3DQEB
+CwUAA4IBAQAqr0PfJBdx2hGvvDaUo6CQ5daRKeDzTlb6EudQFYDMEofSJlKXOKTC
+ObCBwMw6IDW/kiAbh077g49je965X8TCYizRCwsOcljChlqSL9Mh45G3dN/29SIQ
+QL/04wwRTvN9ApuPSStEFp2uodr4bbOZA3p8EmFKA69Vf96x+Fq/QAPYChCFry9D
+byCX683PA/n9Ybf8CvlbkLecev4ec+HwbCTsb3CScfaIDAR4Qpfj/4o39q+6pAOM
+sm96XJZ7bDH/YWc0eY6dFvtAx8QNDvWTIlc+W9w+q9MsaA7xaRDDfsHBV0gUw8aa
+iZoea+3xUZIgi5FnPHipoay+KbWiMDv3
+-----END CERTIFICATE-----
+</code></pre>
+<h2 id="三-vmanager配置">三、vManager配置</h2>
+<h3 id="1初始化vmanage">1.初始化vManage</h3>
+<pre><code>Password:
+Welcome to Viptela CLI
+admin connected from 127.0.0.1 using console on vmanage
+Available storage devices:
+hda     19GB
+hda1    3GB
+hda2    16GB
+hdb     100GB
+hdc     3GB
+1) hdb
+2) hdc
+Select storage device to use: 1
+Would you like to format hdb? (y/n): y
+mke2fs 1.43.4 (31-Jan-2017)
+Creating filesystem with 26214400 4k blocks and 6553600 inodes
+Filesystem UUID: 7ed402ab-8f16-469e-ba6d-a5bc7aec6b8b
+Superblock backups stored on blocks:
+32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208,
+4096000, 7962624, 11239424, 20480000, 23887872
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (131072 blocks): done
+Writing superblocks and filesystem accounting information:
+等过几分钟等全部服务起来后进行后续步骤，不然会出现无法登录或报错等问题。
+</code></pre>
+<h3 id="2vmanage基础配置">2.vManage基础配置</h3>
+<pre><code>system
+ host-name vManage
+ system-ip 10.100.0.10
+ site-id 100
+ organization-name lab
+ vbond 223.1.1.11
+
+vpn 0
+ interface eth0
+  ip address 223.1.1.10/24
+no shut
+  tunnel-interface
+   allow-service sshd
+   allow-service netconf
+ ip route 0.0.0.0/0 223.1.1.1
+
+vpn 512
+ interface eth1
+  ip add 10.16.72.123/25
+no shut 
+ ip route 10.0.0.0/8 10.16.72.1
+commit
+</code></pre>
+<p>网页登录地址：https://10.16.72.123:8443/  账号密码: admin/admin</p>
+<h3 id="3-安装root-ca">3. 安装root CA</h3>
+<p>vManage导入Root CA<br>
+<img src="https://eflytop.github.io/post-images/1625541016102.png" alt="" loading="lazy"><br>
+<img src="https://eflytop.github.io/post-images/1625541024834.png" alt="" loading="lazy"></p>
+<h3 id="4-生成vmanage-csr">4. 生成vManage CSR</h3>
+<figure data-type="image" tabindex="4"><img src="https://eflytop.github.io/post-images/1625541042038.png" alt="" loading="lazy"></figure>
+<h3 id="5-安装vmanage-ca">5. 安装vManage CA</h3>
+<p>通过CSR生成vManage CA</p>
+<pre><code>IOS-CA#crypto pki server PKI request pkcs10 terminal
+PKCS10 request in base64 or pem
+
+% Enter Base64 encoded or PEM formatted PKCS10 enrollment request.
+% End with a blank line or &quot;quit&quot; on a line by itself.
+</code></pre>
+<p>看到% End with a blank line or &quot;quit&quot; on a line by itself.提示后粘贴vManage CSR</p>
+<pre><code>% End with a blank line or &quot;quit&quot; on a line by itself. 
+-----BEGIN CERTIFICATE REQUEST-----
+MIIDKjCCAhICAQAwgakxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTERMA8GA1UE 
+BxMIU2FuIEpvc2UxDDAKBgNVBAsTA2xhYjEMMAoGA1UEChMDbGFiMUEwPwYDVQQD 
+Ezh2bWFuYWdlLTRkYTQxNDZiLTIxMDctNGNiMC04MWQ4LTJhMjAxODkxYmI5OS02 
+LmxhYi5sb2NhbDEbMBkGCSqGSIb3DQEJARYMYWRtaW5Ac2MuY29tMIIBIjANBgkq 
+hkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs7mHp1piPXQArk6F9uKzQ+kjf8H6+NhC
+TL/uS16K2BmpoVegknBaC/hlBWVCdvp5gB43zBgdincLVJGLpJPFNkEudq4E1TDa
+WVEY54gLM1mgzJGiZI8KaNTnUd5UdA7iA87bnKb8QwY9b2em2634LQQhgj1xv6RU
+GRSjiGmT4eCTvz31xoOV/9m2/xX091Kcq39hk3OBCaKhwmuxEkmTtntGNLGxUSyP
+upkbK0kVNAowWtzuuFBjLF5SJh3wD5Dq8Tnv9wlH5vxI7lBB36X3YE5dlGyALK0y
+GuZybgkdxbCCAUyUTIbezO68sic4rAEVmxUgZp5yGpWoFVC6xyrq9QIDAQABoDsw
+OQYJKoZIhvcNAQkOMSwwKjAJBgNVHRMEAjAAMB0GA1UdDgQWBBTBLXO5YYMdJN+J
+gobKQhadrbxGhzANBgkqhkiG9w0BAQsFAAOCAQEAFi/KGz+6WEgAVH8hPB/7I+Gd
+nAVWS92M+S4BKU8PexiP7D6I+NXI3Hv+9GVhNdE7UOZs9xbs4yN+u/aZehzFV3c5
+c4DMK2/5F/43Zw/E+MPmZ5mp/wFVNKh1HTnhMiQm30aPNonWWQljmVcYUmDXCQOA
+DcKG7eJpafTmIPxBtRsvXZv8fJe1yJGdoprDEiH7qISVrJqhx+o6zHSzLDSPu1PP
+xZCDUcbVvm3bwdsCNB51Oy6qyXPdIlbR/aY4UIaQzver4aFyQcXWrUTIi1PFDtbc
+Y3gpTC6FLRT8CFir+Dj1x/rcMo9rRlkx24cYEJWGZrscK6+eTXom1vvDOkcqpw==
+-----END CERTIFICATE REQUEST-----
+</code></pre>
+<p>然后输入quit，获得vManage CA</p>
+<pre><code>Y3gpTC6FLRT8CFir+Dj1x/rcMo9rRlkx24cYEJWGZrscK6+eTXom1vvDOkcqpw==
+-----END CERTIFICATE REQUEST-----
+quit
+% Granted certificate:
+-----BEGIN CERTIFICATE-----
+MIIDkzCCAnugAwIBAgIBAzANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDExByb290
+Y2EubGFiLmxvY2FsMB4XDTIwMDkyNjA4MDMwNFoXDTIxMDkyNjA4MDMwNFowgakx
+CzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTERMA8GA1UEBxMIU2FuIEpvc2UxDDAK
+BgNVBAsTA2xhYjEMMAoGA1UEChMDbGFiMUEwPwYDVQQDEzh2bWFuYWdlLTRkYTQx
+NDZiLTIxMDctNGNiMC04MWQ4LTJhMjAxODkxYmI5OS02LmxhYi5sb2NhbDEbMBkG
+CSqGSIb3DQEJARYMYWRtaW5Ac2MuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEAs7mHp1piPXQArk6F9uKzQ+kjf8H6+NhCTL/uS16K2BmpoVegknBa
+C/hlBWVCdvp5gB43zBgdincLVJGLpJPFNkEudq4E1TDaWVEY54gLM1mgzJGiZI8K
+aNTnUd5UdA7iA87bnKb8QwY9b2em2634LQQhgj1xv6RUGRSjiGmT4eCTvz31xoOV
+/9m2/xX091Kcq39hk3OBCaKhwmuxEkmTtntGNLGxUSyPupkbK0kVNAowWtzuuFBj
+LF5SJh3wD5Dq8Tnv9wlH5vxI7lBB36X3YE5dlGyALK0yGuZybgkdxbCCAUyUTIbe
+zO68sic4rAEVmxUgZp5yGpWoFVC6xyrq9QIDAQABo1MwUTAPBgNVHRMBAf8EBTAD
+AQH/MB8GA1UdIwQYMBaAFL5MINN+WxCMkIqgkVse/sq3QnSTMB0GA1UdDgQWBBTB
+LXO5YYMdJN+JgobKQhadrbxGhzANBgkqhkiG9w0BAQsFAAOCAQEAVH7Ylx4JdSaK
+x96Gjg+E4EfAXwyzBHxb5DOnsxY2ksHbLm2qRPImXxjRJPt2/JIFeGqdaiDKqelE
+iK3AHGu3n/cV7eZZ1L0JHXcaUrutWhtArggYuYCeyDttQ4HfoLLHPik9AoYMZulY
+Wt6QPejyBN4HSxepuu1LWzJYEE0lOC/fhIPzja1jzed/WdZPwQGuzYiPDwT3LLiW
+z5M+1Y+TlLciZ7WU6rLsfwXUo5X4GK1OhAjtAjntq+2YISXZ1PIDwcmEW+Cvlyss
+bqowLd+fNGWDD5x10f5uokSHxAlLPuLazSyA3ItHZhbvaOT7Sbz/gCITDZVZgT7y
+CVvEElpVpA==
+-----END CERTIFICATE-----
+</code></pre>
+<p>安装vManage CA<br>
+<img src="https://eflytop.github.io/post-images/1625541135667.png" alt="" loading="lazy"><br>
+安装成功后可以看到证书状态<br>
+<img src="https://eflytop.github.io/post-images/1625541152080.png" alt="" loading="lazy"></p>
+<h2 id="四-vbond配置">四、vBond配置</h2>
+<h3 id="1-基本配置">1. 基本配置</h3>
+<pre><code>system
+ host-name             vBond
+ system-ip             10.100.0.11
+ site-id               100
+ organization-name     lab
+ vbond 223.1.1.11 local
+
+vpn 0
+ interface ge0/0
+ ip address 223.1.1.11/24
+no shut
+ tunnel-interface
+  encapsulation ipsec
+  allow-service sshd
+  allow-service netconf
+ip route 0.0.0.0/0 223.1.1.1
+commit
+</code></pre>
+<h3 id="2-加入vmanager">2. 加入vManager</h3>
+<figure data-type="image" tabindex="5"><img src="https://eflytop.github.io/post-images/1625541236761.png" alt="" loading="lazy"></figure>
+<h3 id="3-安装root-ca-2">3. 安装root CA</h3>
+<p>进入vshell模式</p>
+<pre><code>vBond# vshell
+vBond:~$ cat &gt;&gt; root-ca.txt &lt;&lt;EOF
+&gt;
+</code></pre>
+<p>看到&gt;提示符后粘贴Root CA证书的内容</p>
+<pre><code>&gt; -----BEGIN CERTIFICATE-----
+&gt; MIIDFDCCAfygAwIBAgIBATANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDExByb290
+&gt; Y2EubGFiLmxvY2FsMB4XDTIwMDkyNjA4MjY1N1oXDTIzMDkyNjA4MjY1N1owGzEZ
+&gt; MBcGA1UEAxMQcm9vdGNhLmxhYi5sb2NhbDCCASIwDQYJKoZIhvcNAQEBBQADggEP
+&gt; ADCCAQoCggEBAM9hTvXeXbQ8R6SDXrMAUA/aZ78965bovbSr9sUqFPyXKf5PH6FY
+&gt; mKIJQDKRwcz4CIXJEd0QHbtsSih/qzEKaGSYknezbTMYA5Tqab5fu4Pa84isCngM
+&gt; v962Ubh4Q0w8OGv2Na9A4HR0rwlquVb2LvigDKqtLrxsOvr6ORr67WHuRXs+Kpe6
+&gt; 1mUFWf2pMTPAZGn+ZT7iPkdiWR+2G+mFYXSG/aHAmDABqWfCSXmg1QOCOT5zSLZd
+&gt; mbb9jiJlRZATGtnlDCXyu546Nqvoa+iJcc8X3WWFhhHVyq3abhqAlKIcv9kj+Lq4
+&gt; rZ1VvCMcZKdoNMaVrhsv6GmIZWVuPjz/SrcCAwEAAaNjMGEwDwYDVR0TAQH/BAUw
+&gt; AwEB/zAOBgNVHQ8BAf8EBAMCAYYwHwYDVR0jBBgwFoAUN5ywvAkOjuS7vl7yR+Am
+&gt; xt+iABMwHQYDVR0OBBYEFDecsLwJDo7ku75e8kfgJsbfogATMA0GCSqGSIb3DQEB
+&gt; CwUAA4IBAQBhPgh5l2rXj+oFYuWfnLW/372wn5Xu/HnxMXqmXzhZpXVbDh5DdG7e
+&gt; +q4qJxRkuzmLZtjAhd+OIz1AQdGjclwlrraUPIBF2lT381PuUkuBOfL275HmBgoU
+&gt; iMKmXKHBBsX+/4DxVvGL6QK6i1VL+Gs0moBkJiudip9tkiMMmbMKkQfLDG/9c8Pv
+&gt; DysCHfTVcyMsGf/dKngtaPEXE4IlwRWih9cug6IShnLp+SePvf2kQow/vzv2bDXW
+&gt; bDwyuzxvp0F5GdJUivbkItM7rHFuL+apgAU2baiOSJ7t2CJlOy261iCvZpuILz80
+&gt; GRaJYW3BzETN7BssLkLmaU91FW1DyzIb
+&gt; -----END CERTIFICATE-----
+</code></pre>
+<p>安装Root CA</p>
+<pre><code>&gt; EOF
+vBond:~$ exit
+exit
+vBond# request root-cert-chain install /home/admin/root-ca.txt
+Uploading root-ca-cert-chain via VPN 0
+Copying ... /home/admin/root-ca.txt via VPN 0
+Updating the root certificate chain..
+Successfully installed the root certificate chain
+</code></pre>
+<h3 id="4-生成vbond-csr">4. 生成vBond CSR</h3>
+<figure data-type="image" tabindex="6"><img src="https://eflytop.github.io/post-images/1625541317500.png" alt="" loading="lazy"></figure>
+<h3 id="5-安装vbond-ca">5. 安装vBond CA</h3>
+<p>通过vBond CSR生成vBond CA</p>
+<pre><code>IOS-CA#crypto pki server PKI request pkcs10 terminal
+PKCS10 request in base64 or pem
+
+% Enter Base64 encoded or PEM formatted PKCS10 enrollment request.
+% End with a blank line or &quot;quit&quot; on a line by itself.
+</code></pre>
+<p>看到% End with a blank line or &quot;quit&quot; on a line by itself.提示后粘贴vBond CSR</p>
+<pre><code>% End with a blank line or &quot;quit&quot; on a line by itself.
+-----BEGIN CERTIFICATE REQUEST-----
+MIIDKDCCAhACAQAwgacxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTERMA8GA1UE
+BxMIU2FuIEpvc2UxDDAKBgNVBAsTA2xhYjEMMAoGA1UEChMDbGFiMT8wPQYDVQQD
+EzZ2Ym9uZC01ZDM5NTg5Yy1kNDVmLTQxM2YtYWQ0Mi1jZjkyMTVhZWZmNjUtMC5s
+YWIubG9jYWwxGzAZBgkqhkiG9w0BCQEWDGFkbWluQHNjLmNvbTCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBAOX7qRtSUX0WpUvICGEnIINcnc1FDXPZmGG+
+zixWw2l3ZJIHM1JkzazI97FeEXkSX+OVeqodSHUF98+/DNJ1Bgczmqb8PhtqMf9q
+Bc4lys4v2WqDUszhH9BmLBIk7GXkkVXz3DJ0q9NOvukiyFAinzGkgZjPfIO1cFlD
+rPOUB8A9mG71U9HaR9p91nWEWlJrtNZVOv6VLRkkVXSKZ2n1BHvfWm73xKiK/18J
+Dk1QfsJaoIC8cYudnHxBZJFzhmhTjAmOXPCkPgjmSvwvM49Hl6eWFtZQD7kYN+Xf
+Ty/oxk13ZeDB8hNhQJIpGJ862ZxeerwXHtmxQbMecCFZWlry1Q0CAwEAAaA7MDkG
+CSqGSIb3DQEJDjEsMCowCQYDVR0TBAIwADAdBgNVHQ4EFgQU8kbeV1HJZgkHjtCy
+o8B2O+1VfNIwDQYJKoZIhvcNAQELBQADggEBAKrnYRoQEr5fOlTWqNvivOzQngUV
+1d7IjIFuoVgJepQjzIiaDgjuwJbWNLwonLRyjLhgo2s1fQXqqDWbR16TmAjIIRyq
+78kgsDL4FYj1J5OsHVI0UjNC+SFAm9zAkTWg1EHP0JGwBMPiozMWhdcgE0XKUps2
+hQq9QBIjPrGdCvaMyeNnocd+WAmowlu23E5EFA9IfGrGHM8VDnxKWJRTu9+GedVv
+X3LIZ30qQ5i0iu8Av0TGsleRDsy3fAMNxniYRMXBsH+KcHnFqJDulf2dkPeLpQuK
+twWDYnOOS6A06t241kjlES14SPOszcnXCT9fg6ekCCJQHh9aolOoIhwWzYE=
+-----END CERTIFICATE REQUEST-----
+</code></pre>
+<p>然后输入quit，获得vBond CA，复制给下一步用</p>
+<pre><code>twWDYnOOS6A06t241kjlES14SPOszcnXCT9fg6ekCCJQHh9aolOoIhwWzYE=
+-----END CERTIFICATE REQUEST-----
+quit
+% Granted certificate:
+-----BEGIN CERTIFICATE-----
+MIIDkTCCAnmgAwIBAgIBATANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDExByb290
+Y2EubGFiLmxvY2FsMB4XDTIwMDkyNjA2NDk1NVoXDTIxMDkyNjA2NDk1NVowgacx
+CzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTERMA8GA1UEBxMIU2FuIEpvc2UxDDAK
+BgNVBAsTA2xhYjEMMAoGA1UEChMDbGFiMT8wPQYDVQQDEzZ2Ym9uZC01ZDM5NTg5
+Yy1kNDVmLTQxM2YtYWQ0Mi1jZjkyMTVhZWZmNjUtMC5sYWIubG9jYWwxGzAZBgkq
+hkiG9w0BCQEWDGFkbWluQHNjLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
+AQoCggEBAOX7qRtSUX0WpUvICGEnIINcnc1FDXPZmGG+zixWw2l3ZJIHM1JkzazI
+97FeEXkSX+OVeqodSHUF98+/DNJ1Bgczmqb8PhtqMf9qBc4lys4v2WqDUszhH9Bm
+LBIk7GXkkVXz3DJ0q9NOvukiyFAinzGkgZjPfIO1cFlDrPOUB8A9mG71U9HaR9p9
+1nWEWlJrtNZVOv6VLRkkVXSKZ2n1BHvfWm73xKiK/18JDk1QfsJaoIC8cYudnHxB
+ZJFzhmhTjAmOXPCkPgjmSvwvM49Hl6eWFtZQD7kYN+XfTy/oxk13ZeDB8hNhQJIp
+GJ862ZxeerwXHtmxQbMecCFZWlry1Q0CAwEAAaNTMFEwDwYDVR0TAQH/BAUwAwEB
+/zAfBgNVHSMEGDAWgBS+TCDTflsQjJCKoJFbHv7Kt0J0kzAdBgNVHQ4EFgQU8kbe
+V1HJZgkHjtCyo8B2O+1VfNIwDQYJKoZIhvcNAQELBQADggEBADdyhIXQAfhYNRKM
+MhHHCGe8KFGx9hrvOe2I1nvJdLe4SJaPBo+ELl/z/DTLbZhNARUahAOGdZgWk/pM
+CLrpPNP5FbTiOeAtsrYG11bbDS9KG6llcKHqpibdslkyo7djpQBimNHYtKnu45WU
+AUwHF4ZQ6alXY+TFb7U8zcW3ga0Xs9CeCJiXGgdWLRgICpiz4GbEDW8tIJUnNwmg
+lz5uwVwTI/YwzuXaybx7fUw6XPefK8mFfd0wcAwicZisNl541v2+lVph0S/MAclZ
+7+Y6YTBrAEZRzf2olnT/Peg6OolE9dbhFecAFFuhBmbHMtPZilf88xJiKK5Y6O+r
+3SoHJ/w=
+-----END CERTIFICATE-----
+</code></pre>
+<p>安装vBond CA证书</p>
+<figure data-type="image" tabindex="7"><img src="https://eflytop.github.io/post-images/1625541372989.png" alt="" loading="lazy"></figure>
+<h2 id="五-vsmart配置">五、vSmart配置</h2>
+<h3 id="1-基本配置-2">1. 基本配置</h3>
+<pre><code>system
+ host-name             vSmart
+ system-ip             10.100.0.12
+ site-id               100
+ organization-name     lab
+ vbond 223.1.1.11
+
+vpn 0
+ interface eth0
+ ip address 223.1.1.12/24
+no shut
+ tunnel-interface
+   allow-service sshd
+   allow-service netconf
+ip route 0.0.0.0/0 223.1.1.1
+commit
+</code></pre>
+<h3 id="2-加入vmanager-2">2. 加入vManager</h3>
+<figure data-type="image" tabindex="8"><img src="https://eflytop.github.io/post-images/1625541413334.png" alt="" loading="lazy"></figure>
+<h3 id="3-安装证书同vbond操作省略">3. 安装证书同vBond操作，省略</h3>
+<h2 id="六-vedge安装">六、vEdge安装</h2>
+<h3 id="1-基本配置-3">1. 基本配置</h3>
+<pre><code>system
+host-name             vEdge1
+system-ip             10.12.0.1
+site-id               12
+organization-name     lab
+vbond 223.1.1.11
+
+vpn 0
+interface ge0/0 
+ip address 192.1.1.2/24
+no shut
+tunnel-interface
+color public-internet
+encapsulation ipsec
+allow-service all
+interface ge0/1
+ip address 172.31.11.2/24
+no shut
+tunnel-interface
+color mpls
+encapsulation ipsec
+allow-service all
+ip route 0.0.0.0/0 192.1.1.1
+commit
+</code></pre>
+<h3 id="2-安装root-ca">2. 安装Root CA</h3>
+<p>进入vshell模式</p>
+<pre><code>vEdge1# vshell
+vEdge1:~$ cat &gt;&gt; root-ca.txt &lt;&lt;EOF
+&gt;
+</code></pre>
+<p>看到&gt;提示符后粘贴Root CA证书的内容</p>
+<pre><code>&gt; -----BEGIN CERTIFICATE-----
+&gt; MIIDFDCCAfygAwIBAgIBATANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDExByb290
+&gt; Y2EubGFiLmxvY2FsMB4XDTIwMDkyNjA4MjY1N1oXDTIzMDkyNjA4MjY1N1owGzEZ
+&gt; MBcGA1UEAxMQcm9vdGNhLmxhYi5sb2NhbDCCASIwDQYJKoZIhvcNAQEBBQADggEP
+&gt; ADCCAQoCggEBAM9hTvXeXbQ8R6SDXrMAUA/aZ78965bovbSr9sUqFPyXKf5PH6FY
+&gt; mKIJQDKRwcz4CIXJEd0QHbtsSih/qzEKaGSYknezbTMYA5Tqab5fu4Pa84isCngM
+&gt; v962Ubh4Q0w8OGv2Na9A4HR0rwlquVb2LvigDKqtLrxsOvr6ORr67WHuRXs+Kpe6
+&gt; 1mUFWf2pMTPAZGn+ZT7iPkdiWR+2G+mFYXSG/aHAmDABqWfCSXmg1QOCOT5zSLZd
+&gt; mbb9jiJlRZATGtnlDCXyu546Nqvoa+iJcc8X3WWFhhHVyq3abhqAlKIcv9kj+Lq4
+&gt; rZ1VvCMcZKdoNMaVrhsv6GmIZWVuPjz/SrcCAwEAAaNjMGEwDwYDVR0TAQH/BAUw
+&gt; AwEB/zAOBgNVHQ8BAf8EBAMCAYYwHwYDVR0jBBgwFoAUN5ywvAkOjuS7vl7yR+Am
+&gt; xt+iABMwHQYDVR0OBBYEFDecsLwJDo7ku75e8kfgJsbfogATMA0GCSqGSIb3DQEB
+&gt; CwUAA4IBAQBhPgh5l2rXj+oFYuWfnLW/372wn5Xu/HnxMXqmXzhZpXVbDh5DdG7e
+&gt; +q4qJxRkuzmLZtjAhd+OIz1AQdGjclwlrraUPIBF2lT381PuUkuBOfL275HmBgoU
+&gt; iMKmXKHBBsX+/4DxVvGL6QK6i1VL+Gs0moBkJiudip9tkiMMmbMKkQfLDG/9c8Pv
+&gt; DysCHfTVcyMsGf/dKngtaPEXE4IlwRWih9cug6IShnLp+SePvf2kQow/vzv2bDXW
+&gt; bDwyuzxvp0F5GdJUivbkItM7rHFuL+apgAU2baiOSJ7t2CJlOy261iCvZpuILz80
+&gt; GRaJYW3BzETN7BssLkLmaU91FW1DyzIb
+&gt; -----END CERTIFICATE-----
+</code></pre>
+<p>安装Root CA</p>
+<pre><code>&gt; EOF
+vEdge1:~$ exit
+exit
+vEdge1# request root-cert-chain install /home/admin/root-ca.txt
+Uploading root-ca-cert-chain via VPN 0
+Copying ... /home/admin/root-ca.txt via VPN 0
+Updating the root certificate chain..
+Successfully installed the root certificate chain
+</code></pre>
+<h3 id="3-生成vedge-csr">3. 生成vEdge CSR</h3>
+<pre><code>vEdge1# request csr upload home/admin/csr.txt
+Uploading CSR via VPN 0
+Enter organization-unit name            : lab
+Re-enter organization-unit name          : lab
+Generating private/public pair and CSR for this vedge device
+Generating CSR for this vedge device   ........[DONE]
+Copying ... /home/admin/csr.txt via VPN 0
+CSR upload successful
+</code></pre>
+<p>查看vEdge CSR</p>
+<pre><code>vEdge1# vshell
+vEdge1:~$ more csr.txt
+-----BEGIN CERTIFICATE REQUEST-----
+MIIDQTCCAikCAQAwgcAxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+MREwDwYDVQQHEwhTYW4gSm9zZTEMMAoGA1UECxMDbGFiMRQwEgYDVQQKEwt2SVB0
+ZWxhIEluYzFBMD8GA1UEAxM4dmVkZ2UtYjMzYjRkMzItZmNmZi00NGZmLThmYjMt
+YjRkZTQ5NWViODM5LTAudmlwdGVsYS5jb20xIjAgBgkqhkiG9w0BCQEWE3N1cHBv
+cnRAdmlwdGVsYS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCx
+DErEzO/aU0bz/NGaY9l6RNkj+Dj6XOOPEtRWRhAb+ecbpZpV4ETLRJOyvbOyGhaS
+UxkYQ3njUlGjW1ukz5k2jnK5r79lr3v28UXWsLFlO7K9rjt10M3yBPDrNoRT6Eme
+Ds7qiYem0RwmNEf0ZoN/p/iYxO/DK+LgPfqva2FrxUQxs/ZGi6/UUDkU24y0kVmv
+OgOiKIZ5S9M3uJIbu31KB6kiDmSTIZQstkIG2HwcRwkLFqAaD/4DFWl1wpdhLxKs
+pbrbmTdvUg7QqbAbk50rfmt+HjsjdCZT465cy7Gvlj2OpWR8uE7gdbRFskdF41ZY
+D81lpEzI2ViN2HOzs8t3AgMBAAGgOzA5BgkqhkiG9w0BCQ4xLDAqMAkGA1UdEwQC
+MAAwHQYDVR0OBBYEFAxPCi7gYJg4QFjeqsXXJuO9wzYPMA0GCSqGSIb3DQEBCwUA
+A4IBAQCIsCxDO3/Bpom3xStNlMGGEZZF0Ht/gMHtIQPPT3eGgRgw/MLSxdjMLE6H
+YCDoarAImcRXpT2i+1vb/aRDnGZlVwm/AOzQBPZ3Z4SsfXzEGOE3EuefiB9T2dAf
+L4IHpEcSbZMQtPoGynNi7obutoXZTWShB+VRF/SnkzHB8Z4pX10zZ/YTCn880adM
+pYYysDaEh8zdBUYo2dO/x4c2U0+mmZyWG3mFtkfwktHb+FpyPXhiswwWwdcJR+q4
+SAmwAXGQdeBAiC+zm+TRnqmnd0iwN9FmNDl6Y0fc7/MGhRpJEjzTAk4SAgoR61QV
+gnuXTZAZeWPpgpEjd4OimrZSa7z1
+-----END CERTIFICATE REQUEST-----
+vEdge1:~$ exit
+</code></pre>
+<h3 id="4-安装vedge-ca">4. 安装vEdge CA</h3>
+<p>通过vEdge CSR生成vEdge CA</p>
+<pre><code>IOS-CA#crypto pki server PKI request pkcs10 terminal
+PKCS10 request in base64 or pem
+
+% Enter Base64 encoded or PEM formatted PKCS10 enrollment request.
+% End with a blank line or &quot;quit&quot; on a line by itself.
+</code></pre>
+<p>看到% End with a blank line or &quot;quit&quot; on a line by itself.提示后粘贴上一步生成的vEdge CSR</p>
+<pre><code>% End with a blank line or &quot;quit&quot; on a line by itself.
+-----BEGIN CERTIFICATE REQUEST-----
+MIIDQTCCAikCAQAwgcAxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+MREwDwYDVQQHEwhTYW4gSm9zZTEMMAoGA1UECxMDbGFiMRQwEgYDVQQKEwt2SVB0
+ZWxhIEluYzFBMD8GA1UEAxM4dmVkZ2UtYjMzYjRkMzItZmNmZi00NGZmLThmYjMt
+YjRkZTQ5NWViODM5LTAudmlwdGVsYS5jb20xIjAgBgkqhkiG9w0BCQEWE3N1cHBv
+cnRAdmlwdGVsYS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCx
+DErEzO/aU0bz/NGaY9l6RNkj+Dj6XOOPEtRWRhAb+ecbpZpV4ETLRJOyvbOyGhaS
+UxkYQ3njUlGjW1ukz5k2jnK5r79lr3v28UXWsLFlO7K9rjt10M3yBPDrNoRT6Eme
+Ds7qiYem0RwmNEf0ZoN/p/iYxO/DK+LgPfqva2FrxUQxs/ZGi6/UUDkU24y0kVmv
+OgOiKIZ5S9M3uJIbu31KB6kiDmSTIZQstkIG2HwcRwkLFqAaD/4DFWl1wpdhLxKs
+pbrbmTdvUg7QqbAbk50rfmt+HjsjdCZT465cy7Gvlj2OpWR8uE7gdbRFskdF41ZY
+D81lpEzI2ViN2HOzs8t3AgMBAAGgOzA5BgkqhkiG9w0BCQ4xLDAqMAkGA1UdEwQC
+MAAwHQYDVR0OBBYEFAxPCi7gYJg4QFjeqsXXJuO9wzYPMA0GCSqGSIb3DQEBCwUA
+A4IBAQCIsCxDO3/Bpom3xStNlMGGEZZF0Ht/gMHtIQPPT3eGgRgw/MLSxdjMLE6H
+YCDoarAImcRXpT2i+1vb/aRDnGZlVwm/AOzQBPZ3Z4SsfXzEGOE3EuefiB9T2dAf
+L4IHpEcSbZMQtPoGynNi7obutoXZTWShB+VRF/SnkzHB8Z4pX10zZ/YTCn880adM
+pYYysDaEh8zdBUYo2dO/x4c2U0+mmZyWG3mFtkfwktHb+FpyPXhiswwWwdcJR+q4
+SAmwAXGQdeBAiC+zm+TRnqmnd0iwN9FmNDl6Y0fc7/MGhRpJEjzTAk4SAgoR61QV
+gnuXTZAZeWPpgpEjd4OimrZSa7z1
+-----END CERTIFICATE REQUEST-----
+</code></pre>
+<p>然后输入quit，获得vEdge-CA</p>
+<pre><code>twWDYnOOS6A06t241kjlES14SPOszcnXCT9fg6ekCCJQHh9aolOoIhwWzYE=
+-----END CERTIFICATE REQUEST-----
+quit
+% Granted certificate:
+-----BEGIN CERTIFICATE-----
+MIIDqjCCApKgAwIBAgIBBjANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDExByb290
+Y2EubGFiLmxvY2FsMB4XDTIwMDkyODAzMjQxNFoXDTIxMDkyODAzMjQxNFowgcAx
+CzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMREwDwYDVQQHEwhTYW4g
+Sm9zZTEMMAoGA1UECxMDbGFiMRQwEgYDVQQKEwt2SVB0ZWxhIEluYzFBMD8GA1UE
+AxM4dmVkZ2UtYjMzYjRkMzItZmNmZi00NGZmLThmYjMtYjRkZTQ5NWViODM5LTAu
+dmlwdGVsYS5jb20xIjAgBgkqhkiG9w0BCQEWE3N1cHBvcnRAdmlwdGVsYS5jb20w
+ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCxDErEzO/aU0bz/NGaY9l6
+RNkj+Dj6XOOPEtRWRhAb+ecbpZpV4ETLRJOyvbOyGhaSUxkYQ3njUlGjW1ukz5k2
+jnK5r79lr3v28UXWsLFlO7K9rjt10M3yBPDrNoRT6EmeDs7qiYem0RwmNEf0ZoN/
+p/iYxO/DK+LgPfqva2FrxUQxs/ZGi6/UUDkU24y0kVmvOgOiKIZ5S9M3uJIbu31K
+B6kiDmSTIZQstkIG2HwcRwkLFqAaD/4DFWl1wpdhLxKspbrbmTdvUg7QqbAbk50r
+fmt+HjsjdCZT465cy7Gvlj2OpWR8uE7gdbRFskdF41ZYD81lpEzI2ViN2HOzs8t3
+AgMBAAGjUzBRMA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0jBBgwFoAUN5ywvAkOjuS7
+vl7yR+Amxt+iABMwHQYDVR0OBBYEFAxPCi7gYJg4QFjeqsXXJuO9wzYPMA0GCSqG
+SIb3DQEBCwUAA4IBAQCtzCCOjd8tqde4Kga1OCy07cxHPdCMjSctA65g6mbJo06r
+3U04ZkGaNHtOecpTMojCXkqW15L0EJAlQwuS1D84E7kdTyoj3DMb94KPh7ROy7xu
+K0+5vm/gPQwDpvizoKDKJxvp+k7Vmud6o1PqH30Wg6HjdpRJpA4+KzNP4kDvlUxv
+Yfp9TQb9NoDnzMsCAWGzVTsDy9NsAIbKulAaWjNu18OUp8KIdCf3CUg46ihw9uw8
+f8W3tyaJEwYdehIhM81Vxznedx2Do1WCpQcFTV0SE5icC4YwBFHaGLVBUCX9kUsi
+PWHFdprmm6YSTcuDlnRaIFmaZeYHIa9LmbbgLTiH
+-----END CERTIFICATE-----
+</code></pre>
+<p>进入vshell模式</p>
+<pre><code>vEdge1# vshell
+vEdge1:~$ cat &gt;&gt; vedge-ca.txt &lt;&lt;EOF
+&gt;
+</code></pre>
+<p>看到&gt;提示符后粘贴vEdge CA证书的内容</p>
+<pre><code>&gt; -----BEGIN CERTIFICATE-----
+&gt; MIIDFDCCAfygAwIBAgIBATANBgkqhkiG9w0BAQsFADAbMRkwFwYDVQQDExByb290
+&gt; Y2EubGFiLmxvY2FsMB4XDTIwMDkyNjA4MjY1N1oXDTIzMDkyNjA4MjY1N1owGzEZ
+&gt; MBcGA1UEAxMQcm9vdGNhLmxhYi5sb2NhbDCCASIwDQYJKoZIhvcNAQEBBQADggEP
+&gt; ADCCAQoCggEBAM9hTvXeXbQ8R6SDXrMAUA/aZ78965bovbSr9sUqFPyXKf5PH6FY
+&gt; mKIJQDKRwcz4CIXJEd0QHbtsSih/qzEKaGSYknezbTMYA5Tqab5fu4Pa84isCngM
+&gt; v962Ubh4Q0w8OGv2Na9A4HR0rwlquVb2LvigDKqtLrxsOvr6ORr67WHuRXs+Kpe6
+&gt; 1mUFWf2pMTPAZGn+ZT7iPkdiWR+2G+mFYXSG/aHAmDABqWfCSXmg1QOCOT5zSLZd
+&gt; mbb9jiJlRZATGtnlDCXyu546Nqvoa+iJcc8X3WWFhhHVyq3abhqAlKIcv9kj+Lq4
+&gt; rZ1VvCMcZKdoNMaVrhsv6GmIZWVuPjz/SrcCAwEAAaNjMGEwDwYDVR0TAQH/BAUw
+&gt; AwEB/zAOBgNVHQ8BAf8EBAMCAYYwHwYDVR0jBBgwFoAUN5ywvAkOjuS7vl7yR+Am
+&gt; xt+iABMwHQYDVR0OBBYEFDecsLwJDo7ku75e8kfgJsbfogATMA0GCSqGSIb3DQEB
+&gt; CwUAA4IBAQBhPgh5l2rXj+oFYuWfnLW/372wn5Xu/HnxMXqmXzhZpXVbDh5DdG7e
+&gt; +q4qJxRkuzmLZtjAhd+OIz1AQdGjclwlrraUPIBF2lT381PuUkuBOfL275HmBgoU
+&gt; iMKmXKHBBsX+/4DxVvGL6QK6i1VL+Gs0moBkJiudip9tkiMMmbMKkQfLDG/9c8Pv
+&gt; DysCHfTVcyMsGf/dKngtaPEXE4IlwRWih9cug6IShnLp+SePvf2kQow/vzv2bDXW
+&gt; bDwyuzxvp0F5GdJUivbkItM7rHFuL+apgAU2baiOSJ7t2CJlOy261iCvZpuILz80
+&gt; GRaJYW3BzETN7BssLkLmaU91FW1DyzIb
+&gt; -----END CERTIFICATE-----
+</code></pre>
+<p>安装vEdge CA</p>
+<pre><code>&gt; EOF
+vEdge1:~$ exit
+exit
+vEdge1# request certificate install home/admin/vedge-ca.txt
+Installing certificate via VPN 0
+Copying ... /home/admin/vedge-ca.txt via VPN 0
+Successfully installed the certificate
+</code></pre>
+<h3 id="5-加入vmanage">5. 加入vManage</h3>
+<p>查看vEdge Chassis number和serial number</p>
+<pre><code>vEdge1# show certificate serial
+Chassis number: b33b4d32-fcff-44ff-8fb3-b4de495eb839 serial number: 06
+</code></pre>
+<p>加入vManage</p>
+<pre><code>vManage# request vedge add chassis-num b33b4d32-fcff-44ff-8fb3-b4de495eb839 serial-num 06
+</code></pre>
+<p>vBond也收到加入一下</p>
+<pre><code>vBond# request vedge add chassis-num b33b4d32-fcff-44ff-8fb3-b4de495eb839 serial-num 06
+</code></pre>
+<p>vManage网页端同步一下</p>
+<figure data-type="image" tabindex="9"><img src="https://eflytop.github.io/post-images/1625541591835.png" alt="" loading="lazy"></figure>
+<h3 id="6-验证">6. 验证</h3>
+<pre><code>vSmart# show control connections
+PEER                                          PEER                                                                                            
+PEER    PEER PEER            SITE       DOMAIN PEER                                                                                                               PRIV  PEER                                    PUB                                                                                             
+INDEX TYPE    PROT SYSTEM IP       ID         ID     PRIVATE IP                                                                                                         PORT  PUBLIC IP                               PORT  REMOTE COLOR                                                                                STATE UPTIME
+--------------------------------------------------------------------------------                                                                           --------------------------------------------------------------------------------                                                                           -----------------------
+0     vedge   dtls 10.12.0.1       12         1      192.1.1.2                                                                                                          12366 192.1.1.2                               12366 public-internet                                                                            up     0:00:00:36
+0     vbond   dtls 0.0.0.0         0          0      223.1.1.11                                                                                                         12346 223.1.1.11                              12346 default                                                                                    up     1:18:32:07
+0     vmanage dtls 10.100.0.10     100        0      223.1.1.10                                                                                                         12346 223.1.1.10                              12346 default                                                                                    up     1:18:31:48
+1     vbond   dtls 0.0.0.0         0          0      223.1.1.11    
+vSmart# show omp peers
+R -&gt; routes received
+I -&gt; routes installed
+S -&gt; routes sent
+
+DOMAIN    OVERLAY   SITE
+PEER             TYPE    ID        ID        ID        STATE    UPTIME           R/I/S
+------------------------------------------------------------------------------------------
+10.12.0.1        vedge   1         1         12        up       0:00:01:58       0/0/0                                                                                                     12346 223.1.1.11                              12346 default                                                                                    up     1:18:32:07
+
+</code></pre>
+<h2 id="七-controller恢复出厂设置">七、Controller恢复出厂设置</h2>
+<pre><code>vEdge#request software reset
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/gre-vs-ipip-tunneling/" class="post-title gt-a-link">
+                    GRE vs IPIP Tunneling
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

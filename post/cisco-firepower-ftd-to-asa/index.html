@@ -1,0 +1,317 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>思科Firepower 2100 FTD更换ASA镜像 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    思科Firepower 2100 FTD更换ASA镜像
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-08-07 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/e7NmXdMOw6/" class="post-tags">
+                            # Firepower
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/ql3ShvfbkV/" class="post-tags">
+                            # ASA
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/IVqiwfRDKr/" class="post-tags">
+                            # FTD
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>如果您购买的Firepower防火墙是使用的FTD镜像，但是您又十分怀念ASA软件怎么办？您是可以删除FTD镜像并重新安装ASA镜像的。这有点类似于把您笔记本原厂预装的Windows 10换成Linux系统。本文将向您展示其安装步骤。</p>
+<!-- more -->
+<hr>
+<h5 id="step-0-设备连接">Step 0 -  设备连接</h5>
+<ul>
+<li>用Console线连接笔记本USB口和防火墙Console口。</li>
+<li>用网线连接笔记本网卡和防火墙管理口Management1/1。</li>
+<li>笔记本设置一个192.168.45.0/24网段的IP，比如192.168.45.123/24，网关192.168.45.45。</li>
+<li>笔记本上准备好ASA镜像，并启用TFTP软件。<br>
+<img src="https://eflytop.github.io/post-images/1628302120404.png" alt="" loading="lazy"></li>
+</ul>
+<h5 id="step-1-擦除ftd镜像">Step 1 - 擦除FTD镜像</h5>
+<p>从Console口输入账号密码登录FXOS，其默认账号密码为admin/Admin123。然后就是格式化硬盘。</p>
+<pre><code>firepower-2110# connect local-mgmt 
+firepower-2110(local-mgmt)# format everything
+All configuration and bootable images will be lost.
+Do you still want to format? (yes/no):
+</code></pre>
+<p>输入yes后Firepower 2100会自动重启。</p>
+<h5 id="step-2-进入rommon模式">Step 2 - 进入ROMMON模式</h5>
+<p>当重启后输出提示<code>Use BREAK or ESC to interrupt boot</code>时按Esc键。</p>
+<pre><code>Current image running: Boot ROM0
+Last reset cause: ResetRequest
+DIMM_1/1 : Present
+DIMM_2/1 : Present
+
+Platform FPR-2130 with 32768 MBytes of main memory
+BIOS has been successfully locked !!
+MAC Address: 0c:75:bd:08:c9:80
+
+Use BREAK or ESC to interrupt boot.
+Use SPACE to begin boot immediately.
+</code></pre>
+<p>如果没有及时按Esc键，Firepower 2100会尝试启动3次后最终进入ROMMON模式。（因为镜像都被删了，只有ROMMON可用）</p>
+<h5 id="step-3-通过-tftp启动fxos">Step 3 - 通过 TFTP启动FXOS</h5>
+<p>在ROMMON模式下使用命令行：<br>
+<code>address 192.168.45.45</code> : 配置管理口Management1/1地址<br>
+<code>netmask 255.255.255.0</code> ：配置管理口网络掩码<br>
+<code>server 192.168.45.123</code> ：设置TFTP服务器，也就是笔记本的IP地址<br>
+<code>gateway 192.168.45.1</code> ：设置网关，也可以不配置<br>
+<code>file cisco-asa-fp2k.9.8.3.8.SPA</code> ：设置TFTP服务器上的ASA镜像包名。FXOS和ASA是同一个软件包。</p>
+<pre><code>rommon 1&gt; address 192.168.45.45
+rommon 2&gt; netmask 255.255.255.0
+rommon 3&gt; server 192.168.45.123
+rommon 4&gt; gateway 192.168.45.1
+rommon 5&gt; file cisco-asa-fp2k.9.8.3.8.SPA
+rommon 6&gt; set
+[…]
+rommon 7&gt; sync
+rommon 8&gt; tftp -b
+Enable boot bundle: tftp_reqsize = 268435456
+[…]
+link up
+Receiving cisco-asa-fp2k.9.8.3.8.SPA from 10.70.33.222!!!!!!!!
+[…]
+</code></pre>
+<ul>
+<li>set ：显示网络设置。您还可以使用 ping 命令来验证与服务器的连接</li>
+<li>sync ：保存网络设置</li>
+<li>tftp -b ： 加载 FXOS</li>
+</ul>
+<p>加载完毕后Firepower 2100会进入FXOS模式。</p>
+<h5 id="step-4-使用u盘将asa镜像复制至防火墙flash">Step 4 - 使用U盘将ASA镜像复制至防火墙flash</h5>
+<p>现在我们只是从TFTP服务器加载了ASA镜像并进入了FXOS系统，ASA镜像并没有上传至Firepower 2100 Flash中。<br>
+据网上资料所示，我们使用TFTP、FTP等协议上传ASA镜像到Flash不起作用，只能使用U盘将ASA镜像复制至防火墙Flash。</p>
+<ul>
+<li>复制ASA镜像至U盘，插入机箱上的USB接口。(U盘文件系统需为FAT32格式)</li>
+<li>从Console口输入账号密码登录FXOS，其默认账号密码为admin/Admin123。</li>
+<li>使用如下命令复制：</li>
+</ul>
+<pre><code>firepower-2110# scope firmware
+firepower-2110 /firmware # download image usbA:/cisco-asa-fp2k.9.8.3.8.SPA
+Please use the command 'show download-task' or 'show download-task detail' to check download progress.
+firepower-2130 /firmware # show download-task
+Download task:
+ File Name Protocol Server Port Userid State
+ --------- -------- --------------- ---------- --------------- -----
+ cisco-asa-fp2k.9.8.3.8.SPA
+ Usb A 0 Downloading
+</code></pre>
+<ul>
+<li>复制完毕后进行安装</li>
+</ul>
+<pre><code>irepower 2110 /firmware # show package
+Name                                          Package-Vers
+--------------------------------------------- ------------
+cisco-asa-fp2k.9.8.3.8.SPA                    9.8.3.8
+firepower 2110 /firmware # scope auto-install
+firepower-2130 /firmware/auto-install # install security-pack version 9.8.3.8
+The system is currently installed with security software package not set, which has:
+- The platform version: not set
+If you proceed with the upgrade 9.8.3.8, it will do the following:
+- upgrade to the new platform version 2.2.2.97
+- install with CSP asa version 9.8.3.8
+During the upgrade, the system will be reboot
+Do you want to proceed ? (yes/no):yes
+This operation upgrades firmware and software on Security Platform Components
+Here is the checklist of things that are recommended before starting Auto-Install
+(1) Review current critical/major faults
+(2) Initiate a configuration backup
+Do you want to proceed? (yes/no):yes
+Triggered the install of software package version 9.8.3.8
+Install started. This will take several minutes.
+For monitoring the upgrade progress, please enter 'show' or 'show detail' command.
+firepower-2130 /firmware/auto-install # show detail
+Firmware Auto-Install:
+Package-Vers: 9.8.3.8
+Oper State: Scheduled
+Installation Time: 2021-02-22T22:50:53.775
+Upgrade State: Ready
+Upgrade Status:
+Validation Software Pack Status:
+Firmware Upgrade Status:
+Current Task:
+</code></pre>
+<p>从安装进程可以看到，先是安装的FXOS version 2.2.2.97，然后安装的是ASA version 9.8.3.8。FXOS和ASA两个软件被打包在一起。</p>
+<h5 id="使用asa软件">使用ASA软件</h5>
+<p>上个步骤执行完后会自动重启进入FXOS模式。这样我们就可以愉快的使用ASA了。</p>
+<pre><code>firepower-2110# connect asa
+Attaching to Diagnostic CLI ... Press 'Ctrl+a then d' to detach.
+Type help or '?' for a list of available commands.
+ciscoasa&gt; enable
+Password: &lt;blank&gt;
+ciscoasa# configure terminal
+ciscoasa(config)# 
+</code></pre>
+<p>Firepower ASA软件的配置、使用教程请参考我之前的文章：<br>
+<a href="https://www.eflytop.com/post/firepower-2100-asa-installation/">思科Firepower 2100运行ASA配置指南</a></p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/firepower-2100-asa-installation/" class="post-title gt-a-link">
+                    思科Firepower 2100运行ASA配置指南
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

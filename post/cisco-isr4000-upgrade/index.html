@@ -1,0 +1,325 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Cisco ISR4000路由器从3.x升级至Denali 16.2指南 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Cisco ISR4000路由器从3.x升级至Denali 16.2指南
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-04-20 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>在管理和升级ISR4000系列路由器时，我们发现IOS XE版本有3.x的，也有Denali 16.x的。我们可以将3.x版本升级到16.x版本，已实现生成环境的稳定性。在本文中，我们将向您展示如何将ISR4000从IOS XE 3.6升级到Denali 16.2.1。</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://eflytop.github.io/post-images/1625538734306.jpg" alt="" loading="lazy"></figure>
+<h5 id="您需要知道的事">您需要知道的事</h5>
+<ul>
+<li>路由器的最低ROMMON版本必须为16.2（1r）</li>
+<li>以下过程只适合于ISR4000。ASR1000和CSR的过程可能略有不同</li>
+</ul>
+<h5 id="先决条件">先决条件</h5>
+<ul>
+<li>从cisco.com下载ISR4000 ROMMON（除非您的路由器已经满足16.2（1r）或更高版本的要求）</li>
+<li>从cisco.com下载ISR4000软件Denali 16.x IOS XE</li>
+</ul>
+<h5 id="步骤1验证当前rommon版本">步骤1：验证当前ROMMON版本</h5>
+<p>在这里，我们运行的15.4（3r）S3，早于16.2（1r），因此需要升级</p>
+<pre><code>ISR4321#show rom-monitor r0
+
+System Bootstrap, Version 15.4(3r)S3, RELEASE SOFTWARE
+Copyright (c) 1994-2014 by cisco Systems, Inc.
+</code></pre>
+<pre><code>ISR4321#sh platform
+Chassis type: ISR4321/K9
+
+Slot Type State Insert time (ago)
+--------- ------------------- --------------------- -----------------
+0 ISR4321/K9 ok 01:26:51
+0/0 ISR4321-2x1GE ok 01:25:41
+R0 ISR4321/K9 ok, active 01:26:51
+F0 ISR4321/K9 ok, active 01:26:51
+P0 PWR-4320-AC ok 01:26:34
+P2 ACS-4320-FANASSY ok 01:26:34
+
+Slot CPLD Version Firmware Version
+--------- ------------------- ---------------------------------------
+0 15030325 15.4(3r)S3
+R0 15030325 15.4(3r)S3
+F0 15030325 15.4(3r)S3
+</code></pre>
+<h5 id="步骤2将新的rommon文件和denali-16x软件复制到路由器flash">步骤2：将新的ROMMON文件和Denali 16.x软件复制到路由器flash</h5>
+<pre><code>ISR4321#copy ftp://&lt;username&gt;:&lt;password&gt;@&lt;IP Address&gt;/isr4300-rommon.162-1r.pkg flash:
+Destination filename [isr4300-rommon.162-1r.pkg]?
+Accessing ftp://*:*@172.16.32.40/isr4300-rommon.162-1r.pkg...
+Loading isr4300-rommon.162-1r.pkg !!!!!!!!!!!
+[OK - 2646988/4096 bytes]
+
+2646988 bytes copied in 1.295 secs (2044006 bytes/sec)
+</code></pre>
+<pre><code>ISR4321#copy ftp://&lt;username&gt;:&lt;password&gt;@&lt;IP Address&gt;/isr4300-universalk9.16.02.01.SPA.bin flash:
+Destination filename [isr4300-universalk9.16.02.01.SPA.bin]?
+Accessing ftp://*:*@172.16.32.40/isr4300-universalk9.16.02.01.SPA.bin...
+Loading isr4300-universalk9.16.02.01.SPA.bin !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[OK - 497494797/4096 bytes]
+
+497494797 bytes copied in 199.583 secs (2492671 bytes/sec)
+</code></pre>
+<h5 id="步骤3验证文件是否上传成功并校验md5">步骤3：验证文件是否上传成功，并校验MD5</h5>
+<pre><code>ISR4321#dir bootflash: | in isr
+17 -rw- 2646988 Apr 2 2016 11:00:47 -07:00 isr4300-rommon.162-1r.pkg
+18 -rw- 497494797 Apr 2 2016 10:54:31 -07:00 isr4300-universalk9.16.02.01.SPA.bin
+</code></pre>
+<pre><code>ISR4321#verify /md5 flash:isr4300-rommon.162-1r.pkg
+.........................................Done!
+verify /md5 (bootflash:isr4300-rommon.162-1r.pkg) = 2afd598e38c5420162762ec80b285f14
+</code></pre>
+<h5 id="步骤4进行rommon升级">步骤4：进行ROMMON升级</h5>
+<p>这个过程大概需要5分钟，之后需要重新启动路由器</p>
+<pre><code>ISR4321#upgrade rom-monitor filename bootflash:isr4300-rommon.162-1r.pkg all
+Chassis model ISR4321/K9 has a single rom-monitor.
+
+Upgrade rom-monitor
+
+Target copying rom-monitor image file
+selected : 0
+Booted : 0
+Reset Reason: 0
+
+Info: Upgrading entire flash from the rommon package
+4259840+0 records in
+4259840+0 records out
+262144+0 records in
+262144+0 records out
+655360+0 records in
+655360+0 records out
+4194304+0 records in
+4194304+0 records out
+File is a FIPS ROMMON image
+FIPS-140-3 Load Test on has PASSED.
+Authenticity of the image has been verified.
+Switching to ROM 1
+8192+0 records in
+8192+0 records out
+Upgrade image MD5 signature is b702a0a59a46a20a4924f9b17b8f0887
+4259840+0 records in
+4259840+0 records out
+4194304+0 records in
+4194304+0 records out
+4194304+0 records in
+4194304+0 records out
+262144+0 records in
+262144+0 records out
+Upgrade image MD5 signature verification is b702a0a59a46a20a4924f9b17b8f0887
+Switching back to ROM 0
+ROMMON upgrade complete.
+To make the new ROMMON permanent, you must restart the RP.
+
+ISR4321#reload
+</code></pre>
+<h5 id="步骤5验证rommon是否升级成功">步骤5：验证ROMMON是否升级成功</h5>
+<pre><code>ISR4321#sh rom-monitor R0
+
+System Bootstrap, Version 16.2(1r), RELEASE SOFTWARE
+Copyright (c) 1994-2016 by cisco Systems, Inc.
+</code></pre>
+<pre><code>ISR4321#show platform
+Chassis type: ISR4321/K9
+
+Slot Type State Insert time (ago)
+--------- ------------------- --------------------- -----------------
+0 ISR4321/K9 ok 00:04:37
+0/0 ISR4321-2x1GE ok 00:03:24
+R0 ISR4321/K9 ok, active 00:04:37
+F0 ISR4321/K9 ok, active 00:04:37
+P0 PWR-4320-AC ok 00:04:20
+P2 ACS-4320-FANASSY ok 00:04:20
+
+Slot CPLD Version Firmware Version
+--------- ------------------- ---------------------------------------
+0 15030325 16.2(1r)
+R0 15030325 16.2(1r)
+F0 15030325 16.2(1r)
+</code></pre>
+<h5 id="步骤6升级软件denali-16x-ios-xe">步骤6：升级软件Denali 16.x IOS XE</h5>
+<p>修改系统boot变量，保存配置并重启路由器</p>
+<pre><code>ISR4321(config)#no boot system bootflash:isr4300-universalk9.03.16.00c.S.155-3.S0c-ext.SPA.bin
+ISR4321(config)#boot system bootflash:isr4300-universalk9.16.02.01.SPA.bin
+ISR4321#wr
+Building configuration...
+[OK]
+ISR4321#reload
+</code></pre>
+<h5 id="步骤7验证路由器是否已升级到ios-xe-16x版本">步骤7：验证路由器是否已升级到IOS XE 16.x版本</h5>
+<pre><code>ISR4321#sh ver
+Cisco IOS XE Software, Version 16.02.01
+Cisco IOS Software, ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version Denali 16.2.1, RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2016 by Cisco Systems, Inc.
+Compiled Mon 28-Mar-16 03:45 by mcpre
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/cacti-install-on-centos/" class="post-title gt-a-link">
+                    如何在CentOS 7上安装Cacti 1.2
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

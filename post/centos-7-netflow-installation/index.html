@@ -1,0 +1,272 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Centos 7安装与配置Netflow Analyzer 12.4 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Centos 7安装与配置Netflow Analyzer 12.4
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-04-06 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/gGrHw33uD5/" class="post-tags">
+                            # Centos
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/uQqelgFFIi/" class="post-tags">
+                            # Netflow
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>NetFlow Analyzer是一款专业的带宽监控与流量 协议分析软件，帮助用户了解网络流量构成、协议分布以及用户的行为。它利用Flow技术，支持NetFlow、sFlow、cflowd、J-Flow、IPFIX、NetStream等协议，</p>
+<!-- more -->
+<p>集流量收集、分析、报告于一体，为优化网络性能，实现带宽最佳利用以及扩容规划提供科学的依据。<br>
+<img src="https://eflytop.github.io/post-images/1625537933158.webp" alt="" loading="lazy"><br>
+本文将介绍如何在Centos 7系统下安装该软件12.4版本。</p>
+<h5 id="1-安装前环境准备">1 安装前环境准备</h5>
+<p>1.1 将SELinux设置为permissive模式，并重新启动服务器</p>
+<pre><code class="language-powershell">[root@centos ~]# sed -i ‘s/^SELINUX=.*/SELINUX=permissive/g’ /etc/selinux/config
+[root@centos ~]# reboot
+</code></pre>
+<p>1.2 将从官网下载好的ManageEngine_NetFlowAnalyzer_64bit.bin安装包通过sftp工具上传至tmp目录<br>
+1.3 设置文件权限</p>
+<pre><code class="language-powershell">[root@centos ~]# cd /tmp
+[root@centos tmp]# ls
+ManageEngine_NetFlowAnalyzer_64bit.bin yum.log
+[root@centos tmp]# chmod a+x ManageEngine_NetFlowAnalyzer_64bit.bin
+</code></pre>
+<h5 id="2-软件安装">2 软件安装</h5>
+<p>2.1 进入安装文件所在目录，使用如下命令开始安装</p>
+<pre><code class="language-powershell">[root@centos ~]# cd /tmp
+[root@centos tmp]# ls
+ManageEngine_NetFlowAnalyzer_64bit.bin
+[root@centos tmp]# ./ManageEngine_NetFlowAnalyzer_64bit.bin
+Preparing to install…
+Extracting the JRE from the installer archive…
+Unpacking the JRE…
+</code></pre>
+<p>2.2 接下来按照命令提示安装，其中有个步骤可以设定web端口，默认是8060，这里我改成8080，监听端口9996不变</p>
+<pre><code class="language-powershell">===============================================================================
+Webserver port
+Enter requested information
+Enter the Web Server Port Number (Default: 8060): 8080
+===============================================================================
+NetFlow Listener Port
+Enter requested information
+Enter the NetFlow Listener Port (Default: 9996):
+===============================================================================
+Pre-Installation Summary
+Please review the following before continuing:
+Product Name:
+ManageEngine NetFlowAnalyzer
+Install Folder:
+/opt/ManageEngine/OpManager
+</code></pre>
+<h5 id="3-软件和服务配置">3 软件和服务配置</h5>
+<p>3.1 将软件变更为系统服务：进入安装好之后的软件的bin目录，运行 ./linkAsService.sh</p>
+<pre><code class="language-powershell">[root@centos ~]# cd /opt/ManageEngine/OpManager/bin
+[root@centos bin]# ./linkAsService.sh
+Running Opmanager as Service
+Opmanager Directory –&gt; /opt/ManageEngine/OpManager/bin
+Opmanager Service name –&gt; OpManager.service
+OpManager.service successfully placed in /etc/systemd/system/ directory
+Enabling services –
+Created symlink from /etc/systemd/system/multi-user.target.wants/OpManager.service to /etc/systemd/system/OpManager.service.
+Opmanager service is added successfully
+To start the service login as superuser and use – systemctl start OpManager.service
+</code></pre>
+<p>3.2 启用netflow服务</p>
+<pre><code class="language-powershell">[root@centos ~]# systemctl start OpManager.service
+</code></pre>
+<p>3.3 输入./run.sh 运行程序</p>
+<pre><code class="language-powershell">[root@centos ~]# cd /opt/ManageEngine/OpManager/bin
+[root@centos bin]# ./run.sh
+/opt/ManageEngine/OpManager/bin/..
+一月 03, 2020 1:30:34 下午 com.manageengine.silentmigration.SilentPatchUpdater getServerHome信息: SilentInstallation Home Dir : /opt/ManageEngine/OpManager
+/opt/ManageEngine/OpManager/bin/..
+/opt/ManageEngine/OpManager/bin/..
+一月 03, 2020 1:30:37 下午 com.adventnet.persistence.ConfigurationParser$1 resolveEntity信息: /opt/ManageEngine/OpManager/bin/null/conf/customer-config.xml doesnt exists, hence it is skipped
+
+Port Availability Module
+8080 No Client
+13306 No postgres
+22 No SSHD
+69 No TFTP
+514 No Syslog
+#
+Server is already running
+Connect to http://localhost:8080 to view the client
+</code></pre>
+<p>3.3 防火墙设置</p>
+<pre><code class="language-powershell">[root@centos ~]# firewall-cmd –permanent –zone=public –add-port=8080/tcp
+success
+[root@centos ~]# firewall-cmd –permanent –zone=public –add-port=9996/udp
+success
+[root@centos ~]# firewall-cmd –reload
+success
+</code></pre>
+<h5 id="4-netflow的使用">4 Netflow的使用</h5>
+<p>在浏览器中输入NetFlow Server的地址并跟上设定好的Port即可，如下：<br>
+http://你的ip:8080<br>
+初始用户名和密码为：admin/admin</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/fg-asa-firewall-vpn/" class="post-title gt-a-link">
+                    FortiGate与ASA防火墙建立IPsec VPN
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

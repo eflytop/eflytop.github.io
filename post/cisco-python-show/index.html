@@ -1,0 +1,341 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>如何使用Python自动采集路由器信息 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    如何使用Python自动采集路由器信息
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-07-07 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/PoAVydsJ4_/" class="post-tags">
+                            # Python
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>还有一小时就要下班了，老板突然指示马上收集一下所有设备的IP，软件版本，序列号信息，一台一台登录肯定得加班了，要不用Python自动采集吧。</p>
+<!-- more -->
+<h3 id="环境">环境</h3>
+<ol>
+<li>Python 3.9</li>
+<li>Python模块<br>
+Netmiko - ssh登录路由器模块<br>
+Getpass - 非明文输入密码<br>
+TextFSM - 把无规律的文本内容整理成有序的数据格式<br>
+ntc-templates - 用TextFSM开发的用于网络设备的模板集，包括Cisco、Avaya、Huawei等<br>
+openpyxl - 把查询结果输出到EXCEL<br>
+concurrent.futures - 并发模块</li>
+</ol>
+<h3 id="代码">代码</h3>
+<pre><code>#!/usr/bin/env python3 
+# -*- coding=utf-8 -*-
+# by EFLYTOP
+# www.eflytop.com
+
+from netmiko import ConnectHandler,NetmikoTimeoutException,NetmikoAuthenticationException 
+from openpyxl import Workbook
+from openpyxl.styles import PatternFill, Border, Side
+from pprint import pprint
+from concurrent.futures import ThreadPoolExecutor
+import getpass
+import sys
+import time
+
+print('请把要执行的IP清单保存至device.txt文件')
+username = input(&quot;请输入设备用户名：&quot;)
+password = getpass.getpass(prompt='请输入密码:')
+#enpass = getpass.getpass(prompt='请输入enable密码:')
+
+succeed_ip_list = []
+failed_login_ip_list = []
+hostname_list = []
+sn_list = []
+uptime_list = []
+model_list = []
+os_version_list = []
+image_list = []
+
+wb = Workbook()
+ws = wb.active
+ws.title = 'Inventory'
+ws['A1'] = 'Hostname'
+ws['B1'] = 'IP Address'
+ws['C1'] = 'Serial Number'
+ws['D1'] = 'Uptime'
+ws['E1'] = 'Model'
+ws['F1'] = 'OS Version'
+ws['G1'] = 'Image'
+yellowFill = PatternFill(start_color='FFFF00', end_color='FFFF00', fill_type='solid')
+thin_border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'), bottom=Side(style='thin'))
+ws['A1'].fill=yellowFill
+ws['B1'].fill=yellowFill
+ws['C1'].fill=yellowFill
+ws['D1'].fill=yellowFill
+ws['E1'].fill=yellowFill
+ws['F1'].fill=yellowFill
+ws['G1'].fill=yellowFill
+
+file_time = time.strftime(&quot;%Y-%m-%d_%H_%M_%S&quot;, time.localtime())
+#print输出到txt文件
+class Logger(object):
+	def __init__(self, filename=&quot;Default.log&quot;):
+		self.terminal = sys.stdout
+		self.log = open(filename, &quot;a&quot;)
+	def write(self, message):
+		self.terminal.write(message)
+		self.log.write(message)
+	def flush(self):
+		pass
+sys.stdout = Logger('log_' + file_time + '.log')
+
+start_time = time.time()
+
+def get_ip_address():
+    with open('device.txt') as f:
+        addresses = f.read().splitlines()
+    return addresses
+
+def retrieve_data(ipaddr):
+    connection_info = {
+	    	'device_type': 'cisco_ios',
+	    	'ip': ipaddr,
+	    	'username': username,
+	   		'password': password,
+	    	#'port': 22,
+	   	 	#'secret': enpass,
+    }
+    try:
+        with ConnectHandler(**connection_info) as conn:
+            #conn.enable()
+            print('INFO: ',time.strftime('%x %X'),'已经登录设备：', ipaddr)
+            output = conn.send_command('show version', use_textfsm=True)
+            succeed_ip_list.append(ipaddr)
+            hostname = conn.find_prompt().replace('#','')
+            hostname_list.append(hostname)
+            sn = output[0]['serial'][0]
+            sn_list.append(sn)
+            uptime = output[0]['uptime']
+            uptime_list.append(uptime)
+            model = output[0]['hardware'][0]
+            model_list.append(model)
+            os_version = output[0]['version']
+            os_version_list.append(os_version)
+            image = output[0]['running_image']
+            image_list.append(image)
+
+    except NetmikoAuthenticationException : #认证失败报错记录
+    	print('INFO: ',time.strftime('%x %X'),ipaddr,'[Error 1] Authentication failed.')
+    	failed_login_ip_list.append(ipaddr)
+
+    except NetmikoTimeoutException : #登录超时报错记录
+    	print('INFO: ',time.strftime('%x %X'),ipaddr,'[Error 2] Connection timed out.')
+    	failed_login_ip_list.append(ipaddr)
+
+    except Exception as e:
+    	print('INFO: ',time.strftime('%x %X'),ipaddr,e)
+    	failed_login_ip_list.append(ipaddr)
+
+with ThreadPoolExecutor(max_workers=5) as exe:
+    ip_addresses = get_ip_address()
+    results = exe.map(retrieve_data, ip_addresses)
+
+row_top_number = len(succeed_ip_list) + 2
+for hostname, ip, sn, uptime, model, os_version, image, row in zip(hostname_list, succeed_ip_list, sn_list, uptime_list, model_list, os_version_list, image_list, range(2, row_top_number)):
+    ws.cell(row=row, column=1, value=hostname)
+    ws.cell(row=row, column=2, value=ip)
+    ws.cell(row=row, column=3, value=sn)
+    ws.cell(row=row, column=4, value=uptime)
+    ws.cell(row=row, column=5, value=model)
+    ws.cell(row=row, column=6, value=os_version)
+    ws.cell(row=row, column=7, value=image)
+
+dims = {}
+for row in ws.rows:
+    for cell in row:
+        cell.border=thin_border
+        if cell.value:
+            dims[cell.column_letter] = max((dims.get(cell.column, 0), len(str(cell.value))))
+
+for col, value in dims.items():
+    ws.column_dimensions[col].width = value + 5
+
+wb.save('inventory_' + file_time +'.xlsx')
+
+print('下列主机登录失败，请手动检查：')
+for i in failed_login_ip_list:
+	print(i)
+#print(succeed_ip_list)
+#print(hostname_list)
+#print(model_list)
+print('本次执行时长：%.2f'%(time.time()-start_time) + '秒')
+print(&quot;命令执行完毕，执行日志请查看&quot; + 'log_' + file_time + '.log')
+print('执行结果请查看' + 'inventory_' + file_time +'.xlsx')
+</code></pre>
+<h3 id="输出结果">输出结果</h3>
+<figure data-type="image" tabindex="1"><img src="https://eflytop.github.io/post-images/1625618547294.png" alt="" loading="lazy"></figure>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/cisco-isr4000-upgrade/" class="post-title gt-a-link">
+                    Cisco ISR4000路由器从3.x升级至Denali 16.2指南
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

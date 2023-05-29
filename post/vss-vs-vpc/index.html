@@ -1,0 +1,251 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Cisco VSS vs VPC | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Cisco VSS vs VPC
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-09-06 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/05RirekEW1/" class="post-tags">
+                            # VPC
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/_ZWh19O1VY/" class="post-tags">
+                            # VSS
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>VSS和VPC都可以将Port-channel的概念扩展到两个独立的物理交换机，这样消除了Spanning Tree，简化了管理，提高了HA。第三个设备可以分别连接至这两台硬件交换机，并配置成PortChannel。第三个设备可以是交换机、服务器，或者支持PortChannel的其他网络设备。</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://eflytop.github.io/post-images/1630999354675.jpg" alt="" loading="lazy"></figure>
+<hr>
+<h5 id="传统port-channel">传统Port Channel</h5>
+<p>交换机端使用LACP或者PAgP协议，服务器端使用NIC teaming技术讲多条链路绑定在一起，STP运行在所有物理链路组成的逻辑链路上。优点是绝大部分交换机都支持这种技术，缺点是所有port channel的组成端口都必须位于同一台交换机上，可能造成单点故障。</p>
+<h5 id="stackwise">StackWise</h5>
+<p>Catalyst低端交换上使用的堆叠技术，可以将两台交换机“合并”为一台进行使用和管理，同一prot channel当中的端口可以位于不同物理交换机上。不需要特殊配置，只需要连线即可。只有一个控制层面(control plane)和管理层面（management plane），主要用于接入层端口扩充，同一逻辑单元最多能够接入9台物理交换机。</p>
+<h5 id="vss">VSS</h5>
+<p>Catalyst 4500和6500上使用的技术，但是对于硬件型号和引擎要求较多，并且只能将两台设备“合并”在一起。此外，VSS不只是二层技术，而是将二层和三层全部“合并”。只有一个控制层面（control plane）和管理层面（management plane）。<br>
+<img src="https://eflytop.github.io/post-images/1631002714046.png" alt="" loading="lazy"></p>
+<h5 id="vpc">VPC</h5>
+<p>适用于Nexus交换机，单纯的二层跨机箱冗余技术，不支持VPN或QoS等三层特性。和StackWise和VSS不同的是，配置了vPC的Nexus依然保持各自的控制层面(control plane)和管理层面（management palne），可以用于构建大二层网络。此外还有vitual Port Channel Plus和Enhanced virtual Port Channel。<br>
+<img src="https://eflytop.github.io/post-images/1631002662200.png" alt="" loading="lazy"></p>
+<h5 id="vss和vpc具体对比如下">VSS和VPC具体对比如下：</h5>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>VPC</th>
+<th>VSS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Nexus交换机特性</td>
+<td>Catalyst 6500，4500交换机特性</td>
+</tr>
+<tr>
+<td>2</td>
+<td>两台交换机两个控制层面</td>
+<td>两台交换机合并成一个逻辑交换机，只有一个控制层面</td>
+</tr>
+<tr>
+<td>3</td>
+<td>两台交换机两个管理层面</td>
+<td>只有一个管理层面</td>
+</tr>
+<tr>
+<td>4</td>
+<td>需要配置HSRP</td>
+<td>不需要配置HSRP</td>
+</tr>
+<tr>
+<td>5</td>
+<td>支持LACP</td>
+<td>支持PAGP和LACP</td>
+</tr>
+<tr>
+<td>6</td>
+<td>支持L2 PortChannel</td>
+<td>支持L2和L3 PortChannel</td>
+</tr>
+<tr>
+<td>7</td>
+<td>两台交换机都处于active状态并单独工作</td>
+<td>两台交换机管理层面和控制层面一主一备</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Control messages are carried by CFS over Peer Link and a Peer keep alive link is used to check heartbeats and detect dual-active condition</td>
+<td>Control messages and Data frames flow between active and standby via VSL</td>
+</tr>
+</tbody>
+</table>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/Cisco-C9300-Password-Recovery/" class="post-title gt-a-link">
+                    Cisco C9300交换机密码恢复
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

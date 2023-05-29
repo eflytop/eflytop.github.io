@@ -1,0 +1,1320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://eflytop.github.io</id>
+    <title>一览网事</title>
+    <updated>2023-05-29T09:17:08.891Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://eflytop.github.io"/>
+    <link rel="self" href="https://eflytop.github.io/atom.xml"/>
+    <subtitle>一筐罗网事的点点滴滴。</subtitle>
+    <logo>https://eflytop.github.io/images/avatar.png</logo>
+    <icon>https://eflytop.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2023, 一览网事</rights>
+    <entry>
+        <title type="html"><![CDATA[Cacti启用HTTPS登录]]></title>
+        <id>https://eflytop.github.io/post/cacti-https/</id>
+        <link href="https://eflytop.github.io/post/cacti-https/">
+        </link>
+        <updated>2023-05-29T02:22:34.000Z</updated>
+        <summary type="html"><![CDATA[<p>HTTP协议传输的数据都是未加密的，也就是明文的，因此使用HTTP协议传输隐私信息非常不安全，为了保证这些隐私数据能加密传输，于是网景公司（Netscape Communications Corporation）设计了SSL（Secure Sockets Layer）协议用于对HTTP协议传输的数据进行加密，从而就诞生了HTTPS。本文将介绍在Cacti中启用https登录。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>HTTP协议传输的数据都是未加密的，也就是明文的，因此使用HTTP协议传输隐私信息非常不安全，为了保证这些隐私数据能加密传输，于是网景公司（Netscape Communications Corporation）设计了SSL（Secure Sockets Layer）协议用于对HTTP协议传输的数据进行加密，从而就诞生了HTTPS。本文将介绍在Cacti中启用https登录。</p>
+<!-- more -->
+<ol>
+<li>
+<p>安装mod_ssl软件包</p>
+<pre><code>yum install -y mod_ssl
+</code></pre>
+</li>
+<li>
+<p>生成服务器私钥ca.key</p>
+<pre><code>openssl genrsa -out ca.key 2048
+</code></pre>
+</li>
+<li>
+<p>用私钥ca.key文件生成证书请求文件ca.csr</p>
+<pre><code>openssl req -new -key ca.key -out ca.csr
+</code></pre>
+<p>按照提示完成相关信息：</p>
+<pre><code>You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [XX]:CN
+State or Province Name (full name) []:Hunan
+Locality Name (eg, city) [Default City]:Changsha
+Organization Name (eg, company) [Default Company Ltd]:CNCONN Company
+Organizational Unit Name (eg, section) []:NetBU
+Common Name (eg, your name or your server's hostname) []:cacti
+Email Address []:netadmin@cnconn.com
+
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []:123456
+An optional company name []:
+</code></pre>
+<p>如果找第三方公司签名，请把csr文件发给第三方公司签名。以下第4步是自签设定。</p>
+</li>
+<li>
+<p>生成证书文件ca.crt</p>
+<pre><code>openssl x509 -req -days 700 -in ca.csr -signkey ca.key -out ca.crt
+</code></pre>
+<p>可以见到生成成功的提示信息：</p>
+<pre><code>Signature ok
+subject=C = CN, ST = Hunan, L = Changsha, O = CNCONN Company, OU = NetBU, CN = cacti, emailAddress = netadmin@cnconn.com
+Getting Private key
+</code></pre>
+<p>如果是找第三方公司签名，第三方公司签名后会把crt文件发给你。</p>
+</li>
+<li>
+<p>复制证书文件到对应的目录</p>
+<pre><code>cp ca.crt /etc/pki/tls/certs
+cp ca.key /etc/pki/tls/private/ca.key
+cp ca.csr /etc/pki/tls/private/ca.csr
+</code></pre>
+</li>
+<li>
+<p>修改Apache SSL配置文件</p>
+<pre><code>vi /etc/httpd/conf.d/ssl.conf
+</code></pre>
+<p>找到如下两行配置文件：</p>
+<pre><code>SSLCertificateFile /etc/pki/tls/certs/localhost.crt
+SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
+</code></pre>
+<p>修改为：</p>
+<pre><code>SSLCertificateFile /etc/pki/tls/certs/ca.crt
+SSLCertificateKeyFile /etc/pki/tls/private/ca.key
+</code></pre>
+</li>
+<li>
+<p>修改防火墙配置</p>
+<pre><code>firewall-cmd --permanent --add-service=https
+firewall-cmd --permanent --remove-service=http
+firewall-cmd --reload
+firewall-cmd --permanent --list-all
+
+</code></pre>
+</li>
+<li>
+<p>重启http服务</p>
+<pre><code>systemctl restart httpd
+</code></pre>
+</li>
+<li>
+<p>服务器一般是放置在硬件网络防火墙DMZ区，如是，还需开放硬件网络防火墙的权限。</p>
+</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[FortiGate使用内置iperf服务进行带宽测试]]></title>
+        <id>https://eflytop.github.io/post/fortigate-speed-test/</id>
+        <link href="https://eflytop.github.io/post/fortigate-speed-test/">
+        </link>
+        <updated>2023-03-27T01:38:46.000Z</updated>
+        <summary type="html"><![CDATA[<p>FortiGate具有内置的iPerf3客户端和有限的嵌入式 iPerf3 服务器，本文介绍如何使用FortiGate内置iperf服务进行带宽测试，适用固件版本为FortiGate V7.0和V7.2。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>FortiGate具有内置的iPerf3客户端和有限的嵌入式 iPerf3 服务器，本文介绍如何使用FortiGate内置iperf服务进行带宽测试，适用固件版本为FortiGate V7.0和V7.2。</p>
+<!-- more -->
+<p><img src="https://eflytop.github.io/post-images/1679881476276.png" alt="" loading="lazy"><br>
+为了进行测试，本文将“FG-A”作为 Iperf 服务器，将“FG-B”作为 Iperf 客户端。“FG-A”端口port1的IP地址为10.10.10.1/30，“FG-B”端口port1的IP地址为10.10.10.2/30。</p>
+<h6 id="fg-a的配置为">“FG-A”的配置为：</h6>
+<pre><code>config system global
+    set speedtest-server enable
+end
+
+config system interface
+    edit &quot;port1&quot;
+        set ip 10.10.10.1 255.255.255.252
+        set allowaccess ping https ssh http speed-test
+end
+</code></pre>
+<p>注：需在测试端口下允许speed-test流量，该流量使用的是TCP端口5201。</p>
+<h6 id="fg-b的配置为">“FG-B”的配置为：</h6>
+<pre><code>config system interface
+    edit &quot;port1&quot;
+        set ip 10.10.10.2 255.255.255.252
+end
+
+diagnose traffictest client-intf port1
+diagnose traffictest server-intf port1
+diagnose traffictest port 5201
+diagnose traffictest proto 0
+diagnose traffictest show
+    server-intf:    port1
+    client-intf:    port1
+    port:   5201
+    proto:  TCP
+</code></pre>
+<p>注：diagnose traffictest命令是及时的，退出终端后配置就会恢复成默认值。</p>
+<h6 id="测试">测试：</h6>
+<p>使用命令&quot; diagnose traffictest run -c 10.10.10.1&quot;测试带宽：</p>
+<pre><code>diagnose traffictest run -c 10.10.10.1
+Connecting to host 10.10.10.1, port 5201
+[ 10] local 10.10.10.2 port 21241 connected to 10.10.10.1 port 5201
+[ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+[ 10]   0.00-1.00   sec   387 MBytes  3.25 Gbits/sec   70    509 KBytes
+[ 10]   1.00-2.00   sec   446 MBytes  3.75 Gbits/sec    0    566 KBytes
+[ 10]   2.00-3.00   sec   453 MBytes  3.80 Gbits/sec    2    455 KBytes
+[ 10]   3.00-4.00   sec   440 MBytes  3.69 Gbits/sec   26    433 KBytes
+[ 10]   4.00-5.00   sec   452 MBytes  3.80 Gbits/sec    0    515 KBytes
+[ 10]   5.00-6.00   sec   450 MBytes  3.77 Gbits/sec    0    570 KBytes
+[ 10]   6.00-7.00   sec   451 MBytes  3.78 Gbits/sec    4    474 KBytes
+[ 10]   7.00-8.00   sec   452 MBytes  3.79 Gbits/sec    0    539 KBytes
+[ 10]   8.00-9.00   sec   451 MBytes  3.78 Gbits/sec    0    587 KBytes
+[ 10]   9.00-10.00  sec   453 MBytes  3.80 Gbits/sec    2    452 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[ 10]   0.00-10.00  sec  4.33 GBytes  3.72 Gbits/sec  104             sender
+[ 10]   0.00-10.00  sec   338 MBytes   284 Mbits/sec                  receiver
+
+iperf Done.
+iperf3: interrupt - the server has terminated
+</code></pre>
+<pre><code>diagnose traffictest run -c 10.10.10.1 -R
+Connecting to host 10.10.10.1, port 5201
+Reverse mode, remote host 10.10.10.1 is sending
+[ 10] local 10.10.10.2 port 18987 connected to 10.10.10.1 port 5201
+[ ID] Interval           Transfer     Bandwidth
+[ 10]   0.00-1.00   sec   377 MBytes  3.16 Gbits/sec
+[ 10]   1.00-2.00   sec   402 MBytes  3.37 Gbits/sec
+[ 10]   2.00-3.00   sec   410 MBytes  3.44 Gbits/sec
+[ 10]   3.00-4.00   sec   439 MBytes  3.68 Gbits/sec
+[ 10]   4.00-5.00   sec   441 MBytes  3.70 Gbits/sec
+[ 10]   5.00-6.00   sec   450 MBytes  3.77 Gbits/sec
+[ 10]   6.00-7.00   sec   451 MBytes  3.78 Gbits/sec
+[ 10]   7.00-8.00   sec   452 MBytes  3.79 Gbits/sec
+[ 10]   8.00-9.00   sec   453 MBytes  3.80 Gbits/sec
+[ 10]   9.00-10.00  sec   330 MBytes  2.77 Gbits/sec
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bandwidth       Retr
+[ 10]   0.00-10.00  sec   111 MBytes  93.4 Mbits/sec    8             sender
+[ 10]   0.00-10.00  sec  4.11 GBytes  3.53 Gbits/sec                  receiver
+
+iperf Done.
+iperf3: interrupt - the server has terminated
+</code></pre>
+<p>注：默认情况下，iperf 将数据发送到远程主机，也就是说，在本例中，它针对“FG-A”进行了测试 （UPLOAD），要生成相反方向的流量，请使用 -R 选项。<br>
+查看其它可用命令：</p>
+<pre><code>diag traffictest run -h
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[在CentOS 8上安装Zabbix 6.0]]></title>
+        <id>https://eflytop.github.io/post/centos8-install-zabbix6/</id>
+        <link href="https://eflytop.github.io/post/centos8-install-zabbix6/">
+        </link>
+        <updated>2022-03-04T00:28:50.000Z</updated>
+        <summary type="html"><![CDATA[<p>Zabbix可以安装在任何Linux发行版上，但在本教程中，我将向您展示如何在CentOS 8 / RHEL 8 / Alma Linux 8 / Rocky Linux 8上安装最新的Zabbix 6.0 LTS。<br>
+我们首先安装和配置Zabbix服务器，然后是数据库，最后是前端，下图为Zabbix架构。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Zabbix可以安装在任何Linux发行版上，但在本教程中，我将向您展示如何在CentOS 8 / RHEL 8 / Alma Linux 8 / Rocky Linux 8上安装最新的Zabbix 6.0 LTS。<br>
+我们首先安装和配置Zabbix服务器，然后是数据库，最后是前端，下图为Zabbix架构。</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://eflytop.github.io/post-images/1646354008306.jpg" alt="" loading="lazy"></figure>
+<h4 id="1将-selinux-设置为permissive模式">1：将 SELinux 设置为permissive模式</h4>
+<pre><code>setenforce 0 &amp;&amp; sed -i 's/^SELINUX=.*/SELINUX=permissive/g' /etc/selinux/config
+</code></pre>
+<h4 id="2安装-zabbix-服务器-前端和代理">2：安装 Zabbix 服务器、前端和代理</h4>
+<pre><code>rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/x86_64/zabbix-release-6.0-1.el8.noarch.rpm
+dnf clean all
+</code></pre>
+<pre><code>dnf -y install zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-sql-scripts zabbix-selinux-policy zabbix-agent
+</code></pre>
+<h4 id="3安装和配置数据库">3：安装和配置数据库</h4>
+<h5 id="a-安装-mariadb-106">a. 安装 MariaDB 10.6</h5>
+<pre><code>curl -LsS -O https://downloads.mariadb.com/MariaDB/mariadb_repo_setup
+sudo bash mariadb_repo_setup --mariadb-server-version=10.6
+</code></pre>
+<pre><code>dnf -y install mariadb-server &amp;&amp; systemctl start mariadb &amp;&amp; systemctl enable mariadb
+</code></pre>
+<h5 id="b重置数据库的根密码">b.重置数据库的根密码</h5>
+<pre><code>mariadb-secure-installation
+</code></pre>
+<pre><code>Enter current password for root (enter for none): Press Enter
+Switch to unix_socket authentication [Y/n] y
+Change the root password? [Y/n] y
+New password: 输入数据库根密码
+Re-enter new password: 再次输入数据库根密码(我设置的密码为rootDBpass)
+Remove anonymous users? [Y/n]: Y
+Disallow root login remotely? [Y/n]: Y
+Remove test database and access to it? [Y/n]:  Y
+Reload privilege tables now? [Y/n]:  Y
+</code></pre>
+<h5 id="c-创建数据库">c. 创建数据库</h5>
+<pre><code>sudo mysql -uroot -p'rootDBpass' -e &quot;create database zabbix character set utf8mb4 collate utf8mb4_bin;&quot;
+sudo mysql -uroot -p'rootDBpass' -e &quot;grant all privileges on zabbix.* to zabbix@localhost identified by 'zabbixDBpass';&quot;
+</code></pre>
+<p><code>zabbixDBpass</code>为zabbix数据库密码。</p>
+<h5 id="d-导入初始架构和数据">d. 导入初始架构和数据</h5>
+<pre><code>sudo zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.gz | mysql -uzabbix -p'zabbixDBpass' zabbix
+</code></pre>
+<h5 id="e在zabbix配置文件中输入数据库密码">e.在Zabbix配置文件中输入数据库密码</h5>
+<p>使用命令打开文件（如果您没有安装&quot;nano&quot;，请使用&quot;vi&quot;）：<code>zabbix_server.conf</code></p>
+<pre><code>sudo nano /etc/zabbix/zabbix_server.conf
+</code></pre>
+<p>在文件中任意位置添加数据库密码：</p>
+<pre><code>DBPassword=zabbixDBpass
+</code></pre>
+<p>保存并退出文件（ctrl+x，后跟 y 并回车）</p>
+<h4 id="4启动zabbix服务器和代理进程">4：启动Zabbix服务器和代理进程</h4>
+<pre><code>systemctl restart zabbix-server zabbix-agent
+systemctl enable zabbix-server zabbix-agent
+</code></pre>
+<h4 id="5配置防火墙">5：配置防火墙</h4>
+<pre><code>firewall-cmd --add-service={http,https} --permanent
+firewall-cmd --add-port={10051/tcp,10050/tcp} --permanent
+firewall-cmd --reload
+</code></pre>
+<h4 id="6配置-zabbix-前端">6：配置 Zabbix 前端</h4>
+<h5 id="a-重新启动-apache-web-服务器并使其在系统启动时启动">a. 重新启动 Apache Web 服务器，并使其在系统启动时启动</h5>
+<pre><code>systemctl restart httpd php-fpm
+systemctl enable httpd php-fpm
+</code></pre>
+<h5 id="b配置-web-前端">b.配置 Web 前端</h5>
+<p>使用 URL&quot;http:// server_ip_or_dns_name/zabbix&quot;连接到新安装的 Zabbix 前端，以启动 Zabbix 安装向导。在此向导中，您只需要输入Zabbix DB用户的密码，对于其他内容，只需单击&quot;下一步&quot;即可。</p>
+<h4 id="7使用zabbix默认登录凭据登录到前端">7：使用Zabbix默认登录凭据登录到前端</h4>
+<p>使用Zabbix默认管理员用户名&quot;Admin&quot;和密码&quot;zabbix&quot;（不带引号）通过浏览器登录到URL&quot;http:// server_ip_or_dns_name/zabbix&quot;的Zabbix前端。</p>
+<h4 id="8在历史记录和事件表上创建mysql分区可选">8：在历史记录和事件表上创建MySQL分区（可选）</h4>
+<p>Zabbix使用<code>housekeeping</code>进程删除旧的趋势和历史数据。使用 SQL <code>DELETE</code>语句从数据库中删除旧数据可能会对数据库性能产生负面影响。因此，有时候我们看到这个告警：Zabbix housekeeper processes more than 75% busy</p>
+<p>这个问题可以通过数据库分区轻松解决。分区为每个小时或每天创建表，并在不再需要时删除它们。SQL <code>DROP </code>比 <code>DELETE </code>语句更有效。</p>
+<p>您可以参照<a href="https://bestmonitoringtools.com/zabbix-partitioning-tables-on-mysql-database/">这个教程</a>对MySQL表进行分区。</p>
+<h4 id="9优化zabbix服务器可选">9：优化Zabbix服务器（可选）</h4>
+<p>如果您计划监视大量设备，请继续执行此步骤。</p>
+<p>使用<code>vi</code>或<code>nano</code>命令打开<code>zabbix_server.conf</code>文件:</p>
+<pre><code>nano /etc/zabbix/zabbix_server.conf
+</code></pre>
+<p>然后将下列配置添加到文件中的任意位置：</p>
+<pre><code>StartPollers=100
+StartPollersUnreachable=50
+StartPingers=50
+StartTrappers=10
+StartDiscoverers=15
+StartPreprocessors=15
+StartHTTPPollers=5
+StartAlerters=5
+StartTimers=2
+StartEscalators=2
+CacheSize=128M
+HistoryCacheSize=64M
+HistoryIndexCacheSize=32M
+TrendCacheSize=32M
+ValueCacheSize=256M
+</code></pre>
+<p>保存并退出文件（ctrl+x，后跟 y 并回车）。请根据实际情况修改这些配置，比如你不使用ping监控，可以设定<code>StartPingers=1</code>。</p>
+<h4 id="10优化-mysqlmariadb-数据库可选">10：优化 MySQL/MariaDB 数据库（可选）</h4>
+<p>有时您会碰到下面这个告警：<br>
+<code>[Z3001] connection to database 'Zabbix' failed: [1040] Too many connections/var/log/zabbix/zabbix_server.log</code><br>
+那么您可以添加如下配置：</p>
+<h5 id="a-创建自定义-mysql-配置文件">a. 创建自定义 MySQL 配置文件</h5>
+<p>通过<code>vi</code>或<code>nano</code>命令创建<code>mysql.cnf</code>配置文件：</p>
+<pre><code>nano /etc/my.cnf.d/mysql.cnf
+</code></pre>
+<p>粘贴如下配置：</p>
+<pre><code>[mysqld]
+max_connections = 404
+innodb_buffer_pool_size = 800M
+
+innodb-log-file-size = 128M
+innodb-log-buffer-size = 128M
+innodb-file-per-table = 1
+innodb_buffer_pool_instances = 8
+innodb_old_blocks_time = 1000
+innodb_stats_on_metadata = off
+innodb-flush-method = O_DIRECT
+innodb-log-files-in-group = 2
+innodb-flush-log-at-trx-commit = 2
+
+tmp-table-size = 96M
+max-heap-table-size = 96M
+open_files_limit = 65535
+max_connect_errors = 1000000
+connect_timeout = 60
+wait_timeout = 28800
+
+</code></pre>
+<p>保存并退出文件（ctrl+x，后跟 y 并回车）。给该文件添加权限：</p>
+<pre><code>chown mysql:mysql /etc/my.cnf.d/mysql.cnf
+chmod 644 /etc/my.cnf.d/mysql.cnf
+</code></pre>
+<p>要注意的2个参数：</p>
+<ol>
+<li>参数<code>max_connections</code>必须大于所有 Zabbix 进程的总数加上 150。您可以使用以下命令自动检查Zabbix进程的数量（该命令的结果是加上了150后的值）：</li>
+</ol>
+<pre><code>egrep &quot;^Start.+=[0-9]&quot; /etc/zabbix/zabbix_server.conf | awk -F &quot;=&quot; '{s+=$2} END {print s+150}'
+404
+</code></pre>
+<ol start="2">
+<li>第二个重要的参数是<code> innodb_buffer_pool_size</code>。它决定了MySQL可以获得多少内存来缓存InnoDB表和索引数据。如果服务器上仅安装了数据库，则应将该参数设置为系统内存的 70%。</li>
+</ol>
+<p>但是通常情况下，我们将Zabbix数据库和Apache安装在同一台服务器，因此建议将<code>innodb_buffer_pool_size</code>设置为总系统内存的40%。如果服务器是2G RAM，那么这个值将设定为是800MB。</p>
+<h5 id="b-重新启动-zabbix-server-和-mysql-服务">b. 重新启动 Zabbix Server 和 MySQL 服务</h5>
+<pre><code>systemctl stop zabbix-server
+systemctl stop mysql
+systemctl start mysql
+systemctl start zabbix-server
+</code></pre>
+<h4 id="11如何管理zabbix-mysql-apache服务">11：如何管理Zabbix / MySQL / Apache服务</h4>
+<p>有时您需要检查或重新启动Zabbix，MySQL或Apache服务， 使用下面的命令来执行此操作。</p>
+<pre><code>Zabbix Server
+systemctl &lt;status/restart/start/stop&gt; zabbix-server
+
+MySQL/MariaDB Server
+systemctl &lt;status/restart/start/stop&gt; mysql
+
+Apache Server
+systemctl &lt;status/restart/start/stop&gt; httpd
+
+PHP FastCGI Process Manager
+systemctl &lt;status/restart/start/stop&gt; php-fpm
+
+Zabbix Agent
+systemctl &lt;status/restart/start/stop&gt; zabbix-agent
+
+upgrade
+dnf upgrade 'zabbix-*'
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[VMware SD-WAN EDGE冗余方案]]></title>
+        <id>https://eflytop.github.io/post/vwmare-sd-wan-edge-ha/</id>
+        <link href="https://eflytop.github.io/post/vwmare-sd-wan-edge-ha/">
+        </link>
+        <updated>2021-11-30T07:52:25.000Z</updated>
+        <summary type="html"><![CDATA[<p>SD-WAN采用管理平面、控制层面和数据层面分离的工作模式，其中VCO负责管理层面、VCG中的VCC部分负责控制层面、VCE负责数据层面。因此，VCO和VCG（VCC部分）的部署位置其实影响没有那么大，只是我们管理操作稍微慢点，更新路由稍微慢点（毫秒级别），数据通过VCE传输的，直接影响用户感知。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>SD-WAN采用管理平面、控制层面和数据层面分离的工作模式，其中VCO负责管理层面、VCG中的VCC部分负责控制层面、VCE负责数据层面。因此，VCO和VCG（VCC部分）的部署位置其实影响没有那么大，只是我们管理操作稍微慢点，更新路由稍微慢点（毫秒级别），数据通过VCE传输的，直接影响用户感知。</p>
+<!-- more -->
+<p>如果所有的VCO和VCG都挂了，根据官方信息，VCE上的路由表保持不变，在一定的时间内数据传输不受影响。</p>
+<ol>
+<li>VCE有3种冗余模式或架构</li>
+</ol>
+<ul>
+<li>HA高可用High Availability，适合大中小站点及数据中心</li>
+<li>集群Clustering，适合大型站点及数据中心</li>
+<li>VRRP (used in branch only)，适合小站点</li>
+</ul>
+<ol start="2">
+<li>
+<p>3种冗余模式特征对比表<br>
+<img src="https://eflytop.github.io/post-images/1638259020859.png" alt="" loading="lazy"></p>
+</li>
+<li>
+<p>架构示意图</p>
+</li>
+</ol>
+<ul>
+<li>HA模式<br>
+HA模式又分为普通模式与增强模式，无论哪种模式都只能为Active和Standby状态。当Active VCE出问题时，Standby会自动接替Active继续工作。<br>
+两台VCE之间使用GE1口用作心跳线，建议部署新的非HA模式的VCE时，不要使用G1口，以便日后方便部署HA模式。<br>
+HA普通模式：<br>
+<img src="https://eflytop.github.io/post-images/1638259383857.png" alt="" loading="lazy"><br>
+HA增强模式：<br>
+<img src="https://eflytop.github.io/post-images/1638259388653.png" alt="" loading="lazy"></li>
+<li>集群模式：<br>
+每个VCE的LAN口和WAN口都需要一个独立的IP，如果VCE直连Internet，每个VCE都需要一个公网地址，MPLS线路建议先接入自行管理的路由器，然后通过路由器与每台VCE建BGP邻居。<br>
+根据官方文档，VCG会根据每台VCE的负载情况（CPU，内存，隧道容量）来调度，优先使用最低利用率的VCE来承担新的流量。<br>
+集群建议部署的VCE的数量为N+1, N为满足隧道数和吞吐量的最小VCE数量。<br>
+<img src="https://eflytop.github.io/post-images/1638259392988.png" alt="" loading="lazy"></li>
+<li>VRRP模式：<br>
+典型的运作模式为，主线路为专线接其它品牌路由器，备用线路为Internet接VCE，当专线断线时，流量自动切换到Internet接入的SD-WAN上。<br>
+<img src="https://eflytop.github.io/post-images/1638259397265.png" alt="" loading="lazy"></li>
+</ul>
+<ol start="4">
+<li>VCO上VCE的冗余状态显示<br>
+<img src="https://eflytop.github.io/post-images/1638259422990.png" alt="" loading="lazy"><br>
+lh-vce和lh-vce2为一个集群，HA列显示为【集群】，集群中的每台VCE单独展示；<br>
+zz-vce为HA普通模式，HA列显示为一个圆点，2台VCE只展示一台；<br>
+vce-b为HA普通模式，HA列显示为一个圆点，2台VCE只展示一台；<br>
+vce-e为VRRP模式，HA列显示为双向箭头加数字。</li>
+</ol>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[VMware SD-WAN组件简介]]></title>
+        <id>https://eflytop.github.io/post/vmware-sd-wan-by-velocloud/</id>
+        <link href="https://eflytop.github.io/post/vmware-sd-wan-by-velocloud/">
+        </link>
+        <updated>2021-11-22T06:08:21.000Z</updated>
+        <summary type="html"><![CDATA[<p>VMware SD-WAN by VeloCloud由三大组件组成，可以为企业提供高性能、可靠的组网服务。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>VMware SD-WAN by VeloCloud由三大组件组成，可以为企业提供高性能、可靠的组网服务。</p>
+<!-- more -->
+<p>这三个组件为：</p>
+<ul>
+<li>VMware SD-WAN Orchestrator</li>
+<li>VMware SD-WAN Gateway</li>
+<li>VMware SD-WAN Edge</li>
+</ul>
+<h5 id="vmware-sd-wan-orchestrator">VMware SD-WAN Orchestrator</h5>
+<p>简称VCO，是基于虚拟化/云部署的组件，为VMware SD-WAN的管理中心，提供集中管理、配置和监控服务，通过它，可以实现Edge设备快速部署。此外，它还提供丰富的API接口，可用于提供管理、故障排除甚至与其它运营支持系统/业务支持系统（OSS/BSS）集成。它的主要功能有：</p>
+<ul>
+<li>配置： 激活和部署Edge，并设定策略，它能支持Edge零接触部署。</li>
+<li>监控： 能提供基于五元组甚至应用级别的监控数据，供客户或网络工程师使用。</li>
+<li>诊断：为用户提供远程诊断、数据包捕获或其他用于故障排除的相关工具。</li>
+</ul>
+<h5 id="vmware-sd-wan-gateway">VMware SD-WAN Gateway</h5>
+<p>简称VCG，是基于虚拟化/云部署的组件，可以充当两个独立的角色，提供两个独立的服务。这两个服务为控制平面服务和数据平面服务。提供控制平面服务的子组件为VMware SD-WAN Controller（简称VCC），它提供如下两个很重要的功能：</p>
+<ol>
+<li>链路发现</li>
+<li>路由信息分发与更新<br>
+数据平面服务可以用来与SaaS和运营商集成，提供数据转发服务。<br>
+VCG有两个接口，一个网络接口连接到互联网，另一个网络接口连接到服务提供商的MPLS骨干网，使之能够访问服务提供商的基础设施和服务。</li>
+</ol>
+<h5 id="vmware-sd-wan-edge">VMware SD-WAN Edge</h5>
+<p>简称VCE，部署在中心点、分支点或IaaS平台，为公网、私有线路提供接入，并转发数据到其它站点。除了有各种性能的硬件型号外，也提供用于虚拟化/云部署的软件镜像。</p>
+<blockquote>
+<p>VMware SD-WAN Overlay<br>
+Overlay层面，VMware SD-WAN使用VeloCloud Multi-path Protocol (VCMP) 协议来创建基于IPsec协议的隧道。VCMP隧道在两个VCE之间建立或在VCE和VCG之间建立。VCMP使用UDP端口2426。</p>
+</blockquote>
+<h5 id="三大组件之间的通信">三大组件之间的通信</h5>
+<ul>
+<li>
+<p>管理平面<br>
+管理平面流量启用TLS 1.2加密传输，涉及以下组件的通信：</p>
+<ul>
+<li>VCE和VCO</li>
+<li>VCG和VCO<br>
+VCE和VCG都注册在VCO，使用管理平面来接收配置和策略更新，以及上传统计信息和事件日志。VCE和VCG每30秒向VCO发送一次心跳包，如果连续四个心跳包丢失，VCE和VCG则被声明为离线。VCE还会每五分钟向VCO发送一次统计信息。</li>
+</ul>
+</li>
+<li>
+<p>控制平面<br>
+控制平面利用VCE和VCG之间的VCMP隧道进行通信，用于交换路由信息。VCG检测WAN线路IP地址和带宽，并充当路由反射器角色，使VCE能收到和更新每个站点的路由。</p>
+</li>
+<li>
+<p>数据平面<br>
+数据平面利用在两个VCE之间或在VCE和VCG之间的VCMP隧道进行通信，用于转发数据。<br>
+<img src="https://eflytop.github.io/post-images/1637566304176.png" alt="" loading="lazy"></p>
+</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[旧电脑绕过硬件限制升级Win11正式版最全「升级攻略」]]></title>
+        <id>https://eflytop.github.io/post/windows11-upgrade/</id>
+        <link href="https://eflytop.github.io/post/windows11-upgrade/">
+        </link>
+        <updated>2021-10-09T01:36:31.000Z</updated>
+        <summary type="html"><![CDATA[<p>微软正式发布新一代Windows 11操作系统。升级Windows 11有一定的最低硬件要求，比如CPU、TPM 2.0版本等。本文将介绍旧电脑如何绕过硬件限制升级Win11正式版。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>微软正式发布新一代Windows 11操作系统。升级Windows 11有一定的最低硬件要求，比如CPU、TPM 2.0版本等。本文将介绍旧电脑如何绕过硬件限制升级Win11正式版。</p>
+<!-- more -->
+<p>本文转自PCBETA论坛，原文链接：https://bbs.pcbeta.com/viewthread-1906293-1-2.html<br>
+本文涉及到的工具下载：https://wwi.lanzoui.com/b00oxkxsj 密码:2jx9<br>
+Windows 11官方下载网址：https://www.microsoft.com/zh-cn/software-download/windows11/   选择「下载 Windows 11 磁盘映像 (ISO)」选项下载ISO文件</p>
+<p>绕过硬件检测时注意断网~</p>
+<h5 id="一-升级安装方案1">一、升级安装（方案1）</h5>
+<p>首先双击运行脚本“skip_tpm_check_on_dynamic_update_v2.cmd”</p>
+<p><strong>离线升级方法：</strong> 使用微软原版ISO离线升级（无需解压），双击装载。然后双击ISO根目录下的setup.exe即可。</p>
+<p><strong>在线升级方法：</strong></p>
+<ul>
+<li>情况1：如果已经通过offlineinsiderenroll强制切换到了Beta/RP通道，升级了Win11预览版，可以直接在Windows Update中检查更新，微软虽说不给升级，但并没有限制。（注意：如果使用了offlineinsiderenroll强制切换通道后，仍不能收到推送，还需要导入一个注册表rs_prerelease-SwitchChannel.reg，使通道可以自由切换，这样就能收到推送了。）</li>
+<li>情况2：如果你现在的系统是Win10，想采用在线升级，则运行上述批处理，等待推送（因为微软分批推送，短时间未必能收到）。</li>
+</ul>
+<blockquote>
+<p>优点：可以保留现有软件、设置等；<br>
+缺点：不是全新安装，可能会有遗留的疑难杂症。</p>
+</blockquote>
+<h5 id="二-升级安装方案2">二、升级安装（方案2）</h5>
+<ul>
+<li>步骤1、将ISO解压到C盘以外的某目录，比如E:\Win11</li>
+<li>步骤2、将“start_setup.bat”复制到ISO解压的根目录（与setup.exe同一目录）</li>
+<li>步骤3、以管理员身份运行“start_setup.bat”，后续步骤一路下一步即可完成系统的升级安装或全新安装。</li>
+</ul>
+<p>备注：相当于先解除限制、再运行ISO目录下的setup.exe。</p>
+<blockquote>
+<p>优点：简便，不需要PE、U盘等<br>
+缺点：如果当前系统是32位，此方案失效。</p>
+</blockquote>
+<h5 id="三-全新安装方案1">三、全新安装（方案1）</h5>
+<ul>
+<li>步骤1、将ISO解压到C盘以外的某目录，比如E:\Win11</li>
+<li>步骤2、将“start_sources_setup.bat”复制到ISO解压的根目录（与setup.exe同一目录）</li>
+<li>步骤3、以管理员身份运行“start_sources_setup.bat&quot;</li>
+</ul>
+<p>备注：相当于先解除限制、再运行ISO\sources目录下的setup.exe，此种方法虽是全新安装，但不能格式化C盘。生成的old文件夹，以后手动清理掉即可。</p>
+<blockquote>
+<p>优点：简便，不需要PE、U盘等。与在PE下格式化安装几乎毫无区别，干净！<br>
+缺点：如果当前系统是32位，此方案失效；与PE下安装相比，唯一缺陷是不能格式化C盘。</p>
+</blockquote>
+<h5 id="四-全新安装方案2">四、全新安装（方案2）</h5>
+<p>进入Win PE下：</p>
+<ul>
+<li>步骤1、将ISO解压，比如E:\Win11</li>
+<li>步骤2、将“start_setup.bat”复制到ISO解压的根目录（与setup.exe同一目录）</li>
+<li>步骤3、双击运行“start_setup.bat”，后续步骤一路下一步即可完成系统的升级安装或全新安装。</li>
+</ul>
+<blockquote>
+<p>优点：全新安装，非常干净！<br>
+缺点：需要准备64位Win10内核的PE，所以方便性上差一些。</p>
+</blockquote>
+<h5 id="五-全新安装方案3">五、全新安装（方案3）</h5>
+<p>不借助第三方WinPE，不借助U盘等，在当前系统下，使用Dism++工具：</p>
+<ul>
+<li>步骤1、运行Dism++x86.exe，左上角恢复功能→在RE中运行。稍等片刻自动重启进入RE环境。</li>
+<li>步骤2、使用左侧“工具箱”中的“系统还原”。依次设置5项内容：选择install.wim路径、选择系统盘（通常是C盘，如果盘符错乱，以“浏览”看到的为准）、选择Win11的版本、添加引导、格式化。选择完毕后，点击“确定”。</li>
+</ul>
+<blockquote>
+<p>优点：全新安装，非常干净！不需要第三方的PE；也不需要U盘；无论当前系统是32位还是64位，均可行。与进入PE没有区别。<br>
+缺点：需要会使用Dism++这个工具，否则白费。</p>
+</blockquote>
+<p>说明：可能有小伙伴会说，还可以不借助任何工具，直接重启进入高级启动，运行setup.exe不行吗？可以，但是局限性很大，比如当前32位系统，就不能安装64位的Win11。（反之也不可以）</p>
+<h5 id="六-全新安装方案4">六、全新安装（方案4）</h5>
+<p>进入Win PE：</p>
+<p>使用Dism++、WinNTSetup、CGI等工具直接部署安装，无需考虑硬件限制的问题。</p>
+<blockquote>
+<p>优点：全新安装，非常干净！<br>
+缺点：需要会使用PE、Dism++等工具，否则白费。</p>
+</blockquote>
+<h5 id="七-全新安装方案5">七、全新安装（方案5）</h5>
+<p>改造ISO大法，需要下载工具v2.0_plus++版本：</p>
+<ul>
+<li>步骤1、将原版ISO复制到W11目录下；</li>
+<li>步骤2、运行Win_11_Boot_And_Upgrade_FiX_KiT_v2.0_plus++_by_zbezj.cmd，等待3-5分钟，生成一个新的ISO；</li>
+<li>步骤3、将新的ISO写入U盘，U盘启动安装，即可绕过一切硬件限制。（U盘启动的制作工具很多，推荐Ventoy或Rufus，下载自行搜索）</li>
+</ul>
+<blockquote>
+<p>优点：经过改造的ISO，U盘启动无需其他任何操作，与原版的安装方法一样。此外，也可以和上文方案一样，运行ISO根目录下的skip.cmd（或start_setup.bat）安装，既适用于Windows也适用于Win PE环境。还集成了Dism++工具，可以方便的调用。也就是说，改造后，上述所有方案的内容都包含在里面了，集上述所有功能于一身。<br>
+缺点：改造ISO，可能会觉得麻烦。（其实就两步、耗时3分钟，傻瓜式操作）</p>
+</blockquote>
+<p>备注：改造ISO大法，也可把Win11的install.wim替换到Win10的ISO中，但不推荐。因为和原版ISO安装出来的不是100%一样的。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[思科路由器Smart Licensing注册步骤]]></title>
+        <id>https://eflytop.github.io/post/cisco-smart-licensing/</id>
+        <link href="https://eflytop.github.io/post/cisco-smart-licensing/">
+        </link>
+        <updated>2021-09-23T00:54:59.000Z</updated>
+        <summary type="html"><![CDATA[<p>本文将介绍思科路由器Smart Licensing注册步骤，以及如何将传统License转换成Smart License。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>本文将介绍思科路由器Smart Licensing注册步骤，以及如何将传统License转换成Smart License。</p>
+<!-- more -->
+<h5 id="查看smart-licensing">查看Smart Licensing</h5>
+<pre><code>VN-QC4351-1.20#sh license summary
+Smart Licensing is ENABLED
+
+Registration:
+  Status: UNREGISTERED
+  Export-Controlled Functionality: NOT ALLOWED
+
+License Authorization:
+  Status: EVAL MODE
+  Evaluation Period Remaining: 83 days, 1 hours, 20 minutes, 50 seconds
+
+License Usage:
+  License                 Entitlement tag               Count Status
+  -----------------------------------------------------------------------------
+                          (ISR_4351_Security)               1 EVAL MODE
+                          (ISR_4351_400M_Performance)       1 EVAL MODE
+</code></pre>
+<p>我们可以看到：</p>
+<ul>
+<li>没有注册Smart Licensing。</li>
+<li>License处于EVAL MODE试用模式。</li>
+</ul>
+<h5 id="注册smart-licensing">注册Smart Licensing</h5>
+<ol start="0">
+<li>配置代理（可选）</li>
+</ol>
+<p>如果路由器需要通过代理服务器访问思科Smart Licensing，参考如下命令配置代理：</p>
+<pre><code>VN-QC4351-1.20(config)#call-home
+VN-QC4351-1.20(cfg-call-home)#http-proxy 10.111.31.111 port 3128
+VN-QC4351-1.20(cfg-call-home)#end
+</code></pre>
+<p>查看call-home信息：</p>
+<pre><code>VN-QC4351-1.20#sh call-home
+Current call home settings:
+    call home feature : enable
+    call home message's from address: Not yet set up
+    call home message's reply-to address: Not yet set up
+[...]
+    source ip address: Not yet set up
+    source interface: Not yet set up
+    Mail-server: Not yet set up
+    http proxy: 10.111.31.111:3128
+[...]
+</code></pre>
+<pre><code>VN-QC4351-1.20#sh call-home profile all
+
+Profile Name: CiscoTAC-1
+    Profile status: ACTIVE
+    Profile mode: Full Reporting
+    Reporting Data: Smart Call Home, Smart Licensing
+    Preferred Message Format: xml
+    Message Size Limit: 3145728 Bytes
+    Transport Method: http
+    HTTP  address(es): https://tools.cisco.com/its/service/oddce/services/DDCEService
+    Other address(es): default
+
+    Periodic configuration info message is scheduled every 12 day of the month at 12:38
+[...]
+</code></pre>
+<ol>
+<li>申请Token令牌</li>
+</ol>
+<p>访问并登录https://software.cisco.com/，点击[管理许可证]，参照下图所示申请Token:<br>
+<img src="https://eflytop.github.io/post-images/1632361821102.png" alt="" loading="lazy"><br>
+<img src="https://eflytop.github.io/post-images/1632361832116.png" alt="" loading="lazy"></p>
+<p>复制令牌信息：<br>
+<img src="https://eflytop.github.io/post-images/1632361840150.png" alt="" loading="lazy"></p>
+<ol start="2">
+<li>激活Token令牌</li>
+</ol>
+<pre><code>VN-QC4351-1.20#license smart register idtoken OGRlOTdlOWItZGI4[...]
+Registration process is in progress. Use the 'show license status' command to check the progress and result
+</code></pre>
+<ol start="3">
+<li>查看注册状态：</li>
+</ol>
+<pre><code>VN-QC4351-1.20#show license status
+Smart Licensing is ENABLED
+[...]
+Registration:
+  Status: REGISTERED
+  Smart Account: F*H M*** INDUSTRY S.****V.
+  Virtual Account: CNCS
+  Export-Controlled Functionality: ALLOWED
+  Initial Registration: SUCCEEDED on
+  Last Renewal Attempt: None
+  Next Renewal Attempt:
+  Registration Expires:
+[...]
+</code></pre>
+<h5 id="把传统license转换成smart-license">把传统License转换成Smart License</h5>
+<ol>
+<li>查看当前License授权状态</li>
+</ol>
+<pre><code>VN-QC4351-1.20#sh license summary
+Smart Licensing is ENABLED
+
+[...]
+License Authorization:
+  Status: OUT OF COMPLIANCE
+  Last Communication Attempt: SUCCEEDED
+  Next Communication Attempt:
+
+License Usage:
+  License                 Entitlement tag               Count Status
+-----------------------------------------------------------------------------
+  ISR_4351_Security       (ISR_4351_Security)               1 OUT OF COMPLIANCE
+  ISR_4351_400M_Perfor... (ISR_4351_400M_Performance)       1 OUT OF COMPLIANCE
+</code></pre>
+<p>可以看到License状态从EVAL MODE变成了OUT OF COMPLIANCE，没有被授权。<br>
+因为我们还没有将传统License转换成Smart License。</p>
+<ol start="2">
+<li>查询传统License</li>
+</ol>
+<pre><code>VN-QC4351-1.20#sh platform software license dlc
+Index 1  Feature:           securityk9
+        Permanent License:  1
+        EVAL RTU License:   0
+        RTU License:        0
+        Paper License:      0
+Index 2  Feature:           throughput
+        Permanent License:  0
+        EVAL RTU License:   0
+        RTU License:        1
+        Paper License:      0
+
+DLC Process Status: Not Complete
+</code></pre>
+<p>可以看到有一个Permanent License，有一个RTU License。</p>
+<ol start="3">
+<li>将传统License转换成Smart License<br>
+使用<code>license smart conversion start</code>命令开始转换：</li>
+</ol>
+<pre><code>VN-QC4351-1.20#license smart conversion start
+</code></pre>
+<p>查询转换状态：</p>
+<pre><code>VN-QC4351-1.20#show license all | sec License Conversion:
+License Conversion:
+  Automatic Conversion Enabled: False
+  Status: Successful on Sep 22 03:46:17 2021 PDT
+</code></pre>
+<p>转换时间较长，建议1小时后再查询状态。</p>
+<ol start="4">
+<li>查询License状态</li>
+</ol>
+<pre><code>VN-QC4351-1.20#sh license summary
+Smart Licensing is ENABLED
+
+Registration:
+  Status: REGISTERED
+  Smart Account: F*H M*** INDUSTRY S.****V.
+  Virtual Account: CNCS
+  Export-Controlled Functionality: ALLOWED
+  Last Renewal Attempt: None
+  Next Renewal Attempt:
+
+License Authorization:
+  Status: OUT OF COMPLIANCE
+  Last Communication Attempt: SUCCEEDED
+  Next Communication Attempt:
+
+License Usage:
+  License                 Entitlement tag               Count Status
+  -----------------------------------------------------------------------------
+  ISR_4351_Security       (ISR_4351_Security)               1 AUTHORIZED
+  ISR_4351_400M_Perfor... (ISR_4351_400M_Performance)       1 AUTHORIZED
+</code></pre>
+<p>两个License都已经AUTHORIZED了。<br>
+访问并登录https://software.cisco.com/查看设备注册状态：<br>
+<img src="https://eflytop.github.io/post-images/1632361854995.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[如何在CentOS 8/RHEL 8上安装Cacti]]></title>
+        <id>https://eflytop.github.io/post/cacti-installation-on-centos8/</id>
+        <link href="https://eflytop.github.io/post/cacti-installation-on-centos8/">
+        </link>
+        <updated>2021-09-13T00:54:42.000Z</updated>
+        <summary type="html"><![CDATA[<p>Cacti是一个开源的基于Web的网络监控工具，可以用于监控系统的CPU、内存、进程数和网络带宽利用率等图形数据。使用Cacti我们可以通过SNMP监控路由器或交换机的网络流量。本文将介绍如何在CentOS 8/RHEL 8上安装Cacti。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Cacti是一个开源的基于Web的网络监控工具，可以用于监控系统的CPU、内存、进程数和网络带宽利用率等图形数据。使用Cacti我们可以通过SNMP监控路由器或交换机的网络流量。本文将介绍如何在CentOS 8/RHEL 8上安装Cacti。</p>
+<!-- more -->
+<hr>
+<h4 id="step-1-selinux设定">STEP 1. SELinux设定</h4>
+<p>将Selinux设置为permissive模式</p>
+<pre><code>setenforce 0 &amp;&amp; sed -i 's/^SELINUX=.*/SELINUX=permissive/g' /etc/selinux/config
+</code></pre>
+<h4 id="step-2-环境准备">STEP 2. 环境准备</h4>
+<p>安装最新EPEL库：</p>
+<pre><code>[root@localhost ~]# yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+</code></pre>
+<p>安装SNMP和RRDTool，RRDTool为Cacti数据轮询工具：</p>
+<pre><code>[root@localhost ~]# yum install -y net-snmp net-snmp-utils net-snmp-libs rrdtool
+</code></pre>
+<p>安装MariaDB数据库：</p>
+<pre><code>[root@localhost ~]# yum install -y mariadb-server mariadb
+</code></pre>
+<p>安装PHP组件：</p>
+<pre><code>[root@localhost ~]# yum install -y php php-xml php-session php-sockets php-ldap php-gd php-json php-mysqlnd php-gmp php-mbstring php-posix php-snmp php-intl
+
+</code></pre>
+<p>启用相关服务：</p>
+<pre><code>[root@localhost ~]# systemctl start httpd snmpd mariadb php-fpm
+[root@localhost ~]# systemctl enable httpd snmpd mariadb php-fpm
+</code></pre>
+<h4 id="step-3-数据库调优">STEP 3. 数据库调优</h4>
+<p>建议更改MySQL参数以获得更好的性能，参数请根据系统详细参数调整。</p>
+<pre><code>vi /etc/my.cnf.d/mariadb-server.cnf
+</code></pre>
+<p>在[mysqld]部分添加以下参数：</p>
+<pre><code>collation-server=utf8mb4_unicode_ci
+character-set-server=utf8mb4
+max_heap_table_size=32M
+tmp_table_size=32M
+join_buffer_size=64M
+# 25% Of Total System Memory
+innodb_buffer_pool_size=1GB
+# pool_size/128 for less than 1GB of memory
+innodb_buffer_pool_instances=10
+innodb_flush_log_at_timeout=3
+innodb_read_io_threads=32
+innodb_write_io_threads=16
+innodb_io_capacity=5000
+innodb_io_capacity_max=10000
+innodb_file_format=Barracuda
+innodb_large_prefix=1
+</code></pre>
+<p>重启服务：</p>
+<pre><code>[root@localhost ~]# systemctl restart mariadb
+</code></pre>
+<h4 id="step-4-创建cacti数据库">STEP 4. 创建Cacti数据库</h4>
+<p>初始化Maridb：</p>
+<pre><code>[root@localhost ~]# mysql_secure_installation
+</code></pre>
+<p>配置步骤和参数供参考：</p>
+<pre><code>Enter current password for root (enter for none): 敲回车
+Set root password? [Y/n]: Y
+New password: &lt;Enter root DB password&gt;
+Re-enter new password: &lt;Repeat root DB password&gt;
+Remove anonymous users? [Y/n]: Y
+Disallow root login remotely? [Y/n]: Y
+Remove test database and access to it? [Y/n]: Y
+Reload privilege tables now? [Y/n]: Y
+</code></pre>
+<p>这里为root用户创建了一个MariaDB密码。<br>
+为Cacti创建一个数据库：</p>
+<pre><code>[root@localhost ~]# mysql -u root -p
+Enter password:
+MariaDB [(none)]&gt; create database cacti;
+MariaDB [(none)]&gt; GRANT ALL ON cacti.* TO cactiuser@localhost IDENTIFIED BY 'cactipassword';
+MariaDB [(none)]&gt; quit;
+</code></pre>
+<p>数据名为<code>cacti</code>，数据库用户名为<code>cactiuser</code>，把<code>cactipassword</code>修改为你自己的密码。<br>
+新创建的数据库用户<code>cactiuser</code>需有权访问<code>mysql.time_zone_name</code>表。要做到这一点，需要先把<code>mysql_test_data_timezone.sql</code>表导入到MySQL的数据库。</p>
+<pre><code>[root@localhost ~]# mysql -u root -p mysql &lt; /usr/share/mariadb/mysql_test_data_timezone.sql
+Enter password:
+</code></pre>
+<p>再次配置数据库，授权用户<code>cactiuser</code>访问<code>mysql.time_zone_name</code>表：</p>
+<pre><code>[root@localhost ~]# mysql -u root -p
+Enter password:
+MariaDB [(none)]&gt; GRANT SELECT ON mysql.time_zone_name TO cactiuser@localhost;
+MariaDB [(none)]&gt; flush privileges;
+MariaDB [(none)]&gt; quit;
+</code></pre>
+<p>将zoneinfo目录路径名传递给mysql_tzinfo_to_sql程序并将输出发送到mysql程序：</p>
+<pre><code>[root@localhost ~]# mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql -p
+Enter password:
+</code></pre>
+<h4 id="step-5-安装和配置cacti">STEP 5. 安装和配置Cacti</h4>
+<p>安装Cacti：</p>
+<pre><code>[root@localhost ~]# yum install -y cacti
+</code></pre>
+<p>将默认数据库导入Cacti 数据库：</p>
+<pre><code>[root@localhost ~]# mysql cacti &lt; /usr/share/doc/cacti/cacti.sql -u cactiuser -p
+Enter password:
+</code></pre>
+<p>编辑Cacti配置文件以指定数据库名称、主机名、用户和密码信息：</p>
+<pre><code>[root@localhost ~]# vi /usr/share/cacti/include/config.php
+</code></pre>
+<p>进行相应的修改：</p>
+<pre><code>$database_type = 'mysql';
+$database_default = 'cacti';
+$database_hostname = 'localhost';
+$database_username = 'cactiuser';
+$database_password = 'cactipassword';
+$database_port = '3306';
+</code></pre>
+<p>在crontab文件中编辑Cacti的cron条目以每五分钟轮询一次：</p>
+<pre><code>[root@localhost ~]# vi /etc/cron.d/cacti
+</code></pre>
+<p>删除前面的#号以取消注释改行：</p>
+<pre><code>*/5 * * * *    apache  /usr/bin/php /usr/share/cacti/poller.php &gt; /dev/null 2&gt;&amp;1
+</code></pre>
+<p>编辑 Apache 配置文件使Cacti能被远程访问：</p>
+<pre><code>[root@localhost ~]# vi /etc/httpd/conf.d/cacti.conf
+</code></pre>
+<p>删除<code>Require host localhost</code>行，添加内容<code>Require all granted</code>：</p>
+<pre><code>Alias /cacti    /usr/share/cacti
+
+&lt;Directory /usr/share/cacti/&gt;
+        &lt;IfModule mod_authz_core.c&gt;
+                # httpd 2.4
+                Require all granted
+        &lt;/IfModule&gt;
+        &lt;IfModule !mod_authz_core.c&gt;
+                # httpd 2.2
+                Order deny,allow
+                Deny from all
+                Allow from localhost
+        &lt;/IfModule&gt;
+&lt;/Directory&gt;
+</code></pre>
+<p>修改PHP时区及其它配置：</p>
+<pre><code>[root@localhost ~]# vi /etc/php.ini
+</code></pre>
+<p>删除<code>;date.timezone = </code>前面的; 号（取消注释），然后修改为正确的时区，并顺便优化相关PHP参数：</p>
+<pre><code>date.timezone = Asia/Shanghai
+memory_limit = 512M 
+max_execution_time = 60
+</code></pre>
+<p>点击<a href="http://php.net/date.timezone">时区列表</a>查看各个时区。</p>
+<p>重启相关服务：</p>
+<pre><code>[root@localhost ~]# systemctl restart httpd php-fpm snmpd mariadb
+</code></pre>
+<h4 id="step-6-防火墙设定">STEP 6. 防火墙设定</h4>
+<p>允许http连接：</p>
+<pre><code>[root@localhost ~]# firewall-cmd --permanent --add-service=http
+[root@localhost ~]# firewall-cmd --reload
+</code></pre>
+<h4 id="step-7-可选-安装和配置spine">STEP 7. (可选) 安装和配置Spine</h4>
+<p>在需要大量采集数据时，如果使用自带的cmd.php轮询器会比较慢，尤其在设定1分钟1次的采集频率下可能无法完成轮询所有的被监控的机器，从而可能导致部分监控项目不出图或图形断断续续。为了解决效率问题，Cacti官方也推出spine，采用多线程的方式高效的轮询。<br>
+安装spine：</p>
+<pre><code>[root@localhost ~]# yum install cacti-spine
+</code></pre>
+<p>设置spine：</p>
+<pre><code>[root@localhost ~]# vi /etc/spine.conf
+</code></pre>
+<p>填写主机名，用户和密码信息：</p>
+<pre><code>DB_Host       localhost
+DB_Database   cacti
+DB_User       cactiuser
+DB_Pass       cactipassword
+DB_Port       3306
+</code></pre>
+<p>测试spine:</p>
+<pre><code>[root@localhost ~]# /usr/bin/spine
+SPINE: Using spine config file [/etc/spine.conf]
+Version 1.2.17 starting
+Time: 0.2350 s, Threads: 1, Devices: 2
+</code></pre>
+<p>重启相关服务：</p>
+<pre><code>[root@localhost ~]# systemctl restart httpd php-fpm snmpd mariadb
+</code></pre>
+<h4 id="step-8-网页端设置">STEP 8. 网页端设置</h4>
+<p>浏览器访问http://your-ip-address/cacti<br>
+输入默认账号admin/admin后根据提示设置和安装。<br>
+这个步骤可能会有一些报错，请根据具体提示修改相关参数：<br>
+<img src="https://eflytop.github.io/post-images/1631695712270.png" alt="" loading="lazy"><br>
+安装完成后，记得在[系统设置] -&gt; [设置] -&gt; [Poller]选项卡下将采集类型由cmd修改为spine：<br>
+<img src="https://eflytop.github.io/post-images/1631696007931.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[如何在CentOS 8上安装Zabbix-Proxy]]></title>
+        <id>https://eflytop.github.io/post/zabbix-proxy-installation/</id>
+        <link href="https://eflytop.github.io/post/zabbix-proxy-installation/">
+        </link>
+        <updated>2021-09-12T05:14:44.000Z</updated>
+        <summary type="html"><![CDATA[<p>Zabbix-Proxy可以代替Zabbix-Server从终端设备收集性能和可用性数据的服务。是Zabbix分布式架构中十分重要的组件。本教程中将介绍如何在CentOS 8上安装、优化和配置Zabbix Proxy 5.0 LTS或5.4 Standard版本。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Zabbix-Proxy可以代替Zabbix-Server从终端设备收集性能和可用性数据的服务。是Zabbix分布式架构中十分重要的组件。本教程中将介绍如何在CentOS 8上安装、优化和配置Zabbix Proxy 5.0 LTS或5.4 Standard版本。</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://eflytop.github.io/post-images/1631337810924.png" alt="" loading="lazy"></figure>
+<h4 id="step-1-设置selinux">STEP 1. 设置Selinux</h4>
+<p>将Selinux设置为permissive模式</p>
+<pre><code>setenforce 0 &amp;&amp; sed -i 's/^SELINUX=.*/SELINUX=permissive/g' /etc/selinux/config
+</code></pre>
+<h4 id="step-2-配置防火墙">STEP 2. 配置防火墙</h4>
+<pre><code>firewall-cmd --add-service={http,https} --permanent
+firewall-cmd --add-port={10051/tcp,10050/tcp} --permanent
+firewall-cmd --reload
+</code></pre>
+<h4 id="step-3-安装zabbix-proxy">STEP 3. 安装Zabbix Proxy</h4>
+<p>必须注意的是，你的Zabbix-Proxy版本必须要和Zabbix-Server版本匹配，你可以使用如下命令来确认Zabbix-Server版本：</p>
+<pre><code>[root@localhost ~]# zabbix_server -V
+zabbix_server (Zabbix) 5.0.6
+</code></pre>
+<p>Zabbix 5.0:</p>
+<pre><code>rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/8/x86_64/zabbix-release-5.0-1.el8.noarch.rpm
+dnf clean all
+dnf -y install zabbix-proxy-mysql
+</code></pre>
+<p>Zabbix 5.4:</p>
+<pre><code>rpm -Uvh https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/zabbix-release-5.4-1.el8.noarch.rpm
+dnf clean all
+dnf -y install zabbix-proxy-mysql zabbix-sql-scripts
+</code></pre>
+<h4 id="step-4-配置数据库">STEP 4. 配置数据库</h4>
+<h5 id="安装和启用mariadb">安装和启用MariaDB</h5>
+<pre><code>dnf -y install mariadb-server &amp;&amp; systemctl start mariadb &amp;&amp; systemctl enable mariadb
+</code></pre>
+<h5 id="设置mysql-root密码">设置MySQL Root密码</h5>
+<p>输入如下命令初始化配置：</p>
+<pre><code>mysql_secure_installation
+</code></pre>
+<p>配置步骤和参数供参考：</p>
+<pre><code>Enter current password for root (enter for none): 敲回车
+Set root password? [Y/n]: Y
+New password: &lt;Enter root DB password&gt;
+Re-enter new password: &lt;Repeat root DB password&gt;
+Remove anonymous users? [Y/n]: Y
+Disallow root login remotely? [Y/n]: Y
+Remove test database and access to it? [Y/n]: Y
+Reload privilege tables now? [Y/n]: Y
+</code></pre>
+<p>这里为root用户创建了一个MariaDB密码。</p>
+<h5 id="创建数据库">创建数据库</h5>
+<pre><code>mysql -uroot -p
+Enter password:
+MariaDB [(none)]&gt; create database zabbix_proxy character set utf8 collate utf8_bin;
+MariaDB [(none)]&gt; create user zabbix@localhost identified by 'your zabbix DB password';
+MariaDB [(none)]&gt; grant all privileges on zabbix_proxy.* to zabbix@localhost;
+MariaDB [(none)]&gt; quit;
+</code></pre>
+<p>这里创建了一个名为zabbix_proxy的数据库，然后创建了一个名为zabbix的用户，把'your zabbix DB password'中''里面的内容替换为你自己的密码。</p>
+<h4 id="导入初始数据">导入初始数据</h4>
+<p>Zabbix 5.0:</p>
+<pre><code>zcat /usr/share/doc/zabbix-proxy-mysql*/schema.sql.gz | mysql -uzabbix -p  zabbix_proxy
+</code></pre>
+<p>Zabbix 5.4:</p>
+<pre><code>zcat /usr/share/doc/zabbix-sql-scripts/mysql/schema.sql.gz | mysql -uzabbix -p  zabbix_proxy
+</code></pre>
+<h4 id="step-5-配置zabbix-proxy">STEP 5. 配置Zabbix Proxy</h4>
+<p>本案例中，此Zabbix-Proxy将命名为zabbix_proxy_01，Zabbix-Server服务器地址为192.168.10.130。<br>
+编辑配置文件<code>/etc/zabbix/zabbix_proxy.conf</code>:</p>
+<pre><code>vi  /etc/zabbix/zabbix_proxy.conf
+</code></pre>
+<p>修改如下配置：</p>
+<pre><code>DBPassword= your zabbix DB password
+ConfigFrequency= 100
+Server=192.168.10.130
+Hostname=zabbix_proxy_01
+DBName=zabbix_proxy
+DBUser=zabbix
+</code></pre>
+<p><code>ConfigFrequency</code>参数定义了Zabbix-Proxy以秒为单位从Zabbix-Server获取配置数据的频率，默认为3600秒。</p>
+<h4 id="step-6-启动zabbix-proxy进程">STEP 6. 启动Zabbix Proxy进程</h4>
+<pre><code>systemctl restart zabbix-proxy &amp;&amp; systemctl enable zabbix-proxy
+</code></pre>
+<h4 id="step-7-在zabbix-server网页端设置proxy">STEP 7. 在Zabbix-Server网页端设置Proxy</h4>
+<p>如图所示进行配置：<br>
+<img src="https://eflytop.github.io/post-images/1631340042130.png" alt="" loading="lazy"></p>
+<p>至此，你已经在CentOS 8上成功安装了Zabbix-Proxy。下面是一些优化设定，请根据实际情况设定。</p>
+<h4 id="step-8-可选配置-psk-加密">STEP 8. （可选）配置 PSK 加密</h4>
+<p>Zabbix服务器和代理之间可以使用TLS 1.2协议通信。可以使用证书或预共享密钥(PSK)加密。<br>
+这里介绍PSK加密方式。</p>
+<h5 id="在zabbix-proxy上生成psk密钥">在Zabbix-Proxy上生成PSK密钥</h5>
+<pre><code>[root@localhost ~]# openssl rand -hex 32
+3c17b47bd7795e341f9be4666b8a73643e6ef0aa0b21428df799c55a14203234
+</code></pre>
+<p>使用命令<code>vi /etc/zabbix/zabbix_proxy.psk</code>创建并打开文件<code>zabbix_proxy.psk</code>，然后将新生成的密钥复制粘贴到其中并保存。<br>
+设置权限：</p>
+<pre><code>chown zabbix:zabbix /etc/zabbix/zabbix_proxy.psk
+chmod 644 /etc/zabbix/zabbix_proxy.psk
+</code></pre>
+<h5 id="在zabbix-proxy上配置psk加密">在Zabbix-Proxy上配置PSK加密</h5>
+<p>编辑配置文件<code>/etc/zabbix/zabbix_proxy.conf</code>:</p>
+<pre><code>vi  /etc/zabbix/zabbix_proxy.conf
+</code></pre>
+<p>修改如下配置：</p>
+<pre><code>TLSConnect=psk
+TLSAccept=psk
+TLSPSKFile=/etc/zabbix/zabbix_proxy.psk
+TLSPSKIdentity=ZBX-PSK-01
+</code></pre>
+<p>重启服务：</p>
+<pre><code>systemctl restart zabbix-proxy
+</code></pre>
+<h5 id="在-zabbix-server网页端的代理上启用psk加密">在 Zabbix-Server网页端的代理上启用PSK加密</h5>
+<p>如图所示进行配置：<br>
+<img src="https://eflytop.github.io/post-images/1631341436106.png" alt="" loading="lazy"></p>
+<h4 id="step-9-可选优化zabbix-proxy">STEP 9. （可选）优化Zabbix-Proxy</h4>
+<p>如果你监控的设备不多，就没必要进行此步骤，但如果计划监控大量设备，请执行此步骤。<br>
+编辑配置文件<code>/etc/zabbix/zabbix_proxy.conf</code>：</p>
+<pre><code>vi  /etc/zabbix/zabbix_proxy.conf
+</code></pre>
+<p>在任何位置加入如下参数：</p>
+<pre><code>StartPollers=100
+StartPollersUnreachable=50
+StartPingers=50
+StartTrappers=10
+StartDiscoverers=15
+StartHTTPPollers=5
+CacheSize=128M
+HistoryCacheSize=64M
+HistoryIndexCacheSize=32M
+</code></pre>
+<p>请根据实际情况进一步优化，假设您不使用 ICMP 检查，则将<code>StartPingers</code>参数设置为1，或者如果您不使用活动代理，则将<code>StartTrappers</code>设置为1。您可以在<a href="https://www.zabbix.com/documentation/4.0/manual/appendix/config/zabbix_proxy">官方文档</a>中找到有关Zabbix配置文件中支持的参数的更多信息 。</p>
+<h4 id="step-10-可选优化mysqlmariadb数据库">STEP 10. （可选）优化MySQL/MariaDB数据库</h4>
+<h5 id="创建自定义mysql配置文件">创建自定义MySQL配置文件</h5>
+<p>通过命令<code>vi /etc/my.cnf.d/zabbix_db.cnf</code>创建zabbix_db.cnf数据库配置文件：</p>
+<pre><code>vi /etc/my.cnf.d/zabbix_db.cnf
+</code></pre>
+<p>然后粘贴如下配置：</p>
+<pre><code>[mysqld]
+max_connections                = 280
+innodb_buffer_pool_size        = 1G
+
+innodb-log-file-size           = 128M
+innodb-log-buffer-size         = 128M
+innodb-file-per-table          = 1
+innodb_buffer_pool_instances   = 8
+innodb_old_blocks_time         = 1000
+innodb_stats_on_metadata       = off
+innodb-flush-method            = O_DIRECT
+innodb-log-files-in-group      = 2
+innodb-flush-log-at-trx-commit = 2
+
+tmp-table-size                 = 96M
+max-heap-table-size            = 96M
+open_files_limit               = 65535
+max_connect_errors             = 1000000
+connect_timeout                = 60
+wait_timeout                   = 28800
+</code></pre>
+<p>赋予权限：</p>
+<pre><code>chown mysql:mysql /etc/my.cnf.d/zabbix_db.cnf
+chmod 644 /etc/my.cnf.d/zabbix_db.cnf
+</code></pre>
+<p>这样设定后可以避免一些报错，比如参数<code>max_connections = 404</code>可以解决这个报错：<code>“[Z3001] connection to database 'zabbix_proxy' failed: [1040] Too many connections”</code>。值得注意的是<code>max_connections</code>参数必须大于所有Zabbix代理进程总数+150，我们可以使用如下命令计算出来：</p>
+<pre><code>[root@localhost ~]# egrep &quot;^Start.+=[0-9]&quot; /etc/zabbix/zabbix_proxy.conf | awk -F &quot;=&quot; '{s+=$2} END {print s+150}'
+201
+</code></pre>
+<p>还有一个比较重要的参数是<code>innodb_buffer_pool_size</code>，这个参数决定了MySQL可以获得多少内存来缓存 InnoDB表和索引数据。如果服务器只运行了数据库，我们建议将这个值设定为系统内存的70%，这里我们还运行了Zabbix-Proxy服务，我们建议将这个值设定为系统内存的50%。假如系统内存为2G，那么这个值为1G。</p>
+<h5 id="重启进程">重启进程</h5>
+<pre><code>systemctl restart zabbix-proxy 
+systemctl restart mariadb
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[如何在CentOS 8上安装Zabbix 5.0或5.4]]></title>
+        <id>https://eflytop.github.io/post/centos8-install-zabbix5/</id>
+        <link href="https://eflytop.github.io/post/centos8-install-zabbix5/">
+        </link>
+        <updated>2021-09-11T01:49:20.000Z</updated>
+        <summary type="html"><![CDATA[<p>Zabbix是100%免费开源的企业级监控软件，旨在监控IT基础设施组件和服务的可用性和性能。Zabbix可安装在任何Linux发行版上，本教程将展示在CentOS 8上如何安装Zabbix 5.0 LTS和Zabbix 5.4版本。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Zabbix是100%免费开源的企业级监控软件，旨在监控IT基础设施组件和服务的可用性和性能。Zabbix可安装在任何Linux发行版上，本教程将展示在CentOS 8上如何安装Zabbix 5.0 LTS和Zabbix 5.4版本。</p>
+<!-- more -->
+<p>Zabbix 5.0 LTS 版本官方支持至 2025年5月，Zabbix 5.4 标准版官方支持至 2021年12月。</p>
+<hr>
+<p>首先我们安装和配置 Zabbix 服务器，然后是数据库，最后是WEB前端frontend。<br>
+<img src="https://eflytop.github.io/post-images/1631325351617.jpg" alt="" loading="lazy"></p>
+<h4 id="step-1-设置selinux">STEP 1. 设置Selinux</h4>
+<p>将Selinux设置为permissive模式</p>
+<pre><code>setenforce 0 &amp;&amp; sed -i 's/^SELINUX=.*/SELINUX=permissive/g' /etc/selinux/config
+</code></pre>
+<h4 id="step-2-安装zabbix-server-zabbix-web和zabbix-agent">STEP 2. 安装zabbix-server, zabbix-web和zabbix-agent</h4>
+<p>Zabbix 5.0：</p>
+<pre><code>rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/8/x86_64/zabbix-release-5.0-1.el8.noarch.rpm
+dnf clean all
+dnf -y install zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-agent
+</code></pre>
+<p>Zabbix 5.4：</p>
+<pre><code>rpm -Uvh https://repo.zabbix.com/zabbix/5.4/rhel/8/x86_64/zabbix-release-5.4-1.el8.noarch.rpm
+dnf clean all
+dnf -y install zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+</code></pre>
+<p>可以看出5.4多了zabbix-sql-scripts这个组件。</p>
+<h4 id="step-3-安装和配置mariadb数据库">STEP 3. 安装和配置MariaDB数据库</h4>
+<h5 id="安装mariadb和启用mariadb服务">安装MariaDB和启用MariaDB服务</h5>
+<pre><code>dnf -y install mariadb-server &amp;&amp; systemctl start mariadb &amp;&amp; systemctl enable mariadb
+</code></pre>
+<ul>
+<li>配置MariaDB</li>
+</ul>
+<p>输入如下命令初始化配置：</p>
+<pre><code>mysql_secure_installation
+</code></pre>
+<p>配置步骤和参数供参考：</p>
+<pre><code>Enter current password for root (enter for none): 敲回车
+Set root password? [Y/n]: Y
+New password: &lt;Enter root DB password&gt;
+Re-enter new password: &lt;Repeat root DB password&gt;
+Remove anonymous users? [Y/n]: Y
+Disallow root login remotely? [Y/n]: Y
+Remove test database and access to it? [Y/n]: Y
+Reload privilege tables now? [Y/n]: Y
+</code></pre>
+<p>这里为root用户创建了一个MariaDB密码。</p>
+<h5 id="创建数据库">创建数据库</h5>
+<pre><code>mysql -uroot -p
+Enter password:
+MariaDB [(none)]&gt; create database zabbix character set utf8 collate utf8_bin;
+MariaDB [(none)]&gt; create user zabbix@localhost identified by 'your zabbix DB password';
+MariaDB [(none)]&gt; grant all privileges on zabbix.* to zabbix@localhost;
+MariaDB [(none)]&gt; quit;
+</code></pre>
+<p>这里创建了一个名为zabbix的数据库，然后创建了一个名为zabbix的用户，把'your zabbix DB password'中''里面的内容替换为你自己的密码。</p>
+<h5 id="导入初始架构和数据">导入初始架构和数据</h5>
+<p>Zabbix 5.0：</p>
+<pre><code>zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p zabbix
+Enter password:
+</code></pre>
+<p>Zabbix 5.4：</p>
+<pre><code>zcat /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz | mysql -uzabbix -p zabbix
+Enter password:
+</code></pre>
+<p>如果出现报错<code>ERROR 1118 (42000) at line 1284: Row size too large (&gt; 8126)</code>，可以通过如下命令临时关闭strict mode：</p>
+<pre><code>mysql -uroot -p
+Enter password:
+MariaDB [(none)]&gt;set global innodb_strict_mode='OFF';
+MariaDB [(none)]&gt; quit;
+</code></pre>
+<p>然后再执行上面的数据导入步骤，数据导入完毕后再开启strict mode：</p>
+<pre><code>mysql -uroot -p
+Enter password:
+MariaDB [(none)]&gt;set global innodb_strict_mode='ON';
+MariaDB [(none)]&gt; quit;
+</code></pre>
+<h5 id="修改zabbix_serverconf配置文件">修改zabbix_server.conf配置文件</h5>
+<p>编辑配置文件<code> /etc/zabbix/zabbix_server.conf</code>：</p>
+<pre><code>vi  /etc/zabbix/zabbix_server.conf
+</code></pre>
+<p>把Zabbix数据库密码修改为上面设定的密码：</p>
+<pre><code>DBPassword= your zabbix DB password
+</code></pre>
+<p>假如你设定的数据库名和用户名不是为zabbix，对应的也是在这个文件中把数据库名和用户名修改为你设定的名字。</p>
+<h4 id="step-4-配置防火墙">STEP 4. 配置防火墙</h4>
+<pre><code>firewall-cmd --add-service={http,https} --permanent
+firewall-cmd --add-port={10051/tcp,10050/tcp} --permanent
+firewall-cmd --reload
+</code></pre>
+<h4 id="step-5-配置zabbix前端frontend">STEP 5. 配置Zabbix前端frontend</h4>
+<h5 id="配置php中的时区参数">配置PHP中的时区参数</h5>
+<p>编辑<code>/etc/php-fpm.d/zabbix.conf</code>文件：</p>
+<pre><code>vi /etc/php-fpm.d/zabbix.conf
+</code></pre>
+<p>删除<code>php_value date.timezone Europe/Riga</code>前面的; 号（取消注释），然后修改为正确的时区：</p>
+<pre><code>php_value[date.timezone] = Asia/Shanghai
+</code></pre>
+<p>点击<a href="https://www.php.net/manual/zh/timezones.php">时区列表</a>查看各个时区。</p>
+<h5 id="重启zabbix-server-zabbix-agent-http和php服务进程">重启zabbix-server, zabbix-agent, http和php服务进程</h5>
+<pre><code>systemctl restart zabbix-server zabbix-agent httpd php-fpm &amp;&amp; systemctl enable zabbix-server zabbix-agent httpd php-fpm
+</code></pre>
+<h5 id="配置web前端">配置Web前端</h5>
+<p>用浏览器打开网址http://server_ip_or_name/zabbix，根据提示一步一步往下进行配置，在DB配置页面输入正确的数据库密码：<br>
+<img src="https://eflytop.github.io/post-images/1631330745446.png" alt="" loading="lazy"></p>
+<p>最后输入默认的用户名密码Admin/zabbix登录。</p>
+<p>至此，你已经在CentOS 8上成功安装了Zabbix 5，现在您可以监控任何东西了。下面是一些优化设定，请根据实际情况设定。</p>
+<h4 id="step-6-可选优化zabbix服务器参数">STEP 6. （可选）优化Zabbix服务器参数</h4>
+<p>如果你监控的设备不多，就没必要进行此步骤，但如果计划监控大量设备，请执行此步骤。<br>
+编辑配置文件<code> /etc/zabbix/zabbix_server.conf</code>：</p>
+<pre><code>vi  /etc/zabbix/zabbix_server.conf
+</code></pre>
+<p>在任何位置加入如下参数：</p>
+<pre><code>StartPollers=100
+StartPollersUnreachable=50
+StartPingers=50
+StartTrappers=10
+StartDiscoverers=15
+StartPreprocessors=15
+StartHTTPPollers=5
+StartAlerters=5
+StartTimers=2
+StartEscalators=2
+CacheSize=128M
+HistoryCacheSize=64M
+HistoryIndexCacheSize=32M
+TrendCacheSize=32M
+ValueCacheSize=256M
+</code></pre>
+<p>请根据实际情况进一步优化，假设您不使用 ICMP 检查，则将<code>StartPingers</code>参数设置为1，或者如果您不使用活动代理，则将<code>StartTrappers</code>设置为1。您可以在<a href="https://www.zabbix.com/documentation/4.0/manual/appendix/config/zabbix_proxy">官方文档</a>中找到有关Zabbix配置文件中支持的参数的更多信息 。</p>
+<h4 id="step-7-可选优化mysqlmariadb数据库">STEP 7. （可选）优化MySQL/MariaDB数据库</h4>
+<h5 id="创建自定义mysql配置文件">创建自定义MySQL配置文件</h5>
+<p>通过命令<code>vi /etc/my.cnf.d/zabbix_db.cnf</code>创建zabbix_db.cnf数据库配置文件：</p>
+<pre><code>vi /etc/my.cnf.d/zabbix_db.cnf
+</code></pre>
+<p>然后粘贴如下配置：</p>
+<pre><code>[mysqld]
+max_connections = 404
+innodb_buffer_pool_size = 800M
+
+innodb-log-file-size = 128M
+innodb-log-buffer-size = 128M
+innodb-file-per-table = 1
+innodb_buffer_pool_instances = 8
+innodb_old_blocks_time = 1000
+innodb_stats_on_metadata = off
+innodb-flush-method = O_DIRECT
+innodb-log-files-in-group = 2
+innodb-flush-log-at-trx-commit = 2
+
+tmp-table-size = 96M
+max-heap-table-size = 96M
+open_files_limit = 65535
+max_connect_errors = 1000000
+connect_timeout = 60
+wait_timeout = 28800
+</code></pre>
+<p>赋予权限：</p>
+<pre><code>chown mysql:mysql /etc/my.cnf.d/zabbix_db.cnf
+chmod 644 /etc/my.cnf.d/zabbix_db.cnf
+</code></pre>
+<p>这样设定后可以避免一些报错，比如参数<code>max_connections = 404</code>可以解决这个报错：<code>“[Z3001] connection to database 'zabbix' failed: [1040] Too many connections”</code>。值得注意的是<code>max_connections</code>参数必须大于所有Zabbix代理进程总数+150，我们可以使用如下命令计算出来：</p>
+<pre><code>egrep &quot;^Start.+=[0-9]&quot; /etc/zabbix/zabbix_server.conf | awk -F &quot;=&quot; '{s+=$2} END {print s+150}'
+</code></pre>
+<p>还有一个比较重要的参数是<code>innodb_buffer_pool_size</code>，这个参数决定了MySQL可以获得多少内存来缓存 InnoDB表和索引数据。如果服务器只运行了数据库，我们建议将这个值设定为系统内存的70%；这里我们同时运行了数据库、Zabbix-Server及WEB服务，我们建议将这个值设定为系统内存的40%，假如系统内存为2G，那么这个值为800MB。</p>
+<h5 id="重启进程">重启进程</h5>
+<pre><code>systemctl restart zabbix-server 
+systemctl restart mariadb
+</code></pre>
+<h4 id="step-8-可选在history和events表上创建mysql分区">STEP 8. （可选）在History和Events表上创建MySQL分区</h4>
+<p>Zabbix的housekeeping进程负责删除旧的trend和history数据，这个动作会对数据库性能产生负面影响，有时会产生这个烦人的警报：<code>Zabbix housekeeper processes more than 75% busy</code>。<br>
+使用数据库分区可以轻松解决该问题。分区每小时或每天创建表，并在不再需要时删除它们。SQL DROP 比 DELETE 语句更有效。<br>
+MySQL分区教程请详见本网站<code>为Zabbix在History和Events表上创建MySQL分区</code>博文教程。</p>
+]]></content>
+    </entry>
+</feed>

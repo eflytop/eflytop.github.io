@@ -1,0 +1,371 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>如何在CentOS 7上安装Cacti 1.2 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    如何在CentOS 7上安装Cacti 1.2
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-04-19 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/-qzfLCQ1z-/" class="post-tags">
+                            # Cacti
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/gGrHw33uD5/" class="post-tags">
+                            # Centos
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>Cacti是一套基于PHP，MySQL，SNMP及RRDTool开发的网络流量监测图形分析工具。它通过SNMP来获取数据，使用 RRDtool绘画图形，本文介绍如何在CentOS 7上安装Cacti 1.2</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://eflytop.github.io/post-images/1625538541669.png" alt="" loading="lazy"></figure>
+<h5 id="将selinux设置为permissive模式">将SELinux设置为permissive模式</h5>
+<pre><code class="language-powershell">sed -i 's/^SELINUX=.*/SELINUX=permissive/g' /etc/selinux/config
+reboot
+</code></pre>
+<h5 id="安装epel库">安装EPEL库</h5>
+<pre><code class="language-powershell">rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+</code></pre>
+<h5 id="安装snmp和rrdtool">安装SNMP和RRDTool</h5>
+<pre><code class="language-powershell">yum -y install net-snmp net-snmp-utils net-snmp-libs rrdtool
+</code></pre>
+<h5 id="安装php">安装PHP</h5>
+<p>Centos 7的初始PHP版本不符合Cacti的最低要求，因此我们安装PHP 7.3版本。</p>
+<ul>
+<li>安装Remi库</li>
+</ul>
+<pre><code class="language-powershell">yum install -y https://rpms.remirepo.net/enterprise/remi-release-7.rpm
+</code></pre>
+<ul>
+<li>安装PHP 7.3</li>
+</ul>
+<pre><code class="language-powershell">yum install -y --enablerepo=remi-php73 php php-xml php-session php-sockets php-ldap php-gd php-gmp php-intl php-mbstring php-mysqlnd php-pdo php-process php-snmp
+</code></pre>
+<h5 id="安装mariadb">安装MariaDB</h5>
+<p>Centos 7预装的MariaDB 5.4不符合Cacti的最低要求，这里我们安装MariaDB官方最新版本，直接复制下框所有命令设置安装源：</p>
+<pre><code class="language-powershell">cat &lt;&lt;EOF&gt;&gt; /etc/yum.repos.d/mariadb.repo
+[mariadb]name = MariaDB
+baseurl = http://yum.mariadb.org/10.4/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1
+EOF
+</code></pre>
+<p>使用如下命令安装：</p>
+<pre><code class="language-powershell">yum install -y MariaDB-server MariaDB-client
+</code></pre>
+<h5 id="数据库优化">数据库优化</h5>
+<p>编辑MariaDB配置文件：</p>
+<pre><code class="language-powershell">vi /etc/my.cnf.d/server.cnf
+</code></pre>
+<p>修改[mysqld]参数如下：</p>
+<pre><code class="language-powershell">collation-server = utf8mb4_unicode_ci
+character-set-server=utf8mb4
+max_heap_table_size = 64M
+tmp_table_size = 64M
+join_buffer_size = 64M
+innodb_file_format = Barracuda
+innodb_large_prefix = 1
+innodb_flush_log_at_timeout = 3
+innodb_buffer_pool_size = 1GB
+innodb_buffer_pool_instances = 10
+# Based on what type for storage you use. The below values are for SSD drives.
+# Change it if Cacti reports issues during the installation
+innodb_read_io_threads = 32
+innodb_write_io_threads = 16
+innodb_io_capacity = 5000
+innodb_io_capacity_max = 10000
+</code></pre>
+<h5 id="启用服务">启用服务</h5>
+<pre><code class="language-powershell">systemctl start httpd snmpd mariadb
+systemctl enable httpd snmpd mariadb
+</code></pre>
+<h5 id="创建cacti数据库">创建Cacti数据库</h5>
+<ul>
+<li>MariaDB初始化</li>
+</ul>
+<pre><code class="language-powershell">mysql_secure_installation
+</code></pre>
+<p>按照提示设定数据库root用户密码及完成其它设置（都可以选择默认）。</p>
+<ul>
+<li>创建Cacti数据库</li>
+</ul>
+<pre><code class="language-powershell">mysql -u root -p
+Enter password:*******
+MariaDB [(none)]&gt; create database cacti;
+MariaDB [(none)]&gt; GRANT ALL ON cacti.* TO cactiuser@localhost IDENTIFIED BY 'cactipassword';
+MariaDB [(none)]&gt; flush privileges;
+MariaDB [(none)]&gt; exit
+</code></pre>
+<p>其中cactiuser是数据库用户名，cactipassword是数据库密码，都可以自定义，但是下文设置需与之匹配。<br>
+Cacti要求新创建的数据库用户cactiuser需要有权限去访问mysql.time_zone_name表，我们导入mysql_test_data_timezone.sql到mysql并授权来实现这个要求。</p>
+<pre><code class="language-powershell">mysql -u root -p mysql &lt; /usr/share/mysql/mysql_test_data_timezone.sql
+Enter password:*******
+mysql -u root -p
+Enter password:*******
+MariaDB [(none)]&gt; GRANT SELECT ON mysql.time_zone_name TO cactiuser@localhost;
+MariaDB [(none)]&gt; flush privileges;
+MariaDB [(none)]&gt; exit
+</code></pre>
+<h5 id="安装cacti">安装Cacti</h5>
+<p>yum安装cacti</p>
+<pre><code class="language-powershell">yum -y install cacti
+</code></pre>
+<p>将默认数据库导入到cacti数据库</p>
+<pre><code class="language-powershell">mysql cacti &lt; /usr/share/doc/cacti-*/cacti.sql -u root -p
+Enter password:*******
+</code></pre>
+<p>编辑数据库配置文件</p>
+<pre><code class="language-powershell">vi /usr/share/cacti/include/config.php
+</code></pre>
+<p>设定名称，主机名，用户和密码信息</p>
+<pre><code class="language-powershell">/* make sure these values reflect your actual database/host/user/password */
+$database_type = &quot;mysql&quot;;
+$database_default = &quot;cacti&quot;;
+$database_hostname = &quot;localhost&quot;;
+$database_username = &quot;cactiuser&quot;;
+$database_password = &quot;cactipassword&quot;;
+$database_port = &quot;3306&quot;;
+$database_ssl = false;
+</code></pre>
+<p>编辑crontab文件</p>
+<pre><code class="language-powershell">vi /etc/cron.d/cacti
+</code></pre>
+<p>取消注释以下条目以实现每五分钟轮询一次（删掉该条目前面的#号）</p>
+<pre><code class="language-powershell">*/5 * * * *    apache  /usr/bin/php /usr/share/cacti/poller.php &gt; /dev/null 2&gt;&amp;1
+</code></pre>
+<p>编辑/etc/php.ini文件设置时区</p>
+<pre><code class="language-powershell">vi /etc/php.ini
+</code></pre>
+<p>更新时区</p>
+<pre><code class="language-powershell">date.timezone = Aisa/Shanghai #需要删除前面的;号
+memory_limit = 512M
+max_execution_time = 60
+</code></pre>
+<p>编辑Apache配置文件</p>
+<pre><code class="language-powershell">vi /etc/httpd/conf.d/cacti.conf
+</code></pre>
+<p>把Require host localhost修改为Require all granted，修改前：</p>
+<pre><code class="language-powershell">&lt;Directory /usr/share/cacti/&gt;
+        &lt;IfModule mod_authz_core.c&gt;
+                # httpd 2.4
+                Require host localhost
+        &lt;/IfModule&gt;
+        &lt;IfModule !mod_authz_core.c&gt;
+                # httpd 2.2
+                Order deny,allow
+                Deny from all
+                Allow from localhost
+        &lt;/IfModule&gt;
+&lt;/Directory&gt;
+</code></pre>
+<p>修改后：</p>
+<pre><code class="language-powershell">&lt;Directory /usr/share/cacti/&gt;
+        &lt;IfModule mod_authz_core.c&gt;
+                # httpd 2.4
+                Require all granted
+        &lt;/IfModule&gt;
+        &lt;IfModule !mod_authz_core.c&gt;
+                # httpd 2.2
+                Order deny,allow
+                Deny from all
+                Allow from localhost
+        &lt;/IfModule&gt;
+&lt;/Directory&gt;
+</code></pre>
+<h5 id="安装cacti-spine">安装cacti-spine</h5>
+<p>由于效率的原因，在需要大量采集数据时，如果使用自带的cmd.php轮询器会比较慢，1分钟1次的采集频率可能无法完成轮询所有的被监控的机器，从而可能导致部分监控项目不出图或图形断断续续。为了解决效率问题，Cacti官方也推出spine，采用多线程的方式高效的轮询。</p>
+<ul>
+<li>安装spine</li>
+</ul>
+<pre><code class="language-powershell">yum -y install cacti-spine
+</code></pre>
+<ul>
+<li>设置spine</li>
+</ul>
+<pre><code class="language-powershell">vi /etc/spine.conf
+</code></pre>
+<p>填写主机名，用户和密码信息</p>
+<pre><code class="language-powershell">DB_Host       localhost
+DB_Database   cacti
+DB_User       cactiuser
+DB_Pass       cactipassword
+DB_Port       3306
+</code></pre>
+<h5 id="重新启动服务">重新启动服务</h5>
+<pre><code class="language-powershell">systemctl restart httpd snmpd mariadb
+</code></pre>
+<h5 id="设定防火墙">设定防火墙</h5>
+<pre><code class="language-powershell">firewall-cmd --permanent --add-service=http
+firewall-cmd --reload
+</code></pre>
+<h5 id="设置cacti">设置cacti</h5>
+<p>打开浏览器输入http://your-ip-address/cacti登陆后按照安装向导完成Cacti安装。默认密码为admin/admin<br>
+安装完成后，记得在[系统设置] -&gt; [设置] -&gt; [Poller]选项卡下将采集类型由cmd修改为spine。</p>
+<h5 id="其它">其它</h5>
+<p>Cacti 1.2.11有一个小bug，输入用户名和密码无法登陆，打开php配置文件，注释掉如下内容即可(在前面加#号)：</p>
+<pre><code class="language-powershell">vi /usr/share/cacti/include/config.php 
+# $cacti_cookie_domain = 'cacti.net';
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/isr4000-capture/" class="post-title gt-a-link">
+                    如何在Cisco ISR 4000上抓包
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

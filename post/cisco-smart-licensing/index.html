@@ -1,0 +1,354 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>思科路由器Smart Licensing注册步骤 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    思科路由器Smart Licensing注册步骤
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-09-23 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/eYSauC5qJ8/" class="post-tags">
+                            # License
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>本文将介绍思科路由器Smart Licensing注册步骤，以及如何将传统License转换成Smart License。</p>
+<!-- more -->
+<h5 id="查看smart-licensing">查看Smart Licensing</h5>
+<pre><code>VN-QC4351-1.20#sh license summary
+Smart Licensing is ENABLED
+
+Registration:
+  Status: UNREGISTERED
+  Export-Controlled Functionality: NOT ALLOWED
+
+License Authorization:
+  Status: EVAL MODE
+  Evaluation Period Remaining: 83 days, 1 hours, 20 minutes, 50 seconds
+
+License Usage:
+  License                 Entitlement tag               Count Status
+  -----------------------------------------------------------------------------
+                          (ISR_4351_Security)               1 EVAL MODE
+                          (ISR_4351_400M_Performance)       1 EVAL MODE
+</code></pre>
+<p>我们可以看到：</p>
+<ul>
+<li>没有注册Smart Licensing。</li>
+<li>License处于EVAL MODE试用模式。</li>
+</ul>
+<h5 id="注册smart-licensing">注册Smart Licensing</h5>
+<ol start="0">
+<li>配置代理（可选）</li>
+</ol>
+<p>如果路由器需要通过代理服务器访问思科Smart Licensing，参考如下命令配置代理：</p>
+<pre><code>VN-QC4351-1.20(config)#call-home
+VN-QC4351-1.20(cfg-call-home)#http-proxy 10.111.31.111 port 3128
+VN-QC4351-1.20(cfg-call-home)#end
+</code></pre>
+<p>查看call-home信息：</p>
+<pre><code>VN-QC4351-1.20#sh call-home
+Current call home settings:
+    call home feature : enable
+    call home message's from address: Not yet set up
+    call home message's reply-to address: Not yet set up
+[...]
+    source ip address: Not yet set up
+    source interface: Not yet set up
+    Mail-server: Not yet set up
+    http proxy: 10.111.31.111:3128
+[...]
+</code></pre>
+<pre><code>VN-QC4351-1.20#sh call-home profile all
+
+Profile Name: CiscoTAC-1
+    Profile status: ACTIVE
+    Profile mode: Full Reporting
+    Reporting Data: Smart Call Home, Smart Licensing
+    Preferred Message Format: xml
+    Message Size Limit: 3145728 Bytes
+    Transport Method: http
+    HTTP  address(es): https://tools.cisco.com/its/service/oddce/services/DDCEService
+    Other address(es): default
+
+    Periodic configuration info message is scheduled every 12 day of the month at 12:38
+[...]
+</code></pre>
+<ol>
+<li>申请Token令牌</li>
+</ol>
+<p>访问并登录https://software.cisco.com/，点击[管理许可证]，参照下图所示申请Token:<br>
+<img src="https://eflytop.github.io/post-images/1632361821102.png" alt="" loading="lazy"><br>
+<img src="https://eflytop.github.io/post-images/1632361832116.png" alt="" loading="lazy"></p>
+<p>复制令牌信息：<br>
+<img src="https://eflytop.github.io/post-images/1632361840150.png" alt="" loading="lazy"></p>
+<ol start="2">
+<li>激活Token令牌</li>
+</ol>
+<pre><code>VN-QC4351-1.20#license smart register idtoken OGRlOTdlOWItZGI4[...]
+Registration process is in progress. Use the 'show license status' command to check the progress and result
+</code></pre>
+<ol start="3">
+<li>查看注册状态：</li>
+</ol>
+<pre><code>VN-QC4351-1.20#show license status
+Smart Licensing is ENABLED
+[...]
+Registration:
+  Status: REGISTERED
+  Smart Account: F*H M*** INDUSTRY S.****V.
+  Virtual Account: CNCS
+  Export-Controlled Functionality: ALLOWED
+  Initial Registration: SUCCEEDED on
+  Last Renewal Attempt: None
+  Next Renewal Attempt:
+  Registration Expires:
+[...]
+</code></pre>
+<h5 id="把传统license转换成smart-license">把传统License转换成Smart License</h5>
+<ol>
+<li>查看当前License授权状态</li>
+</ol>
+<pre><code>VN-QC4351-1.20#sh license summary
+Smart Licensing is ENABLED
+
+[...]
+License Authorization:
+  Status: OUT OF COMPLIANCE
+  Last Communication Attempt: SUCCEEDED
+  Next Communication Attempt:
+
+License Usage:
+  License                 Entitlement tag               Count Status
+-----------------------------------------------------------------------------
+  ISR_4351_Security       (ISR_4351_Security)               1 OUT OF COMPLIANCE
+  ISR_4351_400M_Perfor... (ISR_4351_400M_Performance)       1 OUT OF COMPLIANCE
+</code></pre>
+<p>可以看到License状态从EVAL MODE变成了OUT OF COMPLIANCE，没有被授权。<br>
+因为我们还没有将传统License转换成Smart License。</p>
+<ol start="2">
+<li>查询传统License</li>
+</ol>
+<pre><code>VN-QC4351-1.20#sh platform software license dlc
+Index 1  Feature:           securityk9
+        Permanent License:  1
+        EVAL RTU License:   0
+        RTU License:        0
+        Paper License:      0
+Index 2  Feature:           throughput
+        Permanent License:  0
+        EVAL RTU License:   0
+        RTU License:        1
+        Paper License:      0
+
+DLC Process Status: Not Complete
+</code></pre>
+<p>可以看到有一个Permanent License，有一个RTU License。</p>
+<ol start="3">
+<li>将传统License转换成Smart License<br>
+使用<code>license smart conversion start</code>命令开始转换：</li>
+</ol>
+<pre><code>VN-QC4351-1.20#license smart conversion start
+</code></pre>
+<p>查询转换状态：</p>
+<pre><code>VN-QC4351-1.20#show license all | sec License Conversion:
+License Conversion:
+  Automatic Conversion Enabled: False
+  Status: Successful on Sep 22 03:46:17 2021 PDT
+</code></pre>
+<p>转换时间较长，建议1小时后再查询状态。</p>
+<ol start="4">
+<li>查询License状态</li>
+</ol>
+<pre><code>VN-QC4351-1.20#sh license summary
+Smart Licensing is ENABLED
+
+Registration:
+  Status: REGISTERED
+  Smart Account: F*H M*** INDUSTRY S.****V.
+  Virtual Account: CNCS
+  Export-Controlled Functionality: ALLOWED
+  Last Renewal Attempt: None
+  Next Renewal Attempt:
+
+License Authorization:
+  Status: OUT OF COMPLIANCE
+  Last Communication Attempt: SUCCEEDED
+  Next Communication Attempt:
+
+License Usage:
+  License                 Entitlement tag               Count Status
+  -----------------------------------------------------------------------------
+  ISR_4351_Security       (ISR_4351_Security)               1 AUTHORIZED
+  ISR_4351_400M_Perfor... (ISR_4351_400M_Performance)       1 AUTHORIZED
+</code></pre>
+<p>两个License都已经AUTHORIZED了。<br>
+访问并登录https://software.cisco.com/查看设备注册状态：<br>
+<img src="https://eflytop.github.io/post-images/1632361854995.png" alt="" loading="lazy"></p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/cacti-installation-on-centos8/" class="post-title gt-a-link">
+                    如何在CentOS 8/RHEL 8上安装Cacti
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

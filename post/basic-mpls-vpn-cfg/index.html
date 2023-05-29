@@ -1,0 +1,360 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>MPLS VPN的基本配置 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    MPLS VPN的基本配置
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-01-03 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/QcgFxsNOu_F/" class="post-tags">
+                            # VPN
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/bntItrEdjEb/" class="post-tags">
+                            # MPLS
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>MPLS-VPN是指采用MPLS（多协议标记转换）技术在骨干的宽带IP网络上构建企业IP专网，实现跨地域、安全、高速、可靠的数据、语音、图像多业务通信，并结合差别服务、流量工程等相关技术，将公众网可靠的性能、良好的扩展性、丰富的功能与专用网的安全 、灵活、高效结合在一起。本文主要展示一些基本配置。</p>
+<!-- more -->
+<h5 id="mpls-vpn配置">MPLS-VPN配置</h5>
+<p>1.CE和PE（IGP）<br>
+2.区分CE相同路由（RD）<br>
+3.VRF（Virtual Routing Forwarding）<br>
+4.RT（路由的导入导出）</p>
+<!-- more -->
+<p><img src="https://eflytop.github.io/post-images/1625621303763.png" alt="" loading="lazy"><br>
+①配置各路由器接口以及PE-P-PE内部IGP，保证用于建立iBGP邻居的各路由器环回接口的可达性</p>
+<pre><code>PE1(config)#router isis
+PE1(config-router)#net 49.0000.0000.0001.00
+PE1(config-router)#int f0/0
+PE1(config-if)#ip router isis
+PE1(config-if)#int lo0
+PE1(config-if)#ip router isis   #只启用PE-P对接接口的ISIS路由功能，但是不要忽略了环回接口也需要启用
+PE1(config-router)#is-type level-1  #优化ISIS配置，使路由器只发送level-1 Hello（只维护level-1 LSDB）
+</code></pre>
+<p>P、PE2：配置同PE1。基本的接口配置省略。</p>
+<p>②启用PE-P-PE各个相连接口的MPLS功能</p>
+<pre><code>P(config)#int f1/0
+P(config-if)#mpls ip
+P(config-if)#exit
+P(config-if)#int f2/0
+P(config-if)#mpls ip
+</code></pre>
+<p>PE1、PE2：配置同P基本相同</p>
+<p>③在PE上定义并配置VRF参数</p>
+<pre><code>PE1(config)#ip vrf vpna
+PE1(config-vrf)#rd 100:1
+PE1(config-vrf)#route-target import 100:1
+PE1(config-vrf)#route-target export 100:1
+PE1(config-vrf)#exit
+PE1(config)#ip vrf vpnb
+PE1(config-vrf)#rd 200:2
+PE1(config-vrf)#route-target import 200:2
+PE1(config-vrf)#route-target export 200:2
+</code></pre>
+<p>PE2：配置同PE1</p>
+<p>④将VRF与相应的接口进行关联（PE与CE相连接的接口）</p>
+<pre><code>PE1(config-vrf)#int f2/0
+PE1(config-if)#ip vrf forwarding vpna
+% Interface FastEthernet2/0 IP address 14.1.1.1 removed due to enabling VRF vpna
+PE1(config-if)#ip add 14.1.1.1 255.255.255.252
+PE1(config-if)#int f1/0
+PE1(config-if)#ip vrf forwarding vpnb
+% Interface FastEthernet1/0 IP address 15.1.1.1 removed due to enabling VRF vpnb
+PE1(config-if)#ip add 15.1.1.1 255.255.255.252
+</code></pre>
+<p>PE2：配置基本同PE1。</p>
+<p>⑤配置PE到PE的iBGP连接（MP-BGP）</p>
+<pre><code>PE1(config)#router bgp 100
+PE1(config-router)#bgp router-id 1.1.1.1
+PE1(config-router)#nei 3.3.3.3 remote-as 100
+PE1(config-router)#nei 3.3.3.3 update-source lo0
+PE1(config-router)#address-family vpnv4
+PE1(config-router-af)#nei 3.3.3.3 activate
+PE1(config-router)#address-family ipv4 vrf vpna
+PE1(config-router)#address-family ipv4 vrf vpnb
+</code></pre>
+<p>PE2：配置基本同PE1。</p>
+<p>⑥配置PE到CE 的vrf 路由（注意这里与传统路由的区别）<br>
+a)静态路由</p>
+<pre><code>PE1(config)#ip route vrf vpna 10.1.1.1 255.255.255.255 14.1.1.2
+PE1(config)#ip route vrf vpnb 10.1.1.1 255.255.255.255 15.1.1.2
+PE1(config)#router bgp 100
+PE1(config-router)#address-family ipv4 vrf vpna
+PE1(config-router-af)#redistribute static
+PE1(config-router-af)#exit-address-family
+PE1(config-router)#address-family ipv4 vrf vpnb
+PE1(config-router-af)#redistribute static
+</code></pre>
+<p>PE2：配置基本同PE1。</p>
+<pre><code>CE1_vpna(config)#ip route 0.0.0.0 0.0.0.0 14.1.1.1
+</code></pre>
+<p>CE1_vpnb、 CE2_vpna 、CE2_vpnb：配置都是只需要添加一条缺省路由指向对端的PE设备。</p>
+<p>b)OSPF</p>
+<pre><code>PE1(config)#router ospf 1 vrf vpnb
+PE1(config-router)#router-id 1.1.1.1
+PE1(config-router)#redistribute bgp 100 subnets
+PE1(config-router)#network 15.1.1.1 0.0.0.0 area 0
+PE1(config-router)#exit
+PE1(config)#router bgp 100
+PE1(config-router)#address-family ipv4 vrf vpnb
+PE1(config-router-af)#redistribute ospf 1
+</code></pre>
+<p>PE2：配置基本同PE1。</p>
+<pre><code>CE1_vpnb(config)#router ospf 1
+CE1_vpnb(config-router)#router-id 10.1.1.1
+CE1_vpnb(config-router)#net 10.1.1.1 0.0.0.0 a 0
+CE1_vpnb(config-router)#net 15.1.1.2 0.0.0.0 a 0
+</code></pre>
+<p>CE1_vpna、 CE2_vpna 、CE2_vpnb：配置基本同CE1_vpnb。</p>
+<p>c)BGP</p>
+<pre><code>PE1(config-router)#address-family ipv4 vrf vpnb
+PE1(config-router-af)#neighbor 15.1.1.2 remote-as 500
+PE1(config-router-af)#neighbor 15.1.1.2 activate
+</code></pre>
+<p>PE2：配置基本同PE1。</p>
+<pre><code>CE1_vpnb(config-router)#router bgp 500
+CE1_vpnb(config-router)#nei 15.1.1.1 remote-as 100
+CE1_vpnb(config-router)#network 10.1.1.1 mask 255.255.255.255
+CE1_vpnb(config-router)#network 15.1.1.0 mask 255.255.255.252
+</code></pre>
+<p>CE1_vpna、 CE2_vpna 、CE2_vpnb：配置基本同CE1_vpnb。</p>
+<h5 id="mpls-vpn排错">MPLS VPN排错</h5>
+<p>1.查看哪些接口启用了MPLS</p>
+<pre><code>P#show mpls interface
+Interface          IP          Tunnel          Operational
+FastEthernet1/0  Yes (tdp)       No               Yes
+FastEthernet2/0  Yes (tdp)       No               Yes
+</code></pre>
+<p>2.查看LDP邻居建立情况</p>
+<pre><code>PE1#sh mpls ldp discovery detail
+Local LDP Identifier:
+    1.1.1.1:0
+    Discovery Sources:
+    Interfaces:
+      FastEthernet0/0 (tdp): xmit/recv
+      Hello interval: 5000 ms; Transport IP addr: 1.1.1.1
+      TDP Id: 2.2.2.2:0
+        Src IP addr: 12.1.1.2; Transport IP addr: 2.2.2.2
+      Hold time: 15 sec; Proposed local/peer: 15/15 sec
+        Reachable via 2.2.2.2/32
+</code></pre>
+<p>Local LDP Identifier 是每台LSR都必须有的，这个ID用6个字节表示，前4个节字称为Rotuer-ID，先选loopback地址最大的，然后是物理接口，它的选举方法和OSPF Rotuer-ID相同，后面2个字节是表示标签空间的，也就是标签是基于设备还是基于接口，如果是基于设备，就是0，可以从上面看出，1.1.1.1:0中，1.1.1.1表示R1的Rotuer-ID，而0表示标签是基于设备的。<br>
+Transport IP addr默认是选用Rotuer-ID的地址，这个地址在建邻居时非常重要，是会话的源地址，如果这个地址对方没有路由可达，那么就不可能建起邻居。所以一定要保证双方Transport IP 是路由相通的。</p>
+<p>3.其它命令</p>
+<pre><code>router# show mpls ldp neighbor     #LDP邻居正常状态为Operational（简写为Oper）
+router# show mpls forwarding-table     #查看LFIB表
+router# show ip route vrf vrf_name     #查看vpn的私网路由表
+router# show ip cef vrf vrf_name     #查看vpn的私网转发表
+router# show ip bgp summary     #查看BGP邻居的基本状况
+router# show ip bgp vpnv4 all     #查看BGP中关于VPNv4路由的信息
+router# show ip bgp vpnv4 all labels     #查看BGP私网路由对应的标签
+router# show ip vrf interfaces     #显示vrf 接口信息
+router# sh ip route vrf YJGQSP     #查看VPN路由表
+router# sh ip bgp vpnv4 vrf YJGQSP summary     #查看BGP邻居建立情况
+router# ping vrf YJGQSP 10.199.82.1 source 10.199.82.5     #测试VPN通信
+router# sh ip bgp vpnv4 vrf YJGQSP neighbors 96.0.183.1 advertised-routes         #查看本路由器向邻居通告了哪些路由
+router# sh ip bgp 10.199.82.0
+</code></pre>
+<h5 id="测试mpls-vpn">测试MPLS VPN</h5>
+<p>1.测试CE到CE的连通性</p>
+<pre><code>CE1_vpnb#ping 10.1.3.1 source 10.1.1.1          #因为没有将直连的网段重分发到vpn路由表中，所以需要添加环回接口来测试
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.1.3.1, timeout is 2 seconds:
+Packet sent with a source address of 10.1.1.1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 76/124/176 ms
+</code></pre>
+<p>2.测试PE到CE的连通性</p>
+<pre><code>PE1#ping vrf vpnb 10.1.3.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.1.3.1, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 52/94/156 ms
+</code></pre>
+<h5 id="mpls-vpn排障思路">MPLS VPN排障思路</h5>
+<p>1.查看私网路由表</p>
+<pre><code>show ip route vrf vrf_name
+show ip cef vrf vrf_name
+</code></pre>
+<p>2.若没有正确学习到私网路由，则：<br>
+①MP-BGP邻居是否正常建立</p>
+<pre><code>show ip bgp vpnv4 all summary
+show ip bgp vpnv4 vrf vrf_name summary
+</code></pre>
+<p>②本路由器是否正确通告路由<br>
+③对端是否正确学习<br>
+④本端RT export与对端RT import是否匹配<br>
+3.若已经正确学习都私网路由，则：检查公网标签是否正确</p>
+<pre><code>show mpls forwarding-table
+show mpls ldp neighbor
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/cisco-sdwan-controller-installation/" class="post-title gt-a-link">
+                    Cisco SD-WAN之vManage，vBond，vSmart和vEdge上线
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

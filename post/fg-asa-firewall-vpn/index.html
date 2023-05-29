@@ -1,0 +1,260 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>FortiGate与ASA防火墙建立IPsec VPN | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    FortiGate与ASA防火墙建立IPsec VPN
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-03-26 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/ql3ShvfbkV/" class="post-tags">
+                            # ASA
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/JZWDQzm-Y9w/" class="post-tags">
+                            # FortiGate
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/QcgFxsNOu_F/" class="post-tags">
+                            # VPN
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>用户本地的出口防火墙选用FortiGate设备，中心点为ASA防火墙，本文介绍如何在这2个设备之间建立IPsec VPN。</p>
+<!-- more -->
+<h5 id="基本架构">基本架构：</h5>
+<p>本地网段为10.1.0.0/24，对端网段为10.2.0.0/24<br>
+<img src="https://eflytop.github.io/post-images/1625539192576.webp" alt="" loading="lazy"></p>
+<h5 id="fortigate设置">FortiGate设置：</h5>
+<p>1 导航栏选择VPN -&gt; IPsec Tunnels，点击Create New<br>
+<img src="https://eflytop.github.io/post-images/1625539203258.webp" alt="" loading="lazy"></p>
+<p>2 填写VPN名字和类型<br>
+– name：根据实际需求填写<br>
+– Template type: site to site<br>
+– NAT configuration:   根据实际需求填写，两边防火墙wan/outside接口ip地址如果是公网ip，那么基本上是FortiGate与ASA之间没有过NAT，选择No NAT between sites, 否则，根据实际情况选择local还是remote behind NAT.<br>
+– Remote device type: Cisco<br>
+<img src="https://eflytop.github.io/post-images/1625539224480.webp" alt="" loading="lazy"><br>
+3 设置认证参数<br>
+remote ip address: 202.1.1.2 （一般为对端外网接口ip）<br>
+outgoing interface: wan (选择防火墙的外网接口）<br>
+pre-share-key: 123456 (自己定义)<br>
+<img src="https://eflytop.github.io/post-images/1625539239578.webp" alt="" loading="lazy"></p>
+<p>4 设置策略和路由<br>
+填写本地加密网段和对端加密网段10.1.0.0/24和10.2.0.0/24<br>
+<img src="https://eflytop.github.io/post-images/1625539247670.webp" alt="" loading="lazy"></p>
+<p>5 最后点击create完成VPN建立，Fortigate会根据你前面填写的参数自动完成相应设置<br>
+– 创建地址<br>
+– 创建路由<br>
+– 创建策略<br>
+<img src="https://eflytop.github.io/post-images/1625539255481.webp" alt="" loading="lazy"></p>
+<h5 id="asa配置">ASA配置：</h5>
+<p>在设置ASA之前，我们先查看一下Fortigate具体用到的加密和校验参数是什么。<br>
+导航VPN -&gt; IPsec Tunnel Template -&gt; Site to Site – Cisco，我们可以看到:</p>
+<pre><code>Phase 1 Interface
+Dead Peer Detection: on-demand
+Proposal: des-sha1 des-md5
+DH Group: 5
+Phase 2 Interface
+Perfect Forward Secrecy (PFS): enable
+Source Address Type: name
+Destination Address Type: name
+Proposal: des-md5
+DH Group: 5
+</code></pre>
+<p>因此，ASA设定命令如下（旧版命令）：</p>
+<pre><code>crypto isakmp policy 70
+authentication pre-share
+encryption des
+hash sha
+group 5
+crypto isakmp policy 80
+authentication pre-share
+encryption des
+hash md5
+group 5
+access-list 1260 extended permit ip 10.2.0.0 255.255.255.0 10.1.0.0 255.255.255.0
+access-list inside-acl extended permit ip 10.2.0.0 255.255.255.0 10.1.0.0 255.255.255.0
+access-list nonat extended permit ip 10.2.0.0 255.255.255.0 10.1.0.0 255.255.255.0
+nat (inside) 0 access-list nonat
+nat (inside) 1 10.0.0.0 0.0.0.0
+global (outside) 1 interface
+crypto ipsec transform-set 1260 esp-des esp-md5-hmac
+crypto map vpnmap 1260 match address 1260
+crypto map vpnmap 1260 set pfs group5
+crypto map vpnmap 1260 set peer 101.1.1.2
+crypto map vpnmap 1260 set transform-set 1260
+crypto map vpnmap interface outside
+crypto isakmp enable outside
+tunnel-group 101.1.1.2 type ipsec-l2l
+tunnel-group 101.1.1.2 ipsec-attributes
+pre-shared-key 123456
+</code></pre>
+<h5 id="验证">验证</h5>
+<p>Fortigate：导航Monitor -&gt; IPsec Monitor</p>
+<p>ASA：</p>
+<pre><code>show crypto isakmp sa
+show crypto ipsec sa
+</code></pre>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/aux-console-connection/" class="post-title gt-a-link">
+                    通过Aux口访问console口
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

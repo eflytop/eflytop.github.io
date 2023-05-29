@@ -1,0 +1,231 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>VMware SD-WAN组件简介 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    VMware SD-WAN组件简介
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-11-22 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/lHOI-VAwP/" class="post-tags">
+                            # VMware
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/NN7J8Olf9p/" class="post-tags">
+                            # SDWAN
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>VMware SD-WAN by VeloCloud由三大组件组成，可以为企业提供高性能、可靠的组网服务。</p>
+<!-- more -->
+<p>这三个组件为：</p>
+<ul>
+<li>VMware SD-WAN Orchestrator</li>
+<li>VMware SD-WAN Gateway</li>
+<li>VMware SD-WAN Edge</li>
+</ul>
+<h5 id="vmware-sd-wan-orchestrator">VMware SD-WAN Orchestrator</h5>
+<p>简称VCO，是基于虚拟化/云部署的组件，为VMware SD-WAN的管理中心，提供集中管理、配置和监控服务，通过它，可以实现Edge设备快速部署。此外，它还提供丰富的API接口，可用于提供管理、故障排除甚至与其它运营支持系统/业务支持系统（OSS/BSS）集成。它的主要功能有：</p>
+<ul>
+<li>配置： 激活和部署Edge，并设定策略，它能支持Edge零接触部署。</li>
+<li>监控： 能提供基于五元组甚至应用级别的监控数据，供客户或网络工程师使用。</li>
+<li>诊断：为用户提供远程诊断、数据包捕获或其他用于故障排除的相关工具。</li>
+</ul>
+<h5 id="vmware-sd-wan-gateway">VMware SD-WAN Gateway</h5>
+<p>简称VCG，是基于虚拟化/云部署的组件，可以充当两个独立的角色，提供两个独立的服务。这两个服务为控制平面服务和数据平面服务。提供控制平面服务的子组件为VMware SD-WAN Controller（简称VCC），它提供如下两个很重要的功能：</p>
+<ol>
+<li>链路发现</li>
+<li>路由信息分发与更新<br>
+数据平面服务可以用来与SaaS和运营商集成，提供数据转发服务。<br>
+VCG有两个接口，一个网络接口连接到互联网，另一个网络接口连接到服务提供商的MPLS骨干网，使之能够访问服务提供商的基础设施和服务。</li>
+</ol>
+<h5 id="vmware-sd-wan-edge">VMware SD-WAN Edge</h5>
+<p>简称VCE，部署在中心点、分支点或IaaS平台，为公网、私有线路提供接入，并转发数据到其它站点。除了有各种性能的硬件型号外，也提供用于虚拟化/云部署的软件镜像。</p>
+<blockquote>
+<p>VMware SD-WAN Overlay<br>
+Overlay层面，VMware SD-WAN使用VeloCloud Multi-path Protocol (VCMP) 协议来创建基于IPsec协议的隧道。VCMP隧道在两个VCE之间建立或在VCE和VCG之间建立。VCMP使用UDP端口2426。</p>
+</blockquote>
+<h5 id="三大组件之间的通信">三大组件之间的通信</h5>
+<ul>
+<li>
+<p>管理平面<br>
+管理平面流量启用TLS 1.2加密传输，涉及以下组件的通信：</p>
+<ul>
+<li>VCE和VCO</li>
+<li>VCG和VCO<br>
+VCE和VCG都注册在VCO，使用管理平面来接收配置和策略更新，以及上传统计信息和事件日志。VCE和VCG每30秒向VCO发送一次心跳包，如果连续四个心跳包丢失，VCE和VCG则被声明为离线。VCE还会每五分钟向VCO发送一次统计信息。</li>
+</ul>
+</li>
+<li>
+<p>控制平面<br>
+控制平面利用VCE和VCG之间的VCMP隧道进行通信，用于交换路由信息。VCG检测WAN线路IP地址和带宽，并充当路由反射器角色，使VCE能收到和更新每个站点的路由。</p>
+</li>
+<li>
+<p>数据平面<br>
+数据平面利用在两个VCE之间或在VCE和VCG之间的VCMP隧道进行通信，用于转发数据。<br>
+<img src="https://eflytop.github.io/post-images/1637566304176.png" alt="" loading="lazy"></p>
+</li>
+</ul>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/windows11-upgrade/" class="post-title gt-a-link">
+                    旧电脑绕过硬件限制升级Win11正式版最全「升级攻略」
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,232 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>如何在Cisco ISR 4000上抓包 | 一览网事</title>
+
+<link rel="shortcut icon" href="https://eflytop.github.io/favicon.ico?v=1685351746105">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://eflytop.github.io/styles/main.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"> -->
+
+<style>
+    hr {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script> -->
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            一览网事
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" id="changeNavbar">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+            <div class="nav-item">
+                
+                <a href="/" class="menu gt-a-link">
+                    首页
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/archives" class="menu gt-a-link">
+                    归档
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/tags" class="menu gt-a-link">
+                    标签
+                </a>
+                
+            </div>
+            
+            <div class="nav-item">
+                
+                <a href="/post/about" class="menu gt-a-link">
+                    关于
+                </a>
+                
+            </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1685351746105"
+                action="/search/">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+<script>
+    /* 移动端导航栏展开/收起切换 */
+    document.getElementById('changeNavbar').onclick = () => {
+        var element = document.getElementById('navbarSupportedContent');
+        if (element.style.display === 'none' || element.style.display === '') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+</script>
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    如何在Cisco ISR 4000上抓包
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2021-04-12 ·
+                    </time>
+                    
+                        <a href="https://eflytop.github.io/tag/dOdGyCimrt/" class="post-tags">
+                            # Cisco
+                        </a>
+                    
+                        <a href="https://eflytop.github.io/tag/uQqelgFFIi/" class="post-tags">
+                            # Netflow
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>在本文中，我们将看到如何在Cisco ISR 4000系列路由器上抓包并导出抓包文件。抓包文件是pcap文件格式，可以在Wireshark中轻松打开和分析。<br>
+本实验中使用的ISR 4331正在运行IOS XE 16.6.4。</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://eflytop.github.io/post-images/1625538216267.png" alt="" loading="lazy"></figure>
+<h3 id="步骤1-创建capture-buffer">步骤1 - 创建capture buffer</h3>
+<p>capture buffer是存储抓包数据的内存区域。有两种类型的缓冲区：<br>
+循环：一旦旧数据满就覆盖旧数据<br>
+线性：流量满后立即停止捕获流量<br>
+在这里我们创建一个capture buffer称为MYCAP，这是一个循环缓冲区，大小为10 KB：</p>
+<pre><code class="language-perl">R1#monitor capture MYCAP buffer circular size 10
+</code></pre>
+<h3 id="步骤2可选-定义要捕获的流量">步骤2（可选）- 定义要捕获的流量</h3>
+<p>我们创建一个ACL并将其附加到capture buffer，与ACL匹配的数据包将被抓包。此步骤是可选的，如果不配置此步骤，所有数据包都会被抓包。<br>
+在这里我们创建一个MYCAP-ACL的访问列表，以匹配所有SIP（端口UDP 5060）流量。</p>
+<pre><code class="language-perl">R1(config)#ip access-list extended MYCAP-ACL
+R1(config-ext-nacl)#permit udp any any eq 5060
+</code></pre>
+<p>让ACL与capture buffer相关联：</p>
+<pre><code class="language-perl">R1#monitor capture MYCAP access-list MYCAP-ACL
+</code></pre>
+<h3 id="步骤3-指定要抓包的接口">步骤3 - 指定要抓包的接口</h3>
+<p>我们可以在该接口上定义流量方向：输入，输出或两者。在这里我们抓接口GE 0/0/0上的流入和流出流量：</p>
+<pre><code class="language-perl">R1#monitor capture MYCAP interface GigabitEthernet 0/0/0 both
+</code></pre>
+<h3 id="步骤4-验证capture-buffer">步骤4 - 验证capture buffer</h3>
+<p>capture buffer配置未存储在running-config中，因此我们需要使用show命令来验证配置。该命令是：</p>
+<pre><code class="language-perl">R1#show monitor capture MYCAP
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://eflytop.github.io/post-images/1625538269762.webp" alt="" loading="lazy"></figure>
+<h3 id="步骤5-开始和停止抓包">步骤5 - 开始和停止抓包</h3>
+<p>通过以下命令启动和停止抓包进程：</p>
+<pre><code class="language-perl">R1#monitor capture MYCAP start
+R1#monitor capture MYCAP stop
+</code></pre>
+<p>运行第一个命令开始抓包，然后运行第二个命令中止抓包。所有抓包数据都存储在路由器的RAM中。</p>
+<h3 id="步骤6-查看抓包数据">步骤6 - 查看抓包数据</h3>
+<p>现在是时候查看抓包数据了。其命令是：</p>
+<pre><code class="language-perl">R1#show monitor capture MYCAP buffer brief
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://eflytop.github.io/post-images/1625538290368.webp" alt="" loading="lazy"></figure>
+<p>另一种选择是使用dump关键字而不是brief，它会打印包内容。</p>
+<h3 id="步骤7-导出抓包数据到本地">步骤7 - 导出抓包数据到本地</h3>
+<p>可以通过TFTP协议将抓包数据导出到本地电脑中。这样就可以用Wireshark分析数据了。<br>
+在确保您的计算机上运行着TFTP服务器后，运行export命令：</p>
+<pre><code class="language-perl">R1#monitor capture MYCAP export tftp://tftp服务器地址/MYCAP.pcap
+</code></pre>
+<h3 id="步骤8-清除capture-buffer">步骤8 - 清除capture buffer</h3>
+<p>如前所述，所有抓包数据都存储在路由器的RAM中。以下命令将清除抓包数据：</p>
+<pre><code class="language-perl">R1#monitor capture MYCAP clear
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://eflytop.github.io/post-images/1625538301705.png" alt="" loading="lazy"></figure>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://eflytop.github.io/post/centos-7-netflow-installation/" class="post-title gt-a-link">
+                    Centos 7安装与配置Netflow Analyzer 12.4
+                </a>
+            </div>
+        
+
+        
+
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first">一筐罗网事的点点滴滴。</div>
+    <div class="social-container">
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        Powered by <a href="https://www.eflytop.com/" target="_blank">Gridea</a>
+    </div>
+    <div>
+        Theme by <a href="https://imhanjie.com/" target="_blank">imhanjie</a>, Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://eflytop.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.highlightAll()
+</script>
+
+    </div>
+</div>
+</body>
+</html>
