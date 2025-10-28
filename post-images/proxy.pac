@@ -12,11 +12,11 @@ function FindProxyForURL(url, host) {
         shExpMatch(host, "*.twitter.com") || 
         shExpMatch(host, "*.x.com") || 
         shExpMatch(host, "*.github.com") 
-        )
-    {
+        ){
     return "PROXY 10.16.31.111:3128";
     }
     
     // Direct connection for all other traffic
     return "DIRECT";
 }
+
